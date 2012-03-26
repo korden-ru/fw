@@ -69,17 +69,6 @@ $template->assign('cfg', $config);
 $template->assign('metaVersion', 1);
 
 /**
-* Типы страниц
-*/
-$_MODULE_TYPEPAGES = array(
-	'Текстовая'            => 0,
-	'Текстовая с галереей' => 1,
-	'Текстовая с блоками'  => 2,
-	'Блоки'                => 3,
-	'Меню'                 => 4,
-);
-
-/**
 * Автозагрузчик классов
 */
 class autoloader

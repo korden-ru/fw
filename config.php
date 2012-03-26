@@ -21,6 +21,17 @@ $dbpers = false;
 $acm_prefix = 'src';
 $acm_type   = 'null';
 
+/**
+* Типы страниц
+*/
+$_MODULE_TYPEPAGES = array(
+	'Текстовая'            => 0,
+	'Текстовая с галереей' => 1,
+	'Текстовая с блоками'  => 2,
+	'Блоки'                => 3,
+	'Меню'                 => 4,
+);
+
 define('SQL_PREFIX', 'tcms_');
 
 /**
