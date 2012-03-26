@@ -1,0 +1,5 @@
+extraExclude = "dev/lib,*.{cur,gif,ico,jpg,png,svg,swf,ttf}"
+
+excludeInFolderSearch = "{$excludeInFolderSearch,$extraExclude}"
+excludeInFileChooser = "{$excludeInFileChooser,$extraExclude}"
+excludeInBrowser = "{$excludeFilesInBrowser,$extraExclude}"
