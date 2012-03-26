@@ -1,7 +1,7 @@
 <?php
 /** 
 *
-* @package cms.korden.net
+* @package fw.korden.net
 * @copyright (c) 2012 vacuum
 *
 */
