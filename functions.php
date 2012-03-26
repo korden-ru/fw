@@ -97,35 +97,6 @@ function hidden_fields($row)
 	return $string;
 }
 
-function get_post($name,$default = null)
-{
-	if(!get_magic_quotes_gpc())
-		return isset($_POST[$name]) ? addslashes($_POST[$name]) : $default; //add slashes where adding into base
-	else
-		return isset($_POST[$name]) ? $_POST[$name] : $default; //or fucking off, slashes already use....
-
-}
-
-function get_get($name,$default = null)
-{
-	if(!get_magic_quotes_gpc())
-		return isset($_GET[$name]) ? addslashes($_GET[$name]) : $default; //add slashes where adding into base
-	else
-		return isset($_GET[$name]) ? $_GET[$name] : $default; //or fucking off, slashes already use....
-
-}
-
-function get_request($name,$default= null)
-{
-	return isset($_REQUEST[$name]) ? $_REQUEST[$name] : $default;
-}
-
-
-function gopage($url, $time = 0)
-{
-	header('Location: ' . $url);
-}
-
 function debug($array, $exit=1)
 {
 	if (isset($_GET['admin']) || $_SERVER['REMOTE_ADDR'] == '79.175.20.190' || $_SERVER['REMOTE_ADDR'] == '127.0.0.1')
