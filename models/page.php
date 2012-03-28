@@ -440,6 +440,29 @@ class page
 	}
 
 	/**
+	* Установка SEO-параметров
+	*/
+	protected function append_seo_params($row)
+	{
+		if( isset($row['seo_title']) && $row['seo_title'] )
+		{
+			$this->data['page_title'] = $row['seo_title'];
+		}
+		
+		if( isset($row['seo_keys']) && $row['seo_keys'] )
+		{
+			$this->data['page_keywords'] = $row['seo_keys'];
+		}
+		
+		if( isset($row['seo_desc']) && $row['seo_desc'] )
+		{
+			$this->data['page_description'] = $row['seo_desc'];
+		}
+		
+		$this->set_page_data();
+	}
+
+	/**
 	* Подсветка активных пунктов меню
 	*/
 	protected function recursive_set_menu_active_items(&$menu, $section_url)
