@@ -59,7 +59,7 @@ $cache   = $factory->get_service();
 
 $db = new db\mysqli($dbhost, $dbuser, $dbpass, $dbname, $dbport, $dbsock, $dbpers);
 
-if( false !== strpos($_SERVER['SERVER_NAME'], '.korden.net') )
+if( false === strpos($_SERVER['SERVER_NAME'], '.korden.net') )
 {
 	/* Принудительная установка кодировки для хостинг-провайдеров */
 	$db->query('SET NAMES utf8');
