@@ -675,9 +675,6 @@ class mysqli
 		
 		define('IN_SQL_ERROR', true);
 		
-		/* Подсветка ключевых слов */
-		$sql = preg_replace('#(SELECT|INSERT INTO|UPDATE|SET|DELETE|FROM|LEFT JOIN|WHERE|AND|GROUP BY|ORDER BY|LIMIT|AS|ON)#', '<em>${1}</em>', $sql);
-
 		$error_ary = array(
 			'code' => $code,
 			'sql'  => $sql,
