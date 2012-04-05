@@ -925,7 +925,7 @@ function seo_url($url, $lang = 'ru')
 	* _. заменяем на _
 	* Убираем точку в конце
 	*/
-	$result = preg_replace(array('/_{2,}/', '/\.{2,}/', '/_\./', '/(.*)\./'), array('_', '', '_', '$1'), $result);
+	$result = preg_replace(array('/\.{2,}/', '/_\./', '/_{2,}/', '/(.*)\./'), array('', '_', '_', '$1'), $result);
 
 	return $result;
 }
