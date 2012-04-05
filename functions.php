@@ -116,9 +116,10 @@ function check_email($email)
 
 function modifyUrl($title)
 {
+	$title = htmlspecialchars_decode($title);
     $ruTitle = preg_replace('/[^А-Яа-яA-Za-z0-9]/ui', '_', $title);
 	$ruTitle = trim($ruTitle, '_');
-	$ruTitle = mb_strtolower($ruTitle, 'utf-8');
+	$ruTitle = mb_strtolower($ruTitle);
 	
 	$ruLetters = array(	'а','б','в','г','д','е','ё','ж','з','и','й','к','л','м','н','о','п','р','с','т','у','ф','х','ц','ч','ы','ш','щ','ь','ъ','э','ю','я');
 	$enLetters = array(	'a','b','v','g','d','e','e','zh','z','i','i','k','l','m','n','o','p','r','s','t','u','f','h','c','ch','y','sh','sh','','','e','yu','ya');
@@ -904,6 +905,8 @@ function send_status_line($code, $message = '')
 */
 function seo_url($url, $lang = 'ru')
 {
+	$url = htmlspecialchars_decode($url);
+	
 	switch( $lang )
 	{
 		case 'ru': $pattern = '/[^а-яa-z\d\.]/u'; break;
