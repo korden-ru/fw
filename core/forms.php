@@ -480,7 +480,7 @@ class forms
 				}
 				
 				$row = ' class="row'.($i%2+1).'" '.$sortId . $style_tr;
-				$cols .= '<tr '.$row. (!empty($this->U_EDIT) ? ' ondblclick="Redirect(arguments, \''.$this->U_EDIT.$value[$this->primary_id].'\');"' : '') . '>';
+				$cols .= '<tr '.$row. (!empty($this->U_EDIT) ? ' ondblclick="Redirect(arguments, \''.str_replace('\\', '\\\\', $this->U_EDIT).$value[$this->primary_id].'\');"' : '') . '>';
 			
 
 				//добавляем данные
@@ -524,7 +524,7 @@ class forms
 				if(!empty($this->U_EDIT))
 				{
 					$cols .= '<td>
-						<input class="button1" style="width:100%;" type="button" value="Изменить" onclick="Redirect(arguments, \''.$this->U_EDIT.$value[$this->primary_id].'\');" />
+						<input class="button1" style="width:100%;" type="button" value="Изменить" onclick="Redirect(arguments, \''.str_replace('\\', '\\\\', $this->U_EDIT).$value[$this->primary_id].'\');" />
 						<br />';
 				}
 
