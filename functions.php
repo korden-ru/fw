@@ -154,18 +154,6 @@ function getRusDate($date)
 	return $str;
 }
 
-//wrapper for stripslashes
-function st($text)
-{
-	return stripslashes($text);
-}
-
-//wrapper for stripslashes \ htmlspecialchars
-function stch($text)
-{
-	return htmlspecialchars($text, ENT_QUOTES);
-}
-
 //определяем ip пользователя
 function getip() 
 {
