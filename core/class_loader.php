@@ -24,7 +24,7 @@ class class_loader
 	{
 		if( $prefix && extension_loaded('apc') )
 		{
-			$this->apc_prefix = $prefix;
+			$this->apc_prefix = $prefix . '_';
 		}
 	}
 	
@@ -65,7 +65,10 @@ class class_loader
 			/* Пространства имен */
 			$namespace  = substr($class, 0, $pos);
 			$class_name = substr($class, $pos + 1);
-			$filename   = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR . $class_name . '.php';
+			
+			list(, $suffix) = explode('\\', $namespace, 2);
+			
+			$filename = str_replace('\\', DIRECTORY_SEPARATOR, $suffix) . DIRECTORY_SEPARATOR . $class_name . '.php';
 			
 			foreach( $this->namespaces as $ns => $dirs )
 			{

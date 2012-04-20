@@ -35,7 +35,8 @@ $src_root_path  = dirname(__FILE__) . '/';
 
 define('ROOT_PATH', $site_root_path);
 
-autoloader::register();
+require($src_root_path . 'core/profiler.php');
+require($src_root_path . 'core/class_loader.php');
 
 /* Профайлер подключается первым */
 $profiler = new core\profiler();
@@ -47,6 +48,14 @@ if( file_exists($site_root_path . '../config.php') )
 {
 	require($site_root_path . '../config.php');
 }
+
+$loader = new core\class_loader('');
+$loader->register_namespaces(array(
+	'engine' => __DIR__,
+	'app'    => rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/../modules',
+	'acp'    => rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/acp/includes',
+));
+$loader->register();
 
 /* Собственный обработчик ошибок */
 core\error_handler::register();
@@ -70,54 +79,5 @@ $template = new template\smarty();
 $user     = new core\user();
 $config   = new config\db($site_info, CONFIG_TABLE);
 
-// 
-
 $template->assign('cfg', $config);
 $template->assign('metaVersion', 1);
-
-/**
-* Автозагрузчик классов
-*/
-class autoloader
-{
-	/**
-	* Загрузка класса
-	*/
-	static public function autoload($class)
-	{
-		global $site_root_path, $src_root_path;
-		
-		if( strpos($class, '\\') === false )
-		{
-			return;
-		}
-		
-		list($prefix, $filename) = explode('/', str_replace('\\', '/', $class), 2);
-		
-		if( $prefix == 'engine' && file_exists($src_root_path . $filename . '.php') )
-		{
-			require($src_root_path . $filename . '.php');
-			return true;
-		}
-		elseif( defined('IN_ACP') && $prefix == 'app' && file_exists($site_root_path . 'acp/includes/' . $filename . '.php') )
-		{
-			require($site_root_path . 'acp/includes/' . $filename . '.php');
-			return true;
-		}
-		elseif( $prefix == 'app' && file_exists($site_root_path . '../modules/' . $filename . '.php') )
-		{
-			require($site_root_path . '../modules/' . $filename . '.php');
-			return true;
-		}
-		
-		return false;
-	}
-	
-	/**
-	* Регистрация загрузчика
-	*/
-	static public function register()
-	{
-		spl_autoload_register(array(new self, 'autoload'));
-	}
-}

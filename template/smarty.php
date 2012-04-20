@@ -8,6 +8,8 @@
 
 namespace engine\template;
 
+global $src_root_path;
+
 define('SMARTY_DIR', $src_root_path . 'lib/smarty/3.1.7/Smarty/');
 require(SMARTY_DIR . 'Smarty.class.php');
 
