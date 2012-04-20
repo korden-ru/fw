@@ -31,12 +31,12 @@ mb_internal_encoding('utf-8');
 
 $acp_root_path  = 'acp/';
 $site_root_path = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/';
-$src_root_path  = dirname(__FILE__) . '/';
+$src_root_path  = __DIR__ . '/';
 
 define('ROOT_PATH', $site_root_path);
 
 require($src_root_path . 'core/profiler.php');
-require($src_root_path . 'core/class_loader.php');
+require($src_root_path . 'core/autoloader.php');
 
 /* Профайлер подключается первым */
 $profiler = new core\profiler();
@@ -49,16 +49,16 @@ if( file_exists($site_root_path . '../config.php') )
 	require($site_root_path . '../config.php');
 }
 
-$loader = new core\class_loader('');
+$loader = new core\autoloader($acm_prefix);
 $loader->register_namespaces(array(
 	'engine' => __DIR__,
-	'app'    => rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/../modules',
-	'acp'    => rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/acp/includes',
+	'app'    => $site_root_path . '../modules',
+	'acp'    => $site_root_path . 'acp/includes',
 ));
 $loader->register();
 
 /* Собственный обработчик ошибок */
-core\error_handler::register();
+core\errorhandler::register();
 
 $request = new core\request();
 

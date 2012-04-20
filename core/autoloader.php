@@ -11,7 +11,7 @@ namespace engine\core;
 /**
 * Автозагрузчик классов
 */
-class class_loader
+class autoloader
 {
 	private $apc_prefix;
 	private $namespaces = array();
@@ -68,7 +68,7 @@ class class_loader
 			
 			list(, $suffix) = explode('\\', $namespace, 2);
 			
-			$filename = str_replace('\\', DIRECTORY_SEPARATOR, $suffix) . DIRECTORY_SEPARATOR . $class_name . '.php';
+			$filename = str_replace('\\', DIRECTORY_SEPARATOR, $suffix) . DIRECTORY_SEPARATOR . str_replace('_', DIRECTORY_SEPARATOR, $class_name) . '.php';
 			
 			foreach( $this->namespaces as $ns => $dirs )
 			{

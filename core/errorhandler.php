@@ -11,7 +11,7 @@ namespace engine\core;
 /**
 * Обработчик ошибок
 */
-class error_handler
+class errorhandler
 {
 	static public function handle_error($type, $text, $file, $line)
 	{
