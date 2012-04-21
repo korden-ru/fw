@@ -254,7 +254,7 @@ class profiler extends console
 
 		foreach( $files as $key => $file )
 		{
-			if( false !== strpos($file, '/Twig/') )
+			if( false !== strpos($file, '/Twig/') || false !== strpos($file, '/lib/') )
 			{
 				continue;
 			}
