@@ -65,8 +65,15 @@ class autoloader
 			/* Пространства имен */
 			$namespace  = substr($class, 0, $pos);
 			$class_name = substr($class, $pos + 1);
-			
-			list(, $suffix) = explode('\\', $namespace, 2);
+
+			if( false !== strpos($namespace, '\\') )
+			{
+				list(, $suffix) = explode('\\', $namespace, 2);
+			}
+			else
+			{
+				$suffix = '';
+			}
 			
 			$filename = str_replace('\\', DIRECTORY_SEPARATOR, $suffix) . DIRECTORY_SEPARATOR . str_replace('_', DIRECTORY_SEPARATOR, $class_name) . '.php';
 			
