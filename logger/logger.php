@@ -6,7 +6,7 @@
 *
 */
 
-namespace engine\core;
+namespace engine\logger;
 
 use Monolog\Logger as base_logger;
 

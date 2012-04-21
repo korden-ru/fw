@@ -12,13 +12,15 @@ use engine\cache\factory as cache_factory;
 use engine\config\db as config_db;
 use engine\core\autoloader;
 use engine\core\errorhandler;
-use engine\core\logger;
 use engine\core\profiler;
 use engine\core\request;
 use engine\core\user;
 use engine\db\mysqli as db_mysqli;
+use engine\logger\logger;
+// use engine\logger\handlers\db as db_logger;
 use engine\template\smarty;
-use Monolog\Handler\StreamHandler;
+// use Monolog\Handler\NativeMailerHandler;
+// use Monolog\Handler\StreamHandler;
 
 session_start();
 
@@ -67,6 +69,16 @@ $loader->register_namespaces(array(
 ));
 $loader->register();
 
+// $log = new logger('main');
+// $log->push_handler(new StreamHandler($site_root_path . '../logs/file', logger::DEBUG));
+// $log->push_handler(new NativeMailerHandler('src-work@ivacuum.ru', 'Monolog', 'www@bsd.korden.net', logger::DEBUG););
+// $log->push_processor(function($record) {
+// 	$record['extra']['ary'] = 'My message';
+// 	
+// 	return $record;
+// });
+// $log->info('hello');
+
 /* Собственный обработчик ошибок */
 errorhandler::register();
 
@@ -77,6 +89,8 @@ $factory = new cache_factory($acm_type, $acm_prefix);
 $cache   = $factory->get_service();
 
 $db = new db_mysqli($dbhost, $dbuser, $dbpass, $dbname, $dbport, $dbsock, $dbpers);
+// $log->push_handler(new db_logger($db));
+// $log->info('Привет!');
 
 if( false === strpos($_SERVER['SERVER_NAME'], '.korden.net') )
 {
