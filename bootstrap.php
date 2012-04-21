@@ -26,9 +26,6 @@ session_start();
 * Настройки, необходимые для
 * функционирования сайта
 */
-$_SESSION['user_login'] = ( isset($_SESSION['user_login']) ) ? $_SESSION['user_login'] : '';
-$_SESSION['user_passwd'] = ( isset($_SESSION['user_passwd']) ) ? $_SESSION['user_passwd'] : '';
-
 if( false !== strpos($_SERVER['SERVER_NAME'], '.korden.net') )
 {
 	error_reporting(E_ALL);
@@ -69,9 +66,6 @@ $loader->register_namespaces(array(
 	'acp'     => $site_root_path . 'acp/includes',
 ));
 $loader->register();
-
-$log = new logger('main');
-$log->push_handler(new StreamHandler($site_root_path . '../logs/file'), logger::DEBUG);
 
 /* Собственный обработчик ошибок */
 errorhandler::register();
