@@ -70,6 +70,20 @@ class errorhandler
 				echo '<h1>Сервис временно недоступен</h1>';
 				echo '<p>Отчет о произошедшей ошибке отправлен администратору.</p>';
 				echo '<p>Приносим извинения за доставленные неудобства.</p>';
+				
+				if( $_SERVER['REMOTE_ADDR'] == '85.21.240.187' || $_SERVER['REMOTE_ADDR'] == '79.195.20.190' || $_SERVER['REMOTE_ADDR'] == '192.168.1.1' )
+				{
+					if( defined('IN_SQL_ERROR') )
+					{
+						echo '<h2>Ошибка в SQL запросе</h2>';
+						echo '<ul>';
+						echo '<li>Код ошибки: <b>' . $error_ary['code'] . '</b></li>';
+						echo '<li>Текст ошибки: <b>' . $error_ary['text'] . '</b></li>';
+						echo '</ul>';
+						echo '<code>' . $error_ary['sql'] . '</code>';
+					}
+				}
+				
 				echo '</body>';
 				echo '</html>';
 				exit;
@@ -148,15 +162,15 @@ class errorhandler
 				case E_USER_ERROR:
 				
 					self::log_mail('Fatal error: ' . $error['message']);
-
-					if( $_SERVER['REMOTE_ADDR'] != '79.175.20.190' && $_SERVER['REMOTE_ADDR'] != '85.21.240.187' )
+					
+					if( $_SERVER['REMOTE_ADDR'] != '79.175.20.190' && $_SERVER['REMOTE_ADDR'] != '85.21.240.187' && $_SERVER['REMOTE_ADDR'] != '192.168.1.1' )
 					{
 						return;
 					}
 
 					$error['file'] = str_replace($_SERVER['DOCUMENT_ROOT'], '', $error['file']);
 
-					printf('<b style="color: red;">***</b> <b style="white-space: pre-line;">%s</b> on line <b>%d</b> in file <b>%s</b>.<br />', $error['message'], $error['line'], $error['file']);
+					printf('<br><br><b style="color: red;">***</b> <b style="white-space: pre-line;">%s</b> on line <b>%d</b> in file <b>%s</b>.<br />', $error['message'], $error['line'], $error['file']);
 
 					if( function_exists('xdebug_print_function_stack') )
 					{
