@@ -8,7 +8,19 @@
 
 namespace engine;
 
-session_start(); 
+use engine\cache\factory as cache_factory;
+use engine\config\db as config_db;
+use engine\core\autoloader;
+use engine\core\errorhandler;
+use engine\core\logger;
+use engine\core\profiler;
+use engine\core\request;
+use engine\core\user;
+use engine\db\mysqli as db_mysqli;
+use engine\template\smarty;
+use Monolog\Handler\StreamHandler;
+
+session_start();
 
 /**
 * Настройки, необходимые для
@@ -39,7 +51,7 @@ require($src_root_path . 'core/profiler.php');
 require($src_root_path . 'core/autoloader.php');
 
 /* Профайлер подключается первым */
-$profiler = new core\profiler();
+$profiler = new profiler();
 
 require($src_root_path . 'functions.php');
 require($src_root_path . 'config.php');
@@ -49,24 +61,28 @@ if( file_exists($site_root_path . '../config.php') )
 	require($site_root_path . '../config.php');
 }
 
-$loader = new core\autoloader($acm_prefix);
+$loader = new autoloader($acm_prefix);
 $loader->register_namespaces(array(
-	'engine' => __DIR__,
-	'app'    => $site_root_path . '../modules',
-	'acp'    => $site_root_path . 'acp/includes',
+	'engine'  => __DIR__,
+	'Monolog' => __DIR__ . '/lib/monolog/1.0.3/Monolog',
+	'app'     => $site_root_path . '../modules',
+	'acp'     => $site_root_path . 'acp/includes',
 ));
 $loader->register();
 
-/* Собственный обработчик ошибок */
-core\errorhandler::register();
+$log = new logger('main');
+$log->push_handler(new StreamHandler($site_root_path . '../logs/file'), logger::DEBUG);
 
-$request = new core\request();
+/* Собственный обработчик ошибок */
+errorhandler::register();
+
+$request = new request();
 
 /* Инициализация кэша */
-$factory = new cache\factory($acm_type, $acm_prefix);
+$factory = new cache_factory($acm_type, $acm_prefix);
 $cache   = $factory->get_service();
 
-$db = new db\mysqli($dbhost, $dbuser, $dbpass, $dbname, $dbport, $dbsock, $dbpers);
+$db = new db_mysqli($dbhost, $dbuser, $dbpass, $dbname, $dbport, $dbsock, $dbpers);
 
 if( false === strpos($_SERVER['SERVER_NAME'], '.korden.net') )
 {
@@ -75,9 +91,9 @@ if( false === strpos($_SERVER['SERVER_NAME'], '.korden.net') )
 }
 
 /* Инициализация классов */
-$template = new template\smarty();
-$user     = new core\user();
-$config   = new config\db($site_info, CONFIG_TABLE);
+$template = new smarty();
+$user     = new user();
+$config   = new config_db($site_info, CONFIG_TABLE);
 
 $template->assign('cfg', $config);
 $template->assign('metaVersion', 1);
