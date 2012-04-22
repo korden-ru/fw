@@ -21,18 +21,23 @@ class router
 	public $page_row;
 	public $site_id;
 	public $url;
-	
+
+	protected $config;
+	protected $db;
 	protected $namespace;
 	protected $params = array();
 	protected $params_count;
+	protected $request;
+	protected $site_info = array();
+	protected $user;
 
-	function __construct($url = '', $namespace = '\\app\\')
+	function __construct($config, $user, $url = '', $namespace = '\\app\\')
 	{
-		global $config, $user;
-		
+		$this->config    = $config;
 		$this->format    = $config['router_default_extension'];
 		$this->namespace = $namespace;
 		$this->page      = $config['router_directory_index'];
+		$this->user      = $user;
 		
 		$url = ( $url ) ?: htmlspecialchars_decode($user->page);
 		
@@ -92,6 +97,8 @@ class router
 		}
 		
 		$this->params_count = sizeof($this->params);
+		
+		return $this;
 	}
 	
 	/**
@@ -115,8 +122,6 @@ class router
 	*/
 	public function handle_request()
 	{
-		global $config;
-		
 		$dynamic_handle = false;
 		$handler_name = $handler_method = '';
 		$parent_id = 0;
@@ -135,7 +140,7 @@ class router
 				$handler_method = $row['handler_method'];
 			}
 			
-			if( $this->page != $config['router_directory_index'] )
+			if( $this->page != $this->config['router_directory_index'] )
 			{
 				$this->page_link[] = ( $this->format ) ? sprintf('%s.%s', $this->page, $this->format) : $this->page;
 			}
@@ -211,7 +216,7 @@ class router
 		*/
 		if( $this->params_count > 0 && !$dynamic_handle && false != $ary = $this->get_page_row_by_url($this->page, false, $parent_id) )
 		{
-			if( $this->page != $config['router_directory_index'] || $ary['page_url'] != '*' )
+			if( $this->page != $this->config['router_directory_index'] || $ary['page_url'] != '*' )
 			{
 				$row = $ary;
 			
@@ -225,7 +230,7 @@ class router
 					$handler_method = 'static_page';
 				}
 
-				if( $this->page != $config['router_directory_index'] )
+				if( $this->page != $this->config['router_directory_index'] )
 				{
 					$this->page_link[] = ( $this->format ) ? sprintf('%s.%s', $this->page, $this->format) : $this->page;
 				}
@@ -274,7 +279,21 @@ class router
 		
 		return $this->load_handler($handler_name, $handler_method, $this->params);
 	}
-
+	
+	public function set_db($db)
+	{
+		$this->db = $db;
+		
+		return $this;
+	}
+	
+	public function set_request($request)
+	{
+		$this->request = $request;
+		
+		return $this;
+	}
+	
 	/**
 	* Загрузка модуля
 	*/
@@ -303,21 +322,19 @@ class router
 	*/
  	protected function load_handler_with_params($params = array())
 	{
-		global $config, $request;
-		
-		$concrete_method = sprintf('%s_%s', $this->method, $request->method);
+		$concrete_method = sprintf('%s_%s', $this->method, $this->request->method);
 
 		/**
 		* Проверка существования необходимого метода у обработчика
 		*/
 		if( !method_exists($this->handler, $concrete_method) && !method_exists($this->handler, $this->method) )
 		{
-			if( $config['router_send_status_codes'] )
+			if( $this->config['router_send_status_codes'] )
 			{
 				/**
 				* API-сайт должен отправлять соответствующие коды состояния HTTP
 				*/
-				if( $request->method == 'get' || !method_exists($this->handler, $this->method . '_get') )
+				if( $this->request->method == 'get' || !method_exists($this->handler, $this->method . '_get') )
 				{
 					send_status_line(501, 'Not Implemented');
 				}
@@ -336,7 +353,7 @@ class router
 			}
 		}
 		
-		$full_url = $this->url . (($this->page != $config['router_directory_index']) ? (($this->format) ? sprintf('/%s.%s', $this->page, $this->format) : $this->page) : '');
+		$full_url = $this->url . (($this->page != $this->config['router_directory_index']) ? (($this->format) ? sprintf('/%s.%s', $this->page, $this->format) : $this->page) : '');
 		
 		/* Параметры обработчика */
 		$this->handler->data     = $this->page_row;
@@ -348,7 +365,11 @@ class router
 		$this->handler->url      = implode('/', $this->page_link);
 		
 		/* Настройка обработчика */
-		$this->handler->obtain_handlers_urls()
+		$this->handler->_set_config($this->config)
+			->_set_db($this->db)
+			->_set_request($this->request)
+			->_set_user($this->user)
+			->obtain_handlers_urls()
 			->set_default_template()
 			->set_site_menu()
 			->set_page_data()
@@ -403,28 +424,26 @@ class router
 	*/
 	protected function get_page_row_by_url($page_url, $is_dir = 1, $parent_id = 0)
 	{
-		global $db;
-		
 		$sql = '
 			SELECT
 				*
 			FROM
 				' . PAGES_TABLE . '
 			WHERE
-				parent_id = ' . $db->check_value($parent_id) . '
+				parent_id = ' . $this->db->check_value($parent_id) . '
 			AND
-				site_id = ' . $db->check_value($this->site_id) . '
+				site_id = ' . $this->db->check_value($this->site_id) . '
 			AND
-				' . $db->in_set('page_url', array($page_url, '*')) . '
+				' . $this->db->in_set('page_url', array($page_url, '*')) . '
 			AND
-				is_dir = ' . $db->check_value($is_dir) . '
+				is_dir = ' . $this->db->check_value($is_dir) . '
 			AND
 				page_enabled = 1
 			ORDER BY
 				LENGTH(page_url) DESC';
-		$db->query_limit($sql, 1);
-		$row = $db->fetchrow();
-		$db->freeresult();
+		$this->db->query_limit($sql, 1);
+		$row = $this->db->fetchrow();
+		$this->db->freeresult();
 		
 		/* Загрузка блока */
 		if( !$row && !$is_dir && $parent_id )

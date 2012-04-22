@@ -32,14 +32,52 @@ class page
 	
 	function __construct()
 	{
-		global $cache, $config, $db, $request, $template, $user;
+		global $cache, $template;
 		
 		$this->cache    =& $cache;
-		$this->config   =& $config;
-		$this->db       =& $db;
-		$this->request  =& $request;
 		$this->template =& $template;
-		$this->user     =& $user;
+	}
+	
+	public function _set_cache($cache)
+	{
+		$this->cache = $cache;
+		
+		return $this;
+	}
+	
+	public function _set_config($config)
+	{
+		$this->config = $config;
+		
+		return $this;
+	}
+	
+	public function _set_db($db)
+	{
+		$this->db = $db;
+		
+		return $this;
+	}
+	
+	public function _set_request($request)
+	{
+		$this->request = $request;
+		
+		return $this;
+	}
+	
+	public function _set_template($template)
+	{
+		$this->template = $template;
+		
+		return $this;
+	}
+	
+	public function _set_user($user)
+	{
+		$this->user = $user;
+		
+		return $this;
 	}
 	
 	/**
