@@ -1,0 +1,185 @@
+<script>
+function changeTab(tab)
+{
+  $('#pQp').removeClass('console speed queries memory files').addClass(tab);
+}
+
+function toggleDetails()
+{
+  $('#pqp-container').toggleClass('hideDetails');
+  $('#pqp-metrics').toggle();
+  $('#profiler_short_data').toggle();
+}
+
+function hideProfiler()
+{
+  $('#pqp-container').empty();
+}
+
+$(function() {
+  $('head').append('<link rel="stylesheet" type="text/css" href="//korden.net/i/profiler/style.css">');
+  setTimeout(function() { $('#pqp-container').show(); }, 1);
+});
+</script>
+
+<div id="pqp-container" class="pQp hideDetails tallDetails" style="display: none;">
+<div id="pQp" class="console">
+	<table id="pqp-metrics" cellspacing="0" style="display: none;">
+	<tr>
+		<td class="green" onclick="changeTab('console');">
+			<var>{$LOGS_COUNT}</var>
+			<h4>Консоль</h4>
+		</td>
+		<td class="blue" onclick="changeTab('speed');">
+			<var>{$SPEED_TOTAL}</var>
+			<h4>Время загрузки</h4>
+		</td>
+		<td class="purple" onclick="changeTab('queries');">
+			<var>{$QUERY_COUNT_TEXT}</var>
+			<h4>База данных</h4>
+		</td>
+		<td class="orange" onclick="changeTab('memory');">
+			<var>{$MEMORY_USED}</var>
+			<h4>Расход памяти</h4>
+		</td>
+		<td class="red" onclick="changeTab('files');">
+			<var>{$FILE_COUNT_TEXT}</var>
+			<h4>Загружено</h4>
+		</td>
+	</tr>
+	</table>
+
+	<div id="pqp-console" class="pqp-box">
+		{if $LOGS_COUNT == 0}
+			<h3>Нет данных</h3>
+		{else}
+			<table class="side" cellspacing="0">
+				<tr>
+					<td class="alt1"><var>{$LOG_COUNT}</var><h4>Logs</h4></td>
+					<td class="alt2"><var>{$ERROR_COUNT}</var> <h4>Errors</h4></td>
+				</tr>
+				<tr>
+					<td class="alt3"><var>{$MEMORY_COUNT}</var> <h4>Memory</h4></td>
+					<td class="alt4"><var>{$SPEED_COUNT}</var> <h4>Speed</h4></td>
+				</tr>
+			</table>
+			<div style="float: left; overflow: auto; width: 80%;">
+			<table class="main" cellspacing="0">
+			{foreach $profiler_logs as $row}
+				<tr class="log-{$row.type}">
+					<td class="type">{$row.type}</td>
+					<td class="{cycle values="alt,"}">
+					{if $row.type == 'log'}
+						<div><pre>{$row.data}</pre></div>
+					{elseif $row.type == 'memory'}
+						<div><pre>{$row.data}</pre> <em>{$row.data_type}</em>: {$row.name} </div>
+					{elseif $row.type == 'speed'}
+						<div><pre>{$row.data}</pre> <em>{$row.name}</em></div>
+					{elseif $row.type == 'error'}
+						<div><em>Line {$row.line}</em> : {$row.data} <pre>{$row.call_stack}</pre></div>
+					{/if}
+					</td>
+				</tr>
+			{/foreach}
+			</table>
+			</div>
+		{/if}
+	</div>
+
+	<div id="pqp-speed" class="pqp-box">
+		{if $SPEED_COUNT == 0}
+			<h3>Нет данных</h3>
+		{else}
+			<table class="side" cellspacing="0">
+				<tr><td><var>{$SPEED_TOTAL}</var><h4>Load Time</h4></td></tr>
+				<tr><td class="alt"><var>{$SPEED_ALLOWED}</var> <h4>Max Execution Time</h4></td></tr>
+			</table>
+			<div style="float: left; overflow: auto; width: 80%;">
+			<table class="main" cellspacing="0">
+				{foreach $profiler_logs as $row}
+					{if $row.type == 'speed'}
+						<tr class="log-{$row.type}"><td class="{cycle values="alt,"}"><div><pre>{$row.data}</pre> <em>{$row.name}</em></div></td></tr>
+					{/if}
+				{/foreach}
+			</table>
+			</div>
+		{/if}
+	</div>
+
+	<div id="pqp-queries" class="pqp-box">
+		{if $QUERY_COUNT == 0}
+			<h3>Нет данных</h3>
+		{else}
+			<table class="side" cellspacing="0">
+				<tr><td><var>{$QUERY_COUNT}</var><h4>Total Queries</h4></td></tr>
+				<tr><td class="alt"><var>{$QUERY_CACHED}</var><h4>Total Time</h4></td></tr>
+				<tr><td><var>{$QUERY_TIME}</var> <h4>Duplicates</h4></td></tr>
+			</table>
+			<div style="float: left; overflow: auto; width: 80%;">
+			<table class="main" cellspacing="0">
+				{foreach $profiler_queries as $row}
+					<tr><td class="{cycle values="alt,"}">{$row.sql} <em>{$row.time}{if $row.cached} <span style="color: #ffd700;">(cached)</span>{/if}</em></td></tr>
+				{/foreach}
+			</table>
+			</div>
+		{/if}
+	</div>
+
+	<div id="pqp-memory" class="pqp-box">
+		{if $MEMORY_COUNT == 0}
+			<h3>Нет данных</h3>
+		{else}
+			<table class="side" cellspacing="0">
+				<tr><td><var>{$MEMORY_USED}</var><h4>Used Memory</h4></td></tr>
+				<tr><td class="alt"><var>{$MEMORY_TOTAL}</var> <h4>Total Available</h4></td></tr>
+			</table>
+			<div style="float: left; overflow: auto; width: 80%;">
+			<table class="main" cellspacing="0">
+				{foreach $profiler_logs as $row}
+					{if $row.type == 'memory'}
+						<tr class="log-{$row.type}"><td class="{cycle values="alt,"}"><b>{$row.data}</b> <em>{$row.data_type}</em>: {$row.name}</td></tr>
+					{/if}
+				{/foreach}
+			</table>
+			</div>
+		{/if}
+	</div>
+
+	<div id="pqp-files" class="pqp-box">
+		{if $FILE_COUNT == 0}
+			<h3>Нет данных</h3>
+		{else}
+			<table class="side" cellspacing="0">
+				<tr><td><var>{$FILE_COUNT}</var><h4>Total Files</h4></td></tr>
+				<tr><td class="alt"><var>{$FILE_SIZE}</var><h4>Total Size</h4></td></tr>
+				<tr><td><var>{$FILE_LARGEST}</var><h4>Largest</h4></td></tr>
+			</table>
+			<div style="float: left; overflow: auto; width: 80%;">
+			<table class="main" cellspacing="0">
+				{foreach $profiler_files as $row}
+					<tr><td class="{cycle values="alt,"}"><b>{$row.size}</b> {$row.name}</td></tr>
+				{/foreach}
+			</table>
+			</div>
+		{/if}
+	</div>
+
+	<table id="pqp-footer" cellspacing="0">
+		<tr>
+			<td id="profiler_short_data">
+				<ul>
+					<li><img src="//korden.net/i/_/application_monitor.png" alt=""> <span class="green">{$LOGS_COUNT}</span></li>
+					<li><img src="//korden.net/i/_/dashboard.png" alt=""> <span class="blue">{$SPEED_TOTAL}</span></li>
+					<li><img src="//korden.net/i/_/database_sql.png" alt=""> <span class="purple">{$QUERY_COUNT_TEXT}</span></li>
+					<li><img src="//korden.net/i/_/memory.png" alt=""> <span class="orange">{$MEMORY_USED}</span></li>
+					<li><img src="//korden.net/i/_/document_php.png" alt=""> <span class="red">{$FILE_COUNT_TEXT}</span></li>
+				</ul>
+			</td>
+			<td class="actions">
+				<a onclick="hideProfiler(); return false;">&times;</a>
+				<a onclick="toggleDetails(); return false">Подробности</a>
+			</td>
+		</tr>
+	</table>
+</div>
+</div>
