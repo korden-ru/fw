@@ -348,11 +348,11 @@ class router
 		$this->handler->url      = implode('/', $this->page_link);
 		
 		/* Настройка обработчика */
-		$this->handler->obtain_handlers_urls();
-		$this->handler->set_default_template();
-		$this->handler->set_site_menu();
-		$this->handler->set_page_data();
-		$this->handler->set_appropriate_content_type();
+		$this->handler->obtain_handlers_urls()
+			->set_default_template()
+			->set_site_menu()
+			->set_page_data()
+			->set_appropriate_content_type();
 		
 		/* Предустановки */
 		if( method_exists($this->handler, '_setup') )

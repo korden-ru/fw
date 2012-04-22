@@ -272,6 +272,8 @@ class page
 				$this->urls[substr($method, $pos)] = $url;
 			}
 		}
+		
+		return $this;
 	}
 
 	/**
@@ -281,7 +283,7 @@ class page
 	{
 		if( defined('HEADER_PRINTED') )
 		{
-			return;
+			return $this;
 		}
 		
 		/* Запрет кэширования страниц */
@@ -294,6 +296,7 @@ class page
 		$this->template->assign('copy_year', $copy_year);
 
 		define('HEADER_PRINTED', true);
+		return $this;
 	}
 
 	/**
@@ -306,13 +309,8 @@ class page
 			$this->template->display();
 		}
 		
-		$display_profiler = false;
-		
 		/* Вывод профайлера только для html-документов */
-		if( $this->format == 'html' )
-		{
-			$display_profiler = true;
-		}
+		$display_profiler = $this->format === 'html';
 
 		garbage_collection($display_profiler);
 		exit;
@@ -329,10 +327,11 @@ class page
 			case 'xml':  $type = 'text/xml'; break;
 
 			/* Веб-сервер по умолчанию устанавливает text/html */
-			default: return true;
+			default: return $this;
 		}
 		
 		header('Content-type: ' . $type . '; charset=utf-8');
+		return $this;
 	}
 
 	/**
@@ -346,7 +345,7 @@ class page
 	{
 		if( !$this->format )
 		{
-			return;
+			return $this;
 		}
 		
 		$filename = str_replace('\\', '/', get_class($this));
@@ -367,6 +366,8 @@ class page
 		{
 			$this->template->file = sprintf('ajax/%s_%s.%s', $filename, $this->method, $this->format);
 		}
+		
+		return $this;
 	}
 	
 	/**
@@ -375,6 +376,8 @@ class page
 	public function set_page_data()
 	{
 		$this->template->assign('page', $this->data);
+		
+		return $this;
 	}
 
 	/**
@@ -410,6 +413,8 @@ class page
 			
 			$this->template->append('menu', $row);
 		}
+		
+		return $this;
 	}
 
 	/**
@@ -429,6 +434,8 @@ class page
 				'U_VIEW' => $this->descendant_link($row)
 			));
 		}
+		
+		return $this;
 	}
 	
 	/**
@@ -460,6 +467,8 @@ class page
 		}
 		
 		$this->set_page_data();
+		
+		return $this;
 	}
 
 	/**
@@ -481,7 +490,7 @@ class page
 				if( $page_url == $menu[$i]['URL'] )
 				{
 					$menu[$i]['ACTIVE'] = true;
-					return;
+					return $this;
 				}
 			}
 			else
@@ -495,9 +504,11 @@ class page
 						$this->recursive_set_menu_active_items($menu[$i]['children'], $menu[$i]['URL']);
 					}
 					
-					return;
+					return $this;
 				}
 			}
 		}
+		
+		return $this;
 	}
 }
