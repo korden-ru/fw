@@ -16,7 +16,7 @@ use engine\core\profiler;
 use engine\core\request;
 use engine\core\user;
 use engine\db\mysqli as db_mysqli;
-use engine\logger\logger;
+// use engine\logger\logger;
 // use engine\logger\handlers\db as db_logger;
 use engine\template\smarty;
 // use Monolog\Handler\NativeMailerHandler;

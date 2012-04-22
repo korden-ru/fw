@@ -19,11 +19,22 @@ class smarty extends \Smarty
 	
 	function __construct()
 	{
-		global $site_root_path;
+		global $site_root_path, $src_root_path;
 
 		parent::__construct();
+		
+		if( defined('IN_ACP') )
+		{
+			$this->setTemplateDir($site_root_path . 'acp/templates/');
+		}
+		else
+		{
+			$this->setTemplateDir(array(
+				'app'    => $site_root_path . '../templates',
+				'engine' => $src_root_path . 'templates',
+			));
+		}
 
-		$this->template_dir = defined('IN_ACP') ? $site_root_path . 'acp/templates/' : $site_root_path . '../templates/';
 		$this->compile_dir  = $site_root_path . '../cache/templates/';
 
 		$this->caching         = false;
