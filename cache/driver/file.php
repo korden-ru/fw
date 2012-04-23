@@ -28,7 +28,7 @@ class file
 		global $site_root_path;
 		
 		$this->set_prefix($prefix);
-		$this->cache_dir = $site_root_path . 'cache/';
+		$this->cache_dir = $site_root_path . '../cache/';
 	}
 	
 	/**
