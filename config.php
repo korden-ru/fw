@@ -8,6 +8,29 @@
 
 namespace engine;
 
+$app = array(
+	/* Настройки подключения к БД */
+	'db.host' => 'localhost',
+	'db.port' => false,
+	'db.name' => '',
+	'db.user' => '',
+	'db.pass' => '',
+	'db.sock' => '',
+	'db.pers' => false,
+	
+	/* Настройки кэша */
+	'acm.prefix' => 'src',
+	'acm.type'   => 'null',
+	
+	/* Типы страниц */
+	'page.types' => array(
+		'Текстовая'            => 0,
+		'Текстовая с галереей' => 1,
+		'Текстовая с блоками'  => 2,
+		'Блоки'                => 3,
+	),
+);
+
 /* Настройки подключения к БД */
 $dbhost = 'localhost';
 $dbport = false;

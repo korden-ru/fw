@@ -8,16 +8,47 @@
 
 namespace engine\core;
 
+use engine\cache\factory as cache_factory;
+use engine\db\mysqli as db_mysqli;
+
 /**
 * Контейнер приложения
 */
-class application implements ArrayAccess
+class application implements \ArrayAccess
 {
+	const VERSION = '3.5-dev';
+	
 	private $values;
 	
 	public function __construct(array $values = array())
 	{
 		$this->values = $values;
+		
+		$app = $this;
+		
+		/* Автозагрузчик классов */
+		$this['autoloader'] = $this->share(function() use ($app) {
+			$loader = new autoloader($app['acm.prefix']);
+			$loader->register();
+			
+			return $loader;
+		});
+		
+		/* Подключение к базе данных */
+		$this['db'] = $this->share(function() use ($app) {
+			return new db_mysqli($app['db.host'], $app['db.user'], $app['db.pass'], $app['db.name'], $app['db.port'], $app['db.sock'], $app['db.pers']);
+		});
+		
+		/* Данные запроса */
+		$this['request'] = $this->share(function() {
+			return new request();
+		});
+		
+		/* Инициализация кэша */
+		$this['cache'] = $this->share(function() use ($app) {
+			$factory = new cache_factory($app['acm.type'], $app['acm.prefix']);
+			return $factory->get_service();
+		});
 	}
 	
 	/**
@@ -25,7 +56,7 @@ class application implements ArrayAccess
 	*
 	* Полезно, когда необходимо расширить объект, не инициализируя его
 	*/
-	public function extend($id, Closure $callable)
+	public function extend($id, \Closure $callable)
 	{
 		if( !array_key_exists($id, $this->values) )
 		{
@@ -34,7 +65,7 @@ class application implements ArrayAccess
 		
 		$factory = $this->values[$id];
 		
-		if( !($factory instanceof Closure) )
+		if( !($factory instanceof \Closure) )
 		{
 			trigger_error(sprintf('Ключ "%s" не содержит объект.', $id));
 		}
@@ -49,7 +80,7 @@ class application implements ArrayAccess
 	* Данный объект не будет вызван при обращении
 	* Его необходимо вызывать вручную
 	*/
-	public function protect(Closure $callable)
+	public function protect(\Closure $callable)
 	{
 		return function ($c) use ($callable)
 		{
@@ -73,7 +104,7 @@ class application implements ArrayAccess
 	/**
 	* Объект-одиночка
 	*/
-	public function share(Closure $callable)
+	public function share(\Closure $callable)
 	{
 		return function ($c) use ($callable)
 		{
@@ -100,7 +131,7 @@ class application implements ArrayAccess
 			trigger_error(sprintf('Ключ "%s" не найден.', $id));
 		}
 		
-		return $this->values[$id] instanceof Closure ? $this->values[$id]($this) : $this->values[$id];
+		return $this->values[$id] instanceof \Closure ? $this->values[$id]($this) : $this->values[$id];
 	}
 	
 	public function offsetSet($id, $value)
