@@ -34,9 +34,9 @@ class router
 	function __construct($config, $user, $url = '', $namespace = '\\app\\')
 	{
 		$this->config    = $config;
-		$this->format    = $config['router_default_extension'];
+		$this->format    = $config['router.default_extension'];
 		$this->namespace = $namespace;
-		$this->page      = $config['router_directory_index'];
+		$this->page      = $config['router.directory_index'];
 		$this->user      = $user;
 		
 		$url = ( $url ) ?: htmlspecialchars_decode($user->page);
@@ -63,7 +63,7 @@ class router
 		if( isset($ary['extension']) )
 		{
 			/* Обращение к странице */
-			if( !in_array($ary['extension'], explode(';', $config['router_allowed_extensions']), true) )
+			if( !in_array($ary['extension'], explode(';', $config['router.allowed_extensions']), true) )
 			{
 				trigger_error('PAGE_NOT_FOUND');
 			}
@@ -79,7 +79,7 @@ class router
 			* Обращение к странице без расширения
 			* Проверяем, можно ли обращаться к страницам без расширения
 			*/
-			if( in_array('', explode(';', $config['router_allowed_extensions']), true) )
+			if( in_array('', explode(';', $config['router.allowed_extensions']), true) )
 			{
 				$this->params = ( $ary['dirname'] != '.' ) ? explode('/', $ary['dirname']) : array();
 				$this->page   = $ary['filename'];
@@ -140,7 +140,7 @@ class router
 				$handler_method = $row['handler_method'];
 			}
 			
-			if( $this->page != $this->config['router_directory_index'] )
+			if( $this->page != $this->config['router.directory_index'] )
 			{
 				$this->page_link[] = ( $this->format ) ? sprintf('%s.%s', $this->page, $this->format) : $this->page;
 			}
@@ -216,7 +216,7 @@ class router
 		*/
 		if( $this->params_count > 0 && !$dynamic_handle && false != $ary = $this->get_page_row_by_url($this->page, false, $parent_id) )
 		{
-			if( $this->page != $this->config['router_directory_index'] || $ary['page_url'] != '*' )
+			if( $this->page != $this->config['router.directory_index'] || $ary['page_url'] != '*' )
 			{
 				$row = $ary;
 			
@@ -230,7 +230,7 @@ class router
 					$handler_method = 'static_page';
 				}
 
-				if( $this->page != $this->config['router_directory_index'] )
+				if( $this->page != $this->config['router.directory_index'] )
 				{
 					$this->page_link[] = ( $this->format ) ? sprintf('%s.%s', $this->page, $this->format) : $this->page;
 				}
@@ -329,7 +329,7 @@ class router
 		*/
 		if( !method_exists($this->handler, $concrete_method) && !method_exists($this->handler, $this->method) )
 		{
-			if( $this->config['router_send_status_codes'] )
+			if( $this->config['router.send_status_codes'] )
 			{
 				/**
 				* API-сайт должен отправлять соответствующие коды состояния HTTP
@@ -353,7 +353,7 @@ class router
 			}
 		}
 		
-		$full_url = $this->url . (($this->page != $this->config['router_directory_index']) ? (($this->format) ? sprintf('/%s.%s', $this->page, $this->format) : $this->page) : '');
+		$full_url = $this->url . (($this->page != $this->config['router.directory_index']) ? (($this->format) ? sprintf('/%s.%s', $this->page, $this->format) : $this->page) : '');
 		
 		/* Параметры обработчика */
 		$this->handler->data     = $this->page_row;

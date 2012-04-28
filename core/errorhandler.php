@@ -107,7 +107,7 @@ class errorhandler
 					$handler = new \app\models\page();
 					$handler->data['site_id'] = $site_info['id'];
 					$handler->set_site_menu();
-					$handler->format = ( !empty($router) ) ? $router->format : $config['router_default_extension'];
+					$handler->format = ( !empty($router) ) ? $router->format : $config['router.default_extension'];
 				}
 			
 				/* Запрет индексирования страницы */

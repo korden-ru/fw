@@ -544,7 +544,7 @@ function ilink($url = '', $prefix = false)
 	$link .= $url;
 	$ary = pathinfo($url);
 	
-	if( isset($ary['extension']) || substr($link, -1) == '/' || !$config['router_default_extension'] )
+	if( isset($ary['extension']) || substr($link, -1) == '/' || !$config['router.default_extension'] )
 	{
 		return $link;
 	}

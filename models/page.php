@@ -115,7 +115,7 @@ class page
 			$base_url = isset($ary['extension']) ? $ary['dirname'] : $this->url;
 		}
 		
-		$url = ( $row['is_dir'] ) ? $row['page_url'] : (($row['page_url'] != $this->config['router_directory_index']) ? (($this->format) ? sprintf('%s.%s', $row['page_url'], $this->format) : $row['page_url']) : '');
+		$url = ( $row['is_dir'] ) ? $row['page_url'] : (($row['page_url'] != $this->config['router.directory_index']) ? (($this->format) ? sprintf('%s.%s', $row['page_url'], $this->format) : $row['page_url']) : '');
 		
 		return ilink(sprintf('%s/%s', $base_url, $url));
 	}

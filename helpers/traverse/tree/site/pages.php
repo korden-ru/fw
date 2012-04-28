@@ -31,7 +31,7 @@ class site_pages extends tree
 	{
 		global $config;
 		
-		$this->base_url[] = ( $this->row['is_dir'] ) ? $this->row['page_url'] : (($this->row['page_url'] == $config['router_directory_index']) ? '' : (($config['router_default_extension']) ? sprintf('%s.%s', $this->row['page_url'], $config['router_default_extension']) : $this->row['page_url']));
+		$this->base_url[] = ( $this->row['is_dir'] ) ? $this->row['page_url'] : (($this->row['page_url'] == $config['router.directory_index']) ? '' : (($config['router.default_extension']) ? sprintf('%s.%s', $this->row['page_url'], $config['router.default_extension']) : $this->row['page_url']));
 		
 		return ( $this->return_as_tree ) ? array('url' => ilink(implode('/', $this->base_url)), 'children' => array()) : ilink(implode('/', $this->base_url));
 	}
