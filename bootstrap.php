@@ -33,10 +33,6 @@ mb_internal_encoding('utf-8');
 require(FW_DIR . 'core/profiler.php');
 require(FW_DIR . 'core/application.php');
 require(FW_DIR . 'core/autoloader.php');
-
-/* Профайлер подключается первым */
-$profiler = new profiler();
-
 require(FW_DIR . 'functions.php');
 require(FW_DIR . 'config.php');
 
@@ -46,6 +42,8 @@ if( file_exists(SITE_DIR . '../config.php') )
 }
 
 $app = new application($app);
+
+$profiler = $app['profiler'];
 
 $app['autoloader']->register_namespaces(array(
 	'engine'  => __DIR__,

@@ -15,7 +15,7 @@ class errorhandler
 {
 	static public function handle_error($type, $text, $file, $line)
 	{
-		global $profiler, $request;
+		global $app;
 		
 		/* Выходим, если проверка отключена через @ */
 		/*
@@ -25,7 +25,7 @@ class errorhandler
 		}
 		*/
 		
-		$file = str_replace($request->server('DOCUMENT_ROOT'), '', $file);
+		$file = str_replace($app['request']->server('DOCUMENT_ROOT'), '', $file);
 		
 		switch( $type )
 		{
@@ -35,7 +35,7 @@ class errorhandler
 			case E_NOTICE:
 			case E_WARNING:
 			
-				$profiler->log_error($text, $line, $file);
+				$app['profiler']->log_error($text, $line, $file);
 				return;
 
 			break;
@@ -187,8 +187,6 @@ class errorhandler
 	*/
 	static public function log_mail($text, $title = '')
 	{
-		global $request;
-		
 		$call_stack = '';
 		$text       = is_array($text) ? print_r($text, true) : $text;
 		

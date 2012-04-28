@@ -325,32 +325,32 @@ function remote_file_upload ($subname='uploads/banners/',$params=array(),$filena
 */
 function garbage_collection($display_profiler = true)
 {
-	global $config, $db, $profiler, $request;
+	global $app, $config;
 
-	if( !empty($profiler) )
+	if( !empty($app['profiler']) )
 	{
-		if( $display_profiler && !$request->is_ajax && !defined('IN_SQL_ERROR') )
+		if( $display_profiler && !$app['request']->is_ajax && !defined('IN_SQL_ERROR') )
 		{
 			if( $config['profiler.enabled'] && ($_SERVER['REMOTE_ADDR'] == '79.175.20.190' || false !== strpos($_SERVER['SERVER_NAME'], '.korden.net')) )
 			{
-				$profiler->display();
+				$app['profiler']->display();
 			}
 		}
 
 		if( $config['profiler.send_stats'] )
 		{
-			$profiler->send_stats($config['profiler.remote_host'], $config['profiler.remote_port']);
+			$app['profiler']->send_stats($config['profiler.remote_host'], $config['profiler.remote_port']);
 		}
 	}
 	
-	if( !empty($cache) )
+	if( !empty($app['cache']) )
 	{
-		$cache->unload();
+		$app['cache']->unload();
 	}
 
-	if( !empty($db) )
+	if( !empty($app['db']) )
 	{
-		$db->close();
+		$app['db']->close();
 	}
 }
 

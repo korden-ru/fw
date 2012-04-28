@@ -13,9 +13,6 @@ namespace engine\db;
 */
 class mysqli
 {
-	/**
-	* Глобальные переменные класса
-	*/
 	private $connect_id;
 	private $query_result;
 	private $num_queries = 0;
@@ -29,11 +26,14 @@ class mysqli
 	private $port;
 	private $socket;
 	
+	private $cache;
+	private $profiler;
+	
 	/**
 	* Сбор параметров
 	* Само подключение к серверу выполняется при первом запросе
 	*/
-	function __construct($dbhost, $dbuser, $dbpass, $dbname, $dbport = false, $dbsock = '', $persistent = false)
+	public function __construct($dbhost, $dbuser, $dbpass, $dbname, $dbport = false, $dbsock = '', $persistent = false)
 	{
 		$this->server = $dbhost;
 		$this->user = $dbuser;
@@ -52,6 +52,20 @@ class mysqli
 			'normal' => 0,
 			'total'  => 0
 		);
+	}
+	
+	public function _set_cache($cache)
+	{
+		$this->cache = $cache;
+		
+		return $this;
+	}
+	
+	public function _set_profiler($profiler)
+	{
+		$this->profiler = $profiler;
+		
+		return $this;
 	}
 	
 	/**
@@ -253,8 +267,6 @@ class mysqli
 	*/
 	public function fetchall($query_id = false, $field = false)
 	{
-		global $cache;
-
 		if( $query_id === false )
 		{
 			$query_id = $this->query_result;
@@ -264,11 +276,11 @@ class mysqli
 		{
 			$result = array();
 
-			if( !is_object($query_id) && isset($cache->sql_rowset[$query_id]) )
+			if( !is_object($query_id) && isset($this->cache->sql_rowset[$query_id]) )
 			{
 				if( $field !== false )
 				{
-					$ary = $cache->sql_fetchall($query_id);
+					$ary = $this->cache->sql_fetchall($query_id);
 					
 					foreach( $ary as $row )
 					{
@@ -278,7 +290,7 @@ class mysqli
 					return $result;
 				}
 				
-				return $cache->sql_fetchall($query_id);
+				return $this->cache->sql_fetchall($query_id);
 			}
 			
 			while( $row = $this->fetchrow($query_id) )
@@ -305,8 +317,6 @@ class mysqli
 	*/
 	public function fetchfield($field, $rownum = false, $query_id = false)
 	{
-		global $cache;
-
 		if( $query_id === false )
 		{
 			$query_id = $this->query_result;
@@ -319,9 +329,9 @@ class mysqli
 				$this->rowseek($rownum, $query_id);
 			}
 
-			if( !is_object($query_id) && isset($cache->sql_rowset[$query_id]) )
+			if( !is_object($query_id) && isset($this->cache->sql_rowset[$query_id]) )
 			{
-				return $cache->sql_fetchfield($query_id, $field);
+				return $this->cache->sql_fetchfield($query_id, $field);
 			}
 
 			$row = $this->fetchrow($query_id);
@@ -337,16 +347,14 @@ class mysqli
 	*/
 	public function fetchrow($query_id = false)
 	{
-		global $cache;
-
 		if( $query_id === false )
 		{
 			$query_id = $this->query_result;
 		}
 
-		if( !is_object($query_id) && isset($cache->sql_rowset[$query_id]) )
+		if( !is_object($query_id) && isset($this->cache->sql_rowset[$query_id]) )
 		{
-			return $cache->sql_fetchrow($query_id);
+			return $this->cache->sql_fetchrow($query_id);
 		}
 		
 		if( $query_id !== false )
@@ -363,16 +371,14 @@ class mysqli
 	*/
 	public function freeresult($query_id = false)
 	{
-		global $cache;
-		
 		if( $query_id === false )
 		{
 			$query_id = $this->query_result;
 		}
 
-		if( !is_object($query_id) && isset($cache->sql_rowset[$query_id]) )
+		if( !is_object($query_id) && isset($this->cache->sql_rowset[$query_id]) )
 		{
-			return $cache->sql_freeresult($query_id);
+			return $this->cache->sql_freeresult($query_id);
 		}
 		
 		return mysqli_free_result($query_id);
@@ -488,8 +494,6 @@ class mysqli
 	*/
 	public function query($query = '', $cache_ttl = 0)
 	{
-		global $profiler;
-
 		if( !$this->connect_id )
 		{
 			$this->connect();
@@ -497,9 +501,7 @@ class mysqli
 		
 		if( $query )
 		{
-			global $cache;
-			
-			$this->query_result = ( $cache_ttl ) ? $cache->sql_load($query) : false;
+			$this->query_result = ( $cache_ttl ) ? $this->cache->sql_load($query) : false;
 			$this->add_num_queries($this->query_result);
 			$start_time = microtime(true);
 
@@ -512,14 +514,14 @@ class mysqli
 				
 				if( $cache_ttl )
 				{
-					$cache->sql_save($query, $this->query_result, $cache_ttl);
+					$this->cache->sql_save($query, $this->query_result, $cache_ttl);
 				}
 				
-				$profiler->log_query($query, microtime(true) - $start_time);
+				$this->profiler->log_query($query, microtime(true) - $start_time);
 			}
 			else
 			{
-				$profiler->log_query($query, microtime(true) - $start_time, true);
+				$this->profiler->log_query($query, microtime(true) - $start_time, true);
 			}
 		}
 		else
@@ -562,16 +564,14 @@ class mysqli
 	*/
 	public function rowseek($rownum, &$query_id)
 	{
-		global $cache;
-
 		if( $query_id === false )
 		{
 			$query_id = $this->query_result;
 		}
 
-		if( !is_object($query_id) && isset($cache->sql_rowset[$query_id]) )
+		if( !is_object($query_id) && isset($this->cache->sql_rowset[$query_id]) )
 		{
-			return $cache->sql_rowseek($rownum, $query_id);
+			return $this->cache->sql_rowseek($rownum, $query_id);
 		}
 
 		return ( $query_id !== false ) ? mysqli_data_seek($query_id, $rownum) : false;

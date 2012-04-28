@@ -34,20 +34,28 @@ class application implements \ArrayAccess
 			return $loader;
 		});
 		
-		/* Подключение к базе данных */
-		$this['db'] = $this->share(function() use ($app) {
-			return new db_mysqli($app['db.host'], $app['db.user'], $app['db.pass'], $app['db.name'], $app['db.port'], $app['db.sock'], $app['db.pers']);
+		$this['profiler'] = $this->share(function() {
+			return new profiler();
 		});
-		
+
 		/* Данные запроса */
 		$this['request'] = $this->share(function() {
 			return new request();
 		});
-		
+
 		/* Инициализация кэша */
 		$this['cache'] = $this->share(function() use ($app) {
 			$factory = new cache_factory($app['acm.type'], $app['acm.prefix']);
 			return $factory->get_service();
+		});
+
+		/* Подключение к базе данных */
+		$this['db'] = $this->share(function() use ($app) {
+			$db = new db_mysqli($app['db.host'], $app['db.user'], $app['db.pass'], $app['db.name'], $app['db.port'], $app['db.sock'], $app['db.pers']);
+			$db->_set_cache($app['cache'])
+				->_set_profiler($app['profiler']);
+			
+			return $db;
 		});
 	}
 	
