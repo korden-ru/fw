@@ -331,16 +331,16 @@ function garbage_collection($display_profiler = true)
 	{
 		if( $display_profiler && !$request->is_ajax && !defined('IN_SQL_ERROR') )
 		{
-			if( $_SERVER['REMOTE_ADDR'] == '79.175.20.190' || false !== strpos($_SERVER['SERVER_NAME'], '.korden.net') )
+			if( $config['profiler.enabled'] && ($_SERVER['REMOTE_ADDR'] == '79.175.20.190' || false !== strpos($_SERVER['SERVER_NAME'], '.korden.net')) )
 			{
 				$profiler->display();
 			}
 		}
 
-		// if( $config['profiler_send_stats'] )
-		// {
-		// 	$profiler->send_stats($config['profiler_ip'], $config['profiler_port']);
-		// }
+		if( $config['profiler.send_stats'] )
+		{
+			$profiler->send_stats($config['profiler.remote_host'], $config['profiler.remote_port']);
+		}
 	}
 	
 	if( !empty($cache) )

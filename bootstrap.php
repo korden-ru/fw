@@ -22,25 +22,14 @@ use engine\template\smarty;
 // use Monolog\Handler\NativeMailerHandler;
 // use Monolog\Handler\StreamHandler;
 
-session_start();
-
 /**
 * Настройки, необходимые для
 * функционирования сайта
 */
-if( false !== strpos($_SERVER['SERVER_NAME'], '.korden.net') )
-{
-	error_reporting(E_ALL);
-}
-else
-{
-	error_reporting(0);
-}
-
 date_default_timezone_set('Europe/Moscow');
+error_reporting(false !== strpos($_SERVER['SERVER_NAME'], '.korden.net') ? E_ALL : 0);
 mb_internal_encoding('utf-8');
 
-$acp_root_path  = 'acp/';
 $site_root_path = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/';
 $src_root_path  = __DIR__ . '/';
 
