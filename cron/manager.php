@@ -18,16 +18,21 @@ class manager
 
 	private $cron_allowed;
 	private $cron_running;
-	private $db;
 	private $deadlock_timeout = 900;
 	private $start_time;
 	private $task_time_limit = 300;
 	private $tasks = array();
 	private $tasks_timeout = 1;
 
-	function __construct()
+	private $cache;
+	private $config;
+	private $db;
+
+	function __construct($cache, $config, $db)
 	{
-		global $db;
+		$this->cache  = $cache;
+		$this->config = $config;
+		$this->db     = $db;
 
 		$this->start_time = time();
 
@@ -36,8 +41,6 @@ class manager
 
 		$this->cron_allowed = $this->log_dir . 'allowed';
 		$this->cron_running = $this->log_dir . 'running';
-
-		$this->db = $db;
 	}
 
 	/**
@@ -85,6 +88,9 @@ class manager
 				/* Выполнение задачи */
 				$cron_class = '\\app\\cron\\' . $task['cron_script'];
 				$cron = new $cron_class($task);
+				$cron->_set_cache($this->cache)
+					->_set_config($this->config)
+					->_set_db($this->db);
 				
 				if( $cron->run() )
 				{
@@ -172,7 +178,6 @@ class manager
 	*/
 	private function set_includes_dir($site_id)
 	{
-		global $cache;
 		static $id = 0;
 		
 		if( $site_id != $id )
@@ -196,7 +201,7 @@ class manager
 			
 			/* Загрузка настроек сайта */
 			// require_once($site_root_path . 'config.php');
-			// $cache->set_prefix($acm_prefix);
+			// $this->cache->set_prefix($acm_prefix);
 		}
 	}
 

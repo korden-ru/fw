@@ -22,13 +22,29 @@ class task
 
 	function __construct(array $row)
 	{
-		global $cache, $config, $db;
-
-		$this->cache  =& $cache;
-		$this->config =& $config;
-		$this->ctime  = time();
-		$this->data   = $row;
-		$this->db     =& $db;
+		$this->ctime = time();
+		$this->data  = $row;
+	}
+	
+	public function _set_cache($cache)
+	{
+		$this->cache = $cache;
+		
+		return $this;
+	}
+	
+	public function _set_config($config)
+	{
+		$this->config = $config;
+		
+		return $this;
+	}
+	
+	public function _set_db($db)
+	{
+		$this->db = $db;
+		
+		return $this;
 	}
 	
 	/**

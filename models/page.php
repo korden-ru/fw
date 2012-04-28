@@ -30,12 +30,8 @@ class page
 	protected $template;
 	protected $user;
 	
-	function __construct()
+	public function __construct()
 	{
-		global $cache, $template;
-		
-		$this->cache    =& $cache;
-		$this->template =& $template;
 	}
 	
 	public function _set_cache($cache)

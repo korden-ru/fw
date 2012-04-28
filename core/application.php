@@ -49,10 +49,6 @@ class application implements \ArrayAccess
 			return new request();
 		});
 		
-		$this['user'] = $this->share(function() {
-			return new user();
-		});
-		
 		/* Инициализация кэша */
 		$this['cache'] = $this->share(function() use ($app) {
 			$factory = new cache_factory($app['acm.type'], $app['acm.prefix']);
@@ -70,6 +66,10 @@ class application implements \ArrayAccess
 		
 		$this['config'] = $this->share(function() use ($app) {
 			return new config_db($app['cache'], $app['db'], $app['site_info'], CONFIG_TABLE);
+		});
+
+		$this['user'] = $this->share(function() use ($app) {
+			return new user($app['cache'], $app['config'], $app['db'], $app['request']);
 		});
 	}
 	

@@ -32,14 +32,12 @@ class user implements \ArrayAccess, \IteratorAggregate, \Countable
 	protected $db;
 	protected $request;
 	
-	function __construct()
+	function __construct($cache, $config, $db, $request)
 	{
-		global $cache, $config, $db, $request;
-		
 		$this->request = $request;
-		$this->cache  =& $cache;
-		$this->config =& $config;
-		$this->db     =& $db;
+		$this->cache   = $cache;
+		$this->config  = $config;
+		$this->db      = $db;
 		
 		/**
 		* Данные посетителя
@@ -59,8 +57,6 @@ class user implements \ArrayAccess, \IteratorAggregate, \Countable
 	function login_full($login,$password,$remember)	//полноценная авторизация
 	{	
 		//возвращает '' если логин пустой, login_activate если пользователь не активировал учетную запись и login_fail в случае неверного логина и пароля.
-		global $db;
-
 
 		//Если все хорошо, то записывает информацию в cookie и перезагружает страницу так и не разобрался в природе этого явления, но чтобы cookie записались надо перезагрузить страницу
 		if($login=='') return 'login_fail';					//пароль надо передавать в md5
@@ -71,9 +67,9 @@ class user implements \ArrayAccess, \IteratorAggregate, \Countable
 
 			$sql='SELECT * 
 				FROM '.SQL_PREFIX.'users 
-				WHERE login = '.$db->check_value($login);
-			$result=$db->query($sql);
-			$row=$db->fetchrow($result);
+				WHERE login = '.$this->db->check_value($login);
+			$result=$this->db->query($sql);
+			$row=$this->db->fetchrow($result);
 			if($result->num_rows > 0)//если учетная запись найдена
 			{
 				
@@ -129,12 +125,11 @@ class user implements \ArrayAccess, \IteratorAggregate, \Countable
 	
 	function register($login,$password,$mail,$array_info,$require_info,$confirm,$mode=1,$activation=false)//Функция для регистрации клиента ($array_info - массив вида "поле => значение" с инфой, которую надо заносить при регистрации
 	{																		//$require_info - массив с именами полей, которые надо обязательно вводить при регистрации
-		global $db;
 		if(!$confirm) return 'register_confirm';//это галочка согласия с условиями регистрации. Если false пользователь не зарегится)))
-		$sql='SELECT * FROM '.SQL_PREFIX.'users WHERE login = '.$db->check_value($login);//проверяем не зарегистрирован ли уже пользователь
-		$result=$db->query($sql);
-		$row=$db->fetchrow($result);
-		$db->freeresult($result);
+		$sql='SELECT * FROM '.SQL_PREFIX.'users WHERE login = '.$this->db->check_value($login);//проверяем не зарегистрирован ли уже пользователь
+		$result=$this->db->query($sql);
+		$row=$this->db->fetchrow($result);
+		$this->db->freeresult($result);
 		if($row) return 'register_already';//если зарегистрирован - прекращаем процесс
 		
 		if(strlen($password)<6) return 'register_password';//если пароль меньше 6 символов - тоже выходим
@@ -144,7 +139,7 @@ class user implements \ArrayAccess, \IteratorAggregate, \Countable
 			if($array_info[$require_info[$i]]=='') return 'register_info';//если поле пустое - выходим
 		}
 		
-		$sql='INSERT INTO '.SQL_PREFIX.'users '.$db->build_array('INSERT',
+		$sql='INSERT INTO '.SQL_PREFIX.'users '.$this->db->build_array('INSERT',
 														array(
 															'role'		=>	$mode,//роль первая - простой пользователь, 0 - требует рассмотрения администратора
 															'login'		=>	$login,
@@ -153,20 +148,20 @@ class user implements \ArrayAccess, \IteratorAggregate, \Countable
 															'regtime'	=>	time(),
 															'password'	=>	$password,
 															'code'		=>	$activation?md5('a'.$login.'7'.$password.'@'):'_'));//если последний параметр поставить true, то будет сгенерен код активации и пока его не снять - пользователь не войдет на сайт
-		$db->query($sql);//заносим пользователя в таблицу
+		$this->db->query($sql);//заносим пользователя в таблицу
 		
 		$sql='SELECT id FROM '.SQL_PREFIX.'users WHERE login	=	"'.$login.'"';
-		$result=$db->query($sql);
-		$row=$db->fetchrow($result);
+		$result=$this->db->query($sql);
+		$row=$this->db->fetchrow($result);
 		$id=$row['id'];//получаем ID пользователя
-		$db->freeresult();
+		$this->db->freeresult();
 		
 		if(sizeof($array_info)>0)//если в массиве с инфой что-нить есть, тогда добавляем информацию в таблицу. ID в таблице с инфой и у пользователя совпадают
 		{
 			$array_info['id']=$id;
 		
-			$sql='INSERT INTO '.SQL_PREFIX.'users_info '.$db->build_array('INSERT',$array_info);
-			$db->query($sql);
+			$sql='INSERT INTO '.SQL_PREFIX.'users_info '.$this->db->build_array('INSERT',$array_info);
+			$this->db->query($sql);
 		}
 		
 		return 'register_success';
@@ -174,20 +169,18 @@ class user implements \ArrayAccess, \IteratorAggregate, \Countable
 	
 	function activate($hash)//активирует аккаунт с указаным активационным кодом
 	{
-		global $db;
-		$sql='UPDATE '.SQL_PREFIX.'users SET code="_" WHERE code='.$db->check_value($hash);
-		$db->query($sql);
+		$sql='UPDATE '.SQL_PREFIX.'users SET code="_" WHERE code='.$this->db->check_value($hash);
+		$this->db->query($sql);
 	}
 	
 	function check()//а это самая главная функция, которая проверяет ввел пользователь пароль или еще нет
 	{
-		global $db;
 		if((isset($_COOKIE['login']))&&(isset($_COOKIE['loginfo'])))//если есть 2 такие cookie
 		{
-			$sql='SELECT * FROM '.SQL_PREFIX.'users WHERE login = '.$db->check_value($_COOKIE['login']);//получаем из базы запись об этом пользователе
-			$result=$db->query($sql);
-			$row=$db->fetchrow($result);
-			$db->freeresult($result);
+			$sql='SELECT * FROM '.SQL_PREFIX.'users WHERE login = '.$this->db->check_value($_COOKIE['login']);//получаем из базы запись об этом пользователе
+			$result=$this->db->query($sql);
+			$row=$this->db->fetchrow($result);
+			$this->db->freeresult($result);
 			if($row)//если пользователь найден
 			{
 				if(($row['code']!='_')||($row['role']==0)) return false;//если не активирован, то считаем, что он не входил на сайт
@@ -197,8 +190,8 @@ class user implements \ArrayAccess, \IteratorAggregate, \Countable
 					$this->role=$row['role'];
 					$this->mail=$row['mail'];
 					$this->group = $row['group'];
-					$sql='UPDATE '.SQL_PREFIX.'users SET lastvisit='.time().' WHERE login ='.$db->check_value($_COOKIE['login']);//обновляем время последнего посещения
-					$db->query($sql);
+					$sql='UPDATE '.SQL_PREFIX.'users SET lastvisit='.time().' WHERE login ='.$this->db->check_value($_COOKIE['login']);//обновляем время последнего посещения
+					$this->db->query($sql);
 					return true;
 				}
 			}

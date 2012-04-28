@@ -60,7 +60,6 @@ $app['autoloader']->register_namespaces(array(
 errorhandler::register();
 
 $request = $app['request'];
-$cache = $app['cache'];
 $db = $app['db'];
 // $log->push_handler(new db_logger($db));
 // $log->info('Привет!');

@@ -22,6 +22,7 @@ class router
 	public $site_id;
 	public $url;
 
+	protected $cache;
 	protected $config;
 	protected $db;
 	protected $namespace;
@@ -29,6 +30,7 @@ class router
 	protected $params_count;
 	protected $request;
 	protected $site_info = array();
+	protected $template;
 	protected $user;
 
 	function __construct($config, $user, $url = '', $namespace = '\\app\\')
@@ -97,6 +99,34 @@ class router
 		}
 		
 		$this->params_count = sizeof($this->params);
+		
+		return $this;
+	}
+	
+	public function _set_cache($cache)
+	{
+		$this->cache = $cache;
+		
+		return $this;
+	}
+	
+	public function _set_db($db)
+	{
+		$this->db = $db;
+		
+		return $this;
+	}
+	
+	public function _set_request($request)
+	{
+		$this->request = $request;
+		
+		return $this;
+	}
+	
+	public function _set_template($template)
+	{
+		$this->template = $template;
 		
 		return $this;
 	}
@@ -280,20 +310,6 @@ class router
 		return $this->load_handler($handler_name, $handler_method, $this->params);
 	}
 	
-	public function set_db($db)
-	{
-		$this->db = $db;
-		
-		return $this;
-	}
-	
-	public function set_request($request)
-	{
-		$this->request = $request;
-		
-		return $this;
-	}
-	
 	/**
 	* Загрузка модуля
 	*/
@@ -365,9 +381,11 @@ class router
 		$this->handler->url      = implode('/', $this->page_link);
 		
 		/* Настройка обработчика */
-		$this->handler->_set_config($this->config)
+		$this->handler->_set_cache($this->cache)
+			->_set_config($this->config)
 			->_set_db($this->db)
 			->_set_request($this->request)
+			->_set_template($this->template)
 			->_set_user($this->user)
 			->obtain_handlers_urls()
 			->set_default_template()
@@ -461,15 +479,15 @@ class router
 	*/
 	protected function get_site_id($domain, $language)
 	{
-		global $site_info;
+		global $app;
 		
-		if( empty($site_info) )
+		if( empty($app['site_info']) )
 		{
 			return false;
 		}
 		
-		setlocale(LC_ALL, $site_info['locale']);
+		setlocale(LC_ALL, $app['site_info']['locale']);
 		
-		return (int) $site_info['id'];
+		return (int) $app['site_info']['id'];
 	}
 }
