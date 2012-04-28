@@ -8,14 +8,11 @@
 
 namespace engine;
 
-use engine\cache\factory as cache_factory;
 use engine\config\db as config_db;
-use engine\core\autoloader;
+use engine\core\application;
 use engine\core\errorhandler;
 use engine\core\profiler;
-use engine\core\request;
 use engine\core\user;
-use engine\db\mysqli as db_mysqli;
 // use engine\logger\logger;
 // use engine\logger\handlers\db as db_logger;
 use engine\template\smarty;
@@ -26,40 +23,39 @@ use engine\template\smarty;
 * Настройки, необходимые для
 * функционирования сайта
 */
+define('FW_DIR', __DIR__ . '/');
+define('SITE_DIR', rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/');
+
 date_default_timezone_set('Europe/Moscow');
 error_reporting(false !== strpos($_SERVER['SERVER_NAME'], '.korden.net') ? E_ALL : 0);
 mb_internal_encoding('utf-8');
 
-$site_root_path = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/';
-$src_root_path  = __DIR__ . '/';
-
-define('ROOT_PATH', $site_root_path);
-
-require($src_root_path . 'core/profiler.php');
-require($src_root_path . 'core/autoloader.php');
+require(FW_DIR . 'core/profiler.php');
+require(FW_DIR . 'core/application.php');
+require(FW_DIR . 'core/autoloader.php');
 
 /* Профайлер подключается первым */
 $profiler = new profiler();
 
-require($src_root_path . 'functions.php');
-require($src_root_path . 'config.php');
+require(FW_DIR . 'functions.php');
+require(FW_DIR . 'config.php');
 
-if( file_exists($site_root_path . '../config.php') )
+if( file_exists(SITE_DIR . '../config.php') )
 {
-	require($site_root_path . '../config.php');
+	require(SITE_DIR . '../config.php');
 }
 
-$loader = new autoloader($acm_prefix);
-$loader->register_namespaces(array(
+$app = new application($app);
+
+$app['autoloader']->register_namespaces(array(
 	'engine'  => __DIR__,
 	'Monolog' => __DIR__ . '/lib/monolog/1.0.3/Monolog',
-	'app'     => $site_root_path . '../modules',
-	'acp'     => $site_root_path . 'acp/includes',
+	'app'     => SITE_DIR . '../modules',
+	'acp'     => SITE_DIR . 'acp/includes',
 ));
-$loader->register();
 
 // $log = new logger('main');
-// $log->push_handler(new StreamHandler($site_root_path . '../logs/file', logger::DEBUG));
+// $log->push_handler(new StreamHandler(SITE_DIR . '../logs/file', logger::DEBUG));
 // $log->push_handler(new NativeMailerHandler('src-work@ivacuum.ru', 'Monolog', 'www@bsd.korden.net', logger::DEBUG););
 // $log->push_processor(function($record) {
 // 	$record['extra']['ary'] = 'My message';
@@ -71,13 +67,9 @@ $loader->register();
 /* Собственный обработчик ошибок */
 errorhandler::register();
 
-$request = new request();
-
-/* Инициализация кэша */
-$factory = new cache_factory($acm_type, $acm_prefix);
-$cache   = $factory->get_service();
-
-$db = new db_mysqli($dbhost, $dbuser, $dbpass, $dbname, $dbport, $dbsock, $dbpers);
+$request = $app['request'];
+$cache = $app['cache'];
+$db = $app['db'];
 // $log->push_handler(new db_logger($db));
 // $log->info('Привет!');
 

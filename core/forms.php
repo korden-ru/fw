@@ -261,14 +261,14 @@ class forms
 							{
 								/* Delete existing items
 								--------------------------------------------*/
-								if(file_exists(ROOT_PATH.'uploads/'.$this->upload_folder.'/'.$data['value']))
-									@unlink(ROOT_PATH.'uploads/'.$this->upload_folder.'/'.$data['value']);
+								if(file_exists(SITE_DIR.'uploads/'.$this->upload_folder.'/'.$data['value']))
+									@unlink(SITE_DIR.'uploads/'.$this->upload_folder.'/'.$data['value']);
 	
-		                        if(file_exists(ROOT_PATH.'uploads/'.$this->upload_folder.'/sm/'.$data['value']))
-									@unlink(ROOT_PATH.'uploads/'.$this->upload_folder.'/sm/'.$data['value']);
+		                        if(file_exists(SITE_DIR.'uploads/'.$this->upload_folder.'/sm/'.$data['value']))
+									@unlink(SITE_DIR.'uploads/'.$this->upload_folder.'/sm/'.$data['value']);
 	
-								if(file_exists(ROOT_PATH.'uploads/'.$this->upload_folder.'/original/'.$data['value']))
-									@unlink(ROOT_PATH.'uploads/'.$this->upload_folder.'/original/'.$data['value']);
+								if(file_exists(SITE_DIR.'uploads/'.$this->upload_folder.'/original/'.$data['value']))
+									@unlink(SITE_DIR.'uploads/'.$this->upload_folder.'/original/'.$data['value']);
 	
 								//если размеры переданы, то используем их
 								if(isset($data['size']) && is_array($data['size']))
@@ -293,17 +293,17 @@ class forms
 									$is_watermark = $data['watermark'];
 							
 								//original folder
-								$this->uploader->dir_dest = ROOT_PATH.'uploads/'.$this->upload_folder.'/original/'; 
+								$this->uploader->dir_dest = SITE_DIR.'uploads/'.$this->upload_folder.'/original/'; 
 								if (!is_dir($this->uploader->dir_dest))
 									mkdir($this->uploader->dir_dest, 0777, true);
 								$this->uploader->ImageResized($bigWidth, $bigHeight, $filename, true, false);
 								//main upload folder
-								$this->uploader->dir_dest = ROOT_PATH.'uploads/'.$this->upload_folder.'/'; 
+								$this->uploader->dir_dest = SITE_DIR.'uploads/'.$this->upload_folder.'/'; 
 								if (!is_dir($this->uploader->dir_dest))
 									mkdir($this->uploader->dir_dest, 0777, true);
 								$this->uploader->ImageResized($bigWidth, $bigHeight, $filename, true, $is_watermark);
 								//mini upload folder
-								$this->uploader->dir_dest = ROOT_PATH.'uploads/'.$this->upload_folder.'/sm/'; 
+								$this->uploader->dir_dest = SITE_DIR.'uploads/'.$this->upload_folder.'/sm/'; 
 								if (!is_dir($this->uploader->dir_dest))
 									mkdir($this->uploader->dir_dest, 0777, true);
 								$this->uploader->ImageResized($prevWidth, $prevHeight, $filename, true, $is_watermark);
@@ -322,14 +322,14 @@ class forms
 									{
 										$dir_tmp .= '/';
 										# если папки нету, создаем ее
-										if (!is_dir(ROOT_PATH.'uploads/'.$this->upload_folder.'/'.$dir_tmp))
-											mkdir(ROOT_PATH.'uploads/'.$this->upload_folder.'/'.$dir_tmp, 0777, true);
+										if (!is_dir(SITE_DIR.'uploads/'.$this->upload_folder.'/'.$dir_tmp))
+											mkdir(SITE_DIR.'uploads/'.$this->upload_folder.'/'.$dir_tmp, 0777, true);
 									
 									}
 									
 									# удаляем старую фотку из данной категории
-									if(file_exists(ROOT_PATH.'uploads/'.$this->upload_folder.'/'.$dir_tmp.$data['value']))
-										@unlink(ROOT_PATH.'uploads/'.$this->upload_folder.'/'.$dir_tmp.$data['value']);
+									if(file_exists(SITE_DIR.'uploads/'.$this->upload_folder.'/'.$dir_tmp.$data['value']))
+										@unlink(SITE_DIR.'uploads/'.$this->upload_folder.'/'.$dir_tmp.$data['value']);
 								}
 							
 								#загружаем фоту
@@ -346,7 +346,7 @@ class forms
 										$dir_tmp = '';
 									else 
 										$dir_tmp .= '/';
-									$this->uploader->dir_dest = ROOT_PATH.'uploads/'.$this->upload_folder.'/'.$dir_tmp;
+									$this->uploader->dir_dest = SITE_DIR.'uploads/'.$this->upload_folder.'/'.$dir_tmp;
 									if ($cropped)
 										$this->uploader->CroppedImageResized($w, $h, $filename_noext);
 									else
@@ -368,8 +368,8 @@ class forms
 					{		
 						//удаляем старый файл
 						if (isset($_POST['old_'.$data['name']]) && $_POST['old_'.$data['name']] != '')
-							if (file_exists(ROOT_PATH.'uploads/'.$this->upload_folder.'/'.$_POST['old_'.$data['name']]))
-								unlink(ROOT_PATH.'uploads/'.$this->upload_folder.'/'.$_POST['old_'.$data['name']]);			
+							if (file_exists(SITE_DIR.'uploads/'.$this->upload_folder.'/'.$_POST['old_'.$data['name']]))
+								unlink(SITE_DIR.'uploads/'.$this->upload_folder.'/'.$_POST['old_'.$data['name']]);			
 				
 						$this->uploader->input_name = $data['name'];
 				
@@ -379,7 +379,7 @@ class forms
 						else
 							$filename = md5(mktime()).'.'.$this->uploader->GetExtension();
 							
-						$this->uploader->dir_dest = ROOT_PATH.'uploads/'.$this->upload_folder.'/'; 
+						$this->uploader->dir_dest = SITE_DIR.'uploads/'.$this->upload_folder.'/'; 
 						if (!is_dir($this->uploader->dir_dest))
 							mkdir($this->uploader->dir_dest, "0777", true);
 							
@@ -753,7 +753,7 @@ class forms
 
 		$old = '';
 		//показываем старый файл
-		if(!empty($data['value']) && file_exists(ROOT_PATH.'uploads/'.$this->upload_folder.'/'.$dir_preview.$data['value']))
+		if(!empty($data['value']) && file_exists(SITE_DIR.'uploads/'.$this->upload_folder.'/'.$dir_preview.$data['value']))
 		{
 			$file_exist = false;
 		
@@ -761,9 +761,9 @@ class forms
 			//изображение со старым old_image
 			if($data['old'] == 'old_image')
 			{
-				if (file_exists(ROOT_PATH.'uploads/'.$this->upload_folder.'/'.$dir_preview.$data['value']))
+				if (file_exists(SITE_DIR.'uploads/'.$this->upload_folder.'/'.$dir_preview.$data['value']))
 				{
-					$im_info = getimagesize(ROOT_PATH.'uploads/'.$this->upload_folder.'/'.$dir_preview.$data['value']);
+					$im_info = getimagesize(SITE_DIR.'uploads/'.$this->upload_folder.'/'.$dir_preview.$data['value']);
 					if (isset($im_info[0]) && $im_info[0] < $img_width)
 						$img_width = $im_info[0];
 				
@@ -776,7 +776,7 @@ class forms
 			//файл, либо любое другое поле old?
 			else
 			{
-				if (file_exists(ROOT_PATH.'uploads/'.$this->upload_folder.'/'.$data['value']))
+				if (file_exists(SITE_DIR.'uploads/'.$this->upload_folder.'/'.$data['value']))
 				{
 					$filename = $data['value'];
 					$ext = strtolower(substr($filename, strrpos($filename, '.')+1));

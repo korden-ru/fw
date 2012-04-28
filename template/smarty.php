@@ -8,9 +8,7 @@
 
 namespace engine\template;
 
-global $src_root_path;
-
-define('SMARTY_DIR', $src_root_path . 'lib/smarty/3.1.7/Smarty/');
+define('SMARTY_DIR', FW_DIR . 'lib/smarty/3.1.7/Smarty/');
 require(SMARTY_DIR . 'Smarty.class.php');
 
 class smarty extends \Smarty
@@ -19,23 +17,21 @@ class smarty extends \Smarty
 	
 	function __construct()
 	{
-		global $site_root_path, $src_root_path;
-
 		parent::__construct();
 		
 		if( defined('IN_ACP') )
 		{
-			$this->setTemplateDir($site_root_path . 'acp/templates/');
+			$this->setTemplateDir(SITE_DIR . 'acp/templates/');
 		}
 		else
 		{
 			$this->setTemplateDir(array(
-				'app'    => $site_root_path . '../templates',
-				'engine' => $src_root_path . 'templates',
+				'app'    => SITE_DIR . '../templates',
+				'engine' => FW_DIR . 'templates',
 			));
 		}
 
-		$this->compile_dir  = $site_root_path . '../cache/templates/';
+		$this->compile_dir  = SITE_DIR . '../cache/templates/';
 
 		$this->caching         = false;
 		$this->compile_check   = true;

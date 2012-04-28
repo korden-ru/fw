@@ -31,9 +31,7 @@ class factory
 	
 	public function get_service()
 	{
-		global $site_root_path;
-		
-		if( file_exists($site_root_path . 'sources/modules/cache/service.php') )
+		if( file_exists(SITE_DIR . 'sources/modules/cache/service.php') )
 		{
 			return new \app\cache\service($this->get_driver());
 		}

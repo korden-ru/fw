@@ -263,9 +263,9 @@ function fileSafeUpload ($subname='uploads/banners/',$params=array())
     {
         if($old_file)
         {
-            if(file_exists(ROOT_PATH.$subname.$old_file))
+            if(file_exists(SITE_DIR.$subname.$old_file))
             {
-                unlink(ROOT_PATH.$subname.$old_file);
+                unlink(SITE_DIR.$subname.$old_file);
             }
         }
         ereg("^.+\.(.+)", strtolower($_FILES[$user_file]['name']), $arr);
@@ -278,7 +278,7 @@ function fileSafeUpload ($subname='uploads/banners/',$params=array())
 	$name = substr($p, 0, (strlen($p)-4));
 	
 	$new_name = substr(md5(mktime()), 0, 10).'.'.$ext;
-	$path = ROOT_PATH.$subname.$new_name;
+	$path = SITE_DIR.$subname.$new_name;
 
         move_uploaded_file($_FILES[$user_file]['tmp_name'], $path);
         chmod ( $path, 0777 );
