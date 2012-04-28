@@ -557,14 +557,14 @@ function ilink($url = '', $prefix = false)
 */
 function load_constants()
 {
-	global $acm_prefix;
+	global $app;
 	
 	if( !function_exists('apc_fetch') )
 	{
 		return false;
 	}
 
-	return apc_load_constants($acm_prefix . '_constants');
+	return apc_load_constants($app['acm.prefix'] . '_constants');
 }
 
 /**
@@ -811,7 +811,7 @@ function redirect($url, $status_code = 302)
 */
 function set_constants($constants)
 {
-	global $acm_prefix;
+	global $app;
 
 	if( !function_exists('apc_fetch') )
 	{
@@ -823,7 +823,7 @@ function set_constants($constants)
 		return;
 	}
 	
-	apc_define_constants($acm_prefix . '_constants', $constants);
+	apc_define_constants($app['acm.prefix'] . '_constants', $constants);
 }
 
 /**

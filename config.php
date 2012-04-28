@@ -31,19 +31,6 @@ $app = array(
 	),
 );
 
-/* Настройки подключения к БД */
-$dbhost = 'localhost';
-$dbport = false;
-$dbname = '';
-$dbuser = '';
-$dbpass = '';
-$dbsock = '';
-$dbpers = false;
-
-/* Настройки кэша */
-$acm_prefix = 'src';
-$acm_type   = 'null';
-
 /**
 * Типы страниц
 */
@@ -58,7 +45,7 @@ define('SQL_PREFIX', 'tcms_');
 
 /**
 * Константы
-* apc_delete($acm_prefix . '_constants');
+* apc_delete($app['acm.prefix'] . '_constants');
 */
 if( false === load_constants() )
 {
