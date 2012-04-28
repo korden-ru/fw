@@ -34,7 +34,6 @@ class file
 	*/
 	public function _get($filename)
 	{
-		global $profiler;
 		$file = $this->cache_dir . $filename . '.php';
 		
 		if( !file_exists($file) )
@@ -103,9 +102,7 @@ class file
 			
 			while( ($buffer = fgets($handle)) && !feof($handle) )
 			{
-				// $profiler->log($line);
 				$buffer = substr($buffer, 0, -1);
-				// $profiler->log($buffer);
 				
 				if( !is_numeric($buffer) )
 				{
@@ -311,8 +308,6 @@ class file
 	*/
 	public function get($var)
 	{
-		global $profiler;
-		$profiler->log('get');
 		if( !$this->_exists($var) )
 		{
 			return false;
@@ -323,7 +318,6 @@ class file
 			return $this->data[$var];
 		}
 		
-		$profiler->log('exists');
 		return $this->_get($this->prefix . $var);
 	}
 
@@ -597,8 +591,6 @@ class file
 	*/
 	private function _exists($var)
 	{
-		global $profiler;
-		$profiler->log('exists?');
 		if( $var[0] == '_' )
 		{
 			if( !sizeof($this->data) )
