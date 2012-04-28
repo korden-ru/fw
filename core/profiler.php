@@ -134,16 +134,20 @@ class profiler extends console
 {
 	private $output = array();
 	private $start_time;
+	
+	private $template;
 
 	/**
 	* Время запуска профайлера
 	*/
-	function __construct()
+	function __construct($template)
 	{
+		$this->template = $template;
+		
 		$time = explode(' ', microtime());
 		$this->start_time = $time[1] + $time[0];
 	}
-
+	
 	/**
 	* Получение и печать данных профайлера
 	*/
@@ -322,9 +326,7 @@ class profiler extends console
 	*/
 	private function display_profiler()
 	{
-		global $template;
-		
-		$template->assign(array(
+		$this->template->assign(array(
 			'profiler_logs'    => $this->output['logs'],
 			'profiler_files'   => $this->output['files'],
 			'profiler_queries' => $this->output['queries'],
@@ -349,6 +351,6 @@ class profiler extends console
 			'QUERY_COUNT_TEXT' => plural($this->query_count, 'запрос;запроса;запросов')
 		));
 		
-		$template->display('profiler.html');
+		$this->template->display('profiler.html');
 	}
 }

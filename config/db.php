@@ -21,17 +21,15 @@ class db extends config
 	protected $site_vars;
 	protected $table;
 	
-	function __construct($site_info, $table = false)
+	function __construct($cache, $db, $site_info, $table = false)
 	{
-		global $cache, $db;
-		
 		if( !is_array($site_info) )
 		{
 			trigger_error('Сайт не найден', E_USER_ERROR);
 		}
 		
-		$this->cache   =& $cache;
-		$this->db      =& $db;
+		$this->cache    = $cache;
+		$this->db       = $db;
 		$this->domain   = $site_info['domain'];
 		$this->language = $site_info['language'];
 		$this->site_id  = $site_info['id'];

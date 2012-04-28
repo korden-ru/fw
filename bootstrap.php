@@ -8,14 +8,10 @@
 
 namespace engine;
 
-use engine\config\db as config_db;
 use engine\core\application;
 use engine\core\errorhandler;
-use engine\core\profiler;
-use engine\core\user;
 // use engine\logger\logger;
 // use engine\logger\handlers\db as db_logger;
-use engine\template\smarty;
 // use Monolog\Handler\NativeMailerHandler;
 // use Monolog\Handler\StreamHandler;
 
@@ -42,8 +38,6 @@ if( file_exists(SITE_DIR . '../config.php') )
 }
 
 $app = new application($app);
-
-$profiler = $app['profiler'];
 
 $app['autoloader']->register_namespaces(array(
 	'engine'  => __DIR__,
@@ -78,9 +72,9 @@ if( false === strpos($_SERVER['SERVER_NAME'], '.korden.net') )
 }
 
 /* Инициализация классов */
-$template = new smarty();
-$user     = new user();
-$config   = new config_db($site_info, CONFIG_TABLE);
+$template = $app['template'];
+$user     = $app['user'];
+$config   = $app['config'];
 
 $template->assign('cfg', $config);
 $template->assign('metaVersion', 1);

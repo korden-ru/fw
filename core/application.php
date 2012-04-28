@@ -9,7 +9,9 @@
 namespace engine\core;
 
 use engine\cache\factory as cache_factory;
+use engine\config\db as config_db;
 use engine\db\mysqli as db_mysqli;
+use engine\template\smarty;
 
 /**
 * Контейнер приложения
@@ -34,15 +36,23 @@ class application implements \ArrayAccess
 			return $loader;
 		});
 		
-		$this['profiler'] = $this->share(function() {
-			return new profiler();
+		$this['template'] = $this->share(function() {
+			return new smarty();
+		});
+		
+		$this['profiler'] = $this->share(function() use ($app) {
+			return new profiler($app['template']);
 		});
 
 		/* Данные запроса */
 		$this['request'] = $this->share(function() {
 			return new request();
 		});
-
+		
+		$this['user'] = $this->share(function() {
+			return new user();
+		});
+		
 		/* Инициализация кэша */
 		$this['cache'] = $this->share(function() use ($app) {
 			$factory = new cache_factory($app['acm.type'], $app['acm.prefix']);
@@ -56,6 +66,10 @@ class application implements \ArrayAccess
 				->_set_profiler($app['profiler']);
 			
 			return $db;
+		});
+		
+		$this['config'] = $this->share(function() use ($app) {
+			return new config_db($app['cache'], $app['db'], $app['site_info'], CONFIG_TABLE);
 		});
 	}
 	
