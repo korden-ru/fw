@@ -8,7 +8,6 @@
 
 namespace engine\core;
 
-use engine\cache\factory as cache_factory;
 use engine\cache\service as cache_service;
 use engine\config\db as config_db;
 use engine\db\mysqli as db_mysqli;
