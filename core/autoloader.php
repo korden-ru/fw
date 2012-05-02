@@ -20,7 +20,7 @@ class autoloader
 	private $prefix_fallbacks = array();
 	private $use_include_path = false;
 	
-	public function __construct($prefix = false)
+	function __construct($prefix = false)
 	{
 		if( $prefix && extension_loaded('apc') )
 		{

@@ -33,7 +33,7 @@ class mysqli
 	* Сбор параметров
 	* Само подключение к серверу выполняется при первом запросе
 	*/
-	public function __construct($dbhost, $dbuser, $dbpass, $dbname, $dbport = false, $dbsock = '', $persistent = false)
+	function __construct($dbhost, $dbuser, $dbpass, $dbname, $dbport = false, $dbsock = '', $persistent = false)
 	{
 		$this->server = $dbhost;
 		$this->user = $dbuser;

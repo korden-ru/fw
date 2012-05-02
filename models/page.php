@@ -30,7 +30,7 @@ class page
 	protected $template;
 	protected $user;
 	
-	public function __construct()
+	function __construct()
 	{
 	}
 	

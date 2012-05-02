@@ -15,7 +15,7 @@ class db extends AbstractProcessingHandler
 {
 	private $db;
 
-	public function __construct($db, $level = LOGGER::INFO, $bubble = true)
+	function __construct($db, $level = LOGGER::INFO, $bubble = true)
 	{
 		$this->db = $db;
 		

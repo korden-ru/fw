@@ -22,7 +22,7 @@ class application implements \ArrayAccess
 	
 	private $values;
 	
-	public function __construct(array $values = array())
+	function __construct(array $values = array())
 	{
 		$this->values = $values;
 		

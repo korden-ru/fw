@@ -64,7 +64,7 @@ $db = $app['db'];
 // $log->push_handler(new db_logger($db));
 // $log->info('Привет!');
 
-if( false === strpos($_SERVER['SERVER_NAME'], '.korden.net') )
+if( false === strpos($app['request']->server('SERVER_NAME'), '.korden.net') )
 {
 	/* Принудительная установка кодировки для хостинг-провайдеров */
 	$db->query('SET NAMES utf8');
@@ -75,5 +75,4 @@ $template = $app['template'];
 $user     = $app['user'];
 $config   = $app['config'];
 
-$template->assign('cfg', $config);
-$template->assign('metaVersion', 1);
+$app['template']->assign('cfg', $app['config']);
