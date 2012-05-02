@@ -71,6 +71,10 @@ class application implements \ArrayAccess
 		$this['user'] = $this->share(function() use ($app) {
 			return new user($app['cache'], $app['config'], $app['db'], $app['request']);
 		});
+		
+		$this['router'] = $this->share(function() use ($app) {
+			return new router($app['cache'], $app['config'], $app['db'], $app['request'], $app['template'], $app['user']);
+		});
 	}
 	
 	/**

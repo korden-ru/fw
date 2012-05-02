@@ -49,6 +49,7 @@ class sitemap extends page
 	public function index_html()
 	{
 		$traversal = new traverse_sitemap_pages_html(true);
+		$traversal->_set_config($this->config);
 		
 		while( $row = $this->db->fetchrow() )
 		{
@@ -68,6 +69,7 @@ class sitemap extends page
 	public function index_xml()
 	{
 		$traversal = new traverse_sitemap_pages_xml();
+		$traversal->_set_config($this->config);
 		
 		while( $row = $this->db->fetchrow() )
 		{
@@ -118,8 +120,6 @@ class traverse_sitemap_pages_xml extends site_pages
 {
 	protected function get_data()
 	{
-		global $config;
-		
 		/**
 		* Пропуск индексных страниц, чтобы одна и та же страница
 		* не отображалась в карте сайта дважды, например:
@@ -128,13 +128,13 @@ class traverse_sitemap_pages_xml extends site_pages
 		*
 		* Исключение: главная страница сайта
 		*/
-		if( !$this->row['is_dir'] && $this->row['page_url'] == $config['router.directory_index'] )
+		if( !$this->row['is_dir'] && $this->row['page_url'] == $this->config['router.directory_index'] )
 		{
 			$this->base_url[] = '';
 			
 			if( !$this->row['parent_id'] )
 			{
-				return ilink('');
+				return ilink();
 			}
 			
 			return false;

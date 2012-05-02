@@ -96,18 +96,23 @@ class errorhandler
 			case E_USER_NOTICE:
 			case E_USER_WARNING:
 
-				global $config, $router, $site_info, $template, $user;
-
-				if( !empty($router) && is_object($router->handler) )
+				if( !empty($app['router']) && is_object($app['router']->handler) )
 				{
-					$handler =& $router->handler;
+					$handler = $app['router']->handler;
 				}
 				else
 				{
 					$handler = new \app\models\page();
-					$handler->data['site_id'] = $site_info['id'];
-					$handler->set_site_menu();
-					$handler->format = ( !empty($router) ) ? $router->format : $config['router.default_extension'];
+					$handler->data['site_id'] = $app['site_info']['id'];
+					$handler->format = ( !empty($app['router']) ) ? $app['router']->format : $app['config']['router.default_extension'];
+					
+					$handler->_set_cache($app['cache'])
+						->_set_config($app['config'])
+						->_set_db($app['db'])
+						->_set_request($app['request'])
+						->_set_template($app['template'])
+						->_set_user($app['user'])
+						->set_site_menu();
 				}
 			
 				/* Запрет индексирования страницы */
@@ -126,13 +131,13 @@ class errorhandler
 					// self::log_mail('Page http://' . $user->domain . $user->page . ' not found', '404 Not Found');
 				}
 			
-				$template->assign(array(
+				$app['template']->assign(array(
 					'page' => $handler->data,
 				
 					'MESSAGE_TEXT'  => $text
 				));
 			
-				$template->file = 'message_body.html';
+				$app['template']->file = 'message_body.html';
 			
 				$handler->page_header();
 				$handler->page_footer();

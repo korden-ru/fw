@@ -26,6 +26,7 @@ class page
 	protected $cache;
 	protected $config;
 	protected $db;
+	protected $profiler;
 	protected $request;
 	protected $template;
 	protected $user;
@@ -51,6 +52,13 @@ class page
 	public function _set_db($db)
 	{
 		$this->db = $db;
+		
+		return $this;
+	}
+	
+	public function _set_profiler($profiler)
+	{
+		$this->profiler = $profiler;
 		
 		return $this;
 	}
@@ -86,14 +94,9 @@ class page
 	*/
 	public function append_link_params($query_string, $url = false)
 	{
-		$url = ( $url ) ? ilink($url) : ilink($this->url);
+		$url = $url ? ilink($url) : ilink($this->url);
 		
-		if( false !== strpos($url, '?') )
-		{
-			return sprintf('%s&%s', $url, $query_string);
-		}
-		
-		return sprintf('%s?%s', $url, $query_string);
+		return false !== strpos($url, '?') ? sprintf('%s&%s', $url, $query_string) : sprintf('%s?%s', $url, $query_string);
 	}
 	
 	/**
@@ -169,7 +172,7 @@ class page
 	{
 		if( $page_id === false )
 		{
-			$page_id = ( $this->data['is_dir'] ) ? $this->data['page_id'] : $this->data['parent_id'];
+			$page_id = $this->data['is_dir'] ? $this->data['page_id'] : $this->data['parent_id'];
 		}
 		
 		$page_id = (int) $page_id;

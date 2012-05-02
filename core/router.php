@@ -33,15 +33,23 @@ class router
 	protected $template;
 	protected $user;
 
-	function __construct($config, $user, $url = '', $namespace = '\\app\\')
+	function __construct($cache, $config, $db, $request, $template, $user)
 	{
-		$this->config    = $config;
-		$this->format    = $config['router.default_extension'];
+		$this->cache    = $cache;
+		$this->config   = $config;
+		$this->db       = $db;
+		$this->request  = $request;
+		$this->template = $template;
+		$this->user     = $user;
+	}
+	
+	public function _init($url = '', $namespace = '\\app\\')
+	{
+		$this->format    = $this->config['router.default_extension'];
 		$this->namespace = $namespace;
-		$this->page      = $config['router.directory_index'];
-		$this->user      = $user;
+		$this->page      = $this->config['router.directory_index'];
 		
-		$url = ( $url ) ?: htmlspecialchars_decode($user->page);
+		$url = $url ?: htmlspecialchars_decode($this->user->page);
 		
 		if( !$url )
 		{
@@ -49,7 +57,7 @@ class router
 		}
 		
 		/* Поиск сайта */
-		if( false === $this->site_id = $this->get_site_id($user->domain, $user->lang['.']) )
+		if( false === $this->site_id = $this->get_site_id($this->user->domain, $this->user->lang['.']) )
 		{
 			trigger_error('Сайт не найден');
 		}
@@ -65,7 +73,7 @@ class router
 		if( isset($ary['extension']) )
 		{
 			/* Обращение к странице */
-			if( !in_array($ary['extension'], explode(';', $config['router.allowed_extensions']), true) )
+			if( !in_array($ary['extension'], explode(';', $this->config['router.allowed_extensions']), true) )
 			{
 				trigger_error('PAGE_NOT_FOUND');
 			}
@@ -81,7 +89,7 @@ class router
 			* Обращение к странице без расширения
 			* Проверяем, можно ли обращаться к страницам без расширения
 			*/
-			if( in_array('', explode(';', $config['router.allowed_extensions']), true) )
+			if( in_array('', explode(';', $this->config['router.allowed_extensions']), true) )
 			{
 				$this->params = ( $ary['dirname'] != '.' ) ? explode('/', $ary['dirname']) : array();
 				$this->page   = $ary['filename'];
@@ -99,34 +107,6 @@ class router
 		}
 		
 		$this->params_count = sizeof($this->params);
-		
-		return $this;
-	}
-	
-	public function _set_cache($cache)
-	{
-		$this->cache = $cache;
-		
-		return $this;
-	}
-	
-	public function _set_db($db)
-	{
-		$this->db = $db;
-		
-		return $this;
-	}
-	
-	public function _set_request($request)
-	{
-		$this->request = $request;
-		
-		return $this;
-	}
-	
-	public function _set_template($template)
-	{
-		$this->template = $template;
 		
 		return $this;
 	}
