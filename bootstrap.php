@@ -41,7 +41,7 @@ $app = new application($app);
 
 $app['autoloader']->register_namespaces(array(
 	'engine'  => __DIR__,
-	'Monolog' => __DIR__ . '/lib/monolog/1.0.3/Monolog',
+	'Monolog' => __DIR__ . '/../lib/monolog/1.0.3/Monolog',
 	'app'     => SITE_DIR . '../modules',
 	'acp'     => SITE_DIR . 'acp/includes',
 ));

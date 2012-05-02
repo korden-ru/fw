@@ -8,7 +8,7 @@
 
 namespace engine\template;
 
-define('SMARTY_DIR', FW_DIR . 'lib/smarty/3.1.7/Smarty/');
+define('SMARTY_DIR', FW_DIR . '../lib/smarty/3.1.7/Smarty/');
 require(SMARTY_DIR . 'Smarty.class.php');
 
 class smarty extends \Smarty
@@ -38,7 +38,7 @@ class smarty extends \Smarty
 		$this->debugging       = false;
 		$this->error_reporting = E_ALL ^ E_NOTICE;
 		$this->force_compile   = false;
-		$this->use_sub_dirs    = true;
+		$this->use_sub_dirs    = false;
 	}
 	
 	/**
@@ -46,7 +46,7 @@ class smarty extends \Smarty
 	*/
 	public function display($file = '')
 	{
-		$this->file = ( $file ) ?: $this->file;
+		$this->file = $file ?: $this->file;
 		
 		return parent::display($this->file);
 	}
