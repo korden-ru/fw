@@ -146,7 +146,7 @@ class forms
 	*/
 	public function saveIntoDB(array $fieldset)
 	{
-		global $db, $request, $user;
+		global $app, $request, $user;
 
 		if( empty($fieldset) )
 		{
@@ -404,10 +404,10 @@ class forms
 			UPDATE
 				' . $this->table_name . '
 			SET
-				' . $db->build_array('UPDATE', $sql_ary) . '
+				' . $app['db']->build_array('UPDATE', $sql_ary) . '
 			WHERE
-				' . $this->primary_id . ' = ' . $db->check_value($this->table_row_id);
-		$db->query($sql);
+				' . $this->primary_id . ' = ' . $app['db']->check_value($this->table_row_id);
+		$app['db']->query($sql);
 		
 		return true;
 	}

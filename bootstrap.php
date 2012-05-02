@@ -46,6 +46,8 @@ $app['autoloader']->register_namespaces(array(
 	'acp'     => SITE_DIR . 'acp/includes',
 ));
 
+$app['db']->_set_cache($app['cache']);
+
 // $log = new logger('main');
 // $log->push_handler(new StreamHandler(SITE_DIR . '../logs/file', logger::DEBUG));
 // $log->push_handler(new NativeMailerHandler('src-work@ivacuum.ru', 'Monolog', 'www@bsd.korden.net', logger::DEBUG););
@@ -60,14 +62,13 @@ $app['autoloader']->register_namespaces(array(
 errorhandler::register();
 
 $request = $app['request'];
-$db = $app['db'];
-// $log->push_handler(new db_logger($db));
+// $log->push_handler(new db_logger($app['db']));
 // $log->info('Привет!');
 
 if( false === strpos($app['request']->server('SERVER_NAME'), '.korden.net') )
 {
 	/* Принудительная установка кодировки для хостинг-провайдеров */
-	$db->query('SET NAMES utf8');
+	$app['db']->query('SET NAMES utf8');
 }
 
 /* Инициализация классов */

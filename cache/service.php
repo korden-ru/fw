@@ -20,12 +20,13 @@ class service
 	
 	protected $db;
 	protected $driver;
+	protected $site_info;
 
-	function __construct($driver)
+	function __construct($driver, $db, $site_info)
 	{
-		global $db;
-
-		$this->db =& $db;
+		$this->db        = $db;
+		$this->site_info = $site_info;
+		
 		$this->set_driver($driver);
 	}
 	
@@ -71,7 +72,6 @@ class service
 	*/
 	public function obtain_handlers_urls($site_id)
 	{
-		global $config, $site_info;
 		static $cache_entry, $handlers;
 		
 		if( !$site_id )
@@ -79,7 +79,7 @@ class service
 			return false;
 		}
 		
-		$cache_entry = sprintf('%s_handlers_%s', $site_info['domain'], $site_info['language']);
+		$cache_entry = sprintf('%s_handlers_%s', $this->site_info['domain'], $this->site_info['language']);
 		
 		if( empty($handlers) && (false === $handlers = $this->driver->_get($cache_entry)) )
 		{
@@ -114,14 +114,12 @@ class service
 	*/
 	public function obtain_menu($site_id)
 	{
-		global $config, $site_info;
-		
 		if( !$site_id )
 		{
 			return false;
 		}
 		
-		$cache_entry = sprintf('%s_menu_%s', $site_info['domain'], $site_info['language']);
+		$cache_entry = sprintf('%s_menu_%s', $this->site_info['domain'], $this->site_info['language']);
 		
 		if( false === $menu = $this->driver->_get($cache_entry) )
 		{

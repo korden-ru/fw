@@ -9,6 +9,7 @@
 namespace engine\core;
 
 use engine\cache\factory as cache_factory;
+use engine\cache\service as cache_service;
 use engine\config\db as config_db;
 use engine\db\mysqli as db_mysqli;
 use engine\template\smarty;
@@ -49,21 +50,21 @@ class application implements \ArrayAccess
 			return new request();
 		});
 		
-		/* Инициализация кэша */
-		$this['cache'] = $this->share(function() use ($app) {
-			$factory = new cache_factory($app['acm.type'], $app['acm.prefix']);
-			return $factory->get_service();
-		});
-
 		/* Подключение к базе данных */
 		$this['db'] = $this->share(function() use ($app) {
 			$db = new db_mysqli($app['db.host'], $app['db.user'], $app['db.pass'], $app['db.name'], $app['db.port'], $app['db.sock'], $app['db.pers']);
-			$db->_set_cache($app['cache'])
-				->_set_profiler($app['profiler']);
+			$db->_set_profiler($app['profiler']);
 			
 			return $db;
 		});
 		
+		/* Инициализация кэша */
+		$this['cache'] = $this->share(function() use ($app) {
+			$class = '\\engine\\cache\\driver\\' . $app['acm.type'];
+			return new cache_service(new $class($app['acm.prefix'], $app['db']), $app['db'], $app['site_info']);
+		});
+
+		/* Настройки сайта и движка */
 		$this['config'] = $this->share(function() use ($app) {
 			return new config_db($app['cache'], $app['db'], $app['site_info'], CONFIG_TABLE);
 		});
@@ -72,6 +73,7 @@ class application implements \ArrayAccess
 			return new user($app['cache'], $app['config'], $app['db'], $app['request']);
 		});
 		
+		/* Маршрутизатор запросов */
 		$this['router'] = $this->share(function() use ($app) {
 			return new router($app['cache'], $app['config'], $app['db'], $app['request'], $app['template'], $app['user']);
 		});

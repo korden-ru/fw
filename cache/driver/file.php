@@ -22,9 +22,13 @@ class file
 	private $data = array();
 	private $data_expires = array();
 	private $is_modified = false;
+
+	private $db;
 	
-	function __construct($prefix = '')
+	function __construct($prefix = '', $db)
 	{
+		$this->db = $db;
+		
 		$this->set_prefix($prefix);
 		$this->cache_dir = SITE_DIR . '../cache/';
 	}
@@ -392,7 +396,7 @@ class file
 	*/
 	public function set_prefix($prefix = '')
 	{
-		$this->prefix = ( $prefix ) ? $prefix . '_' : '';
+		$this->prefix = $prefix ? $prefix . '_' : '';
 	}
 
 	/**
@@ -497,20 +501,18 @@ class file
 	*/
 	public function sql_save($query, &$query_result, $ttl)
 	{
-		global $db;
-		
 		$query = preg_replace('#[\n\r\s\t]+#', ' ', $query);
 		$query_id = sizeof($this->sql_rowset);
 		
 		$this->sql_rowset[$query_id] = array();
 		$this->sql_row_pointer[$query_id] = 0;
 		
-		while( $row = $db->fetchrow($query_result) )
+		while( $row = $this->db->fetchrow($query_result) )
 		{
 			$this->sql_rowset[$query_id][] = $row;
 		}
 		
-		$db->freeresult($query_result);
+		$this->db->freeresult($query_result);
 		
 		if( $this->_set($this->prefix . 'sql_' . md5($query), $this->sql_rowset[$query_id], time() + $ttl, $query) )
 		{

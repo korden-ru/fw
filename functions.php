@@ -255,7 +255,6 @@ function file_upload($subname = '/uploads/banners/', $params = array())
 --------------------------------------------------*/
 function fileSafeUpload ($subname='uploads/banners/',$params=array())
 {
-    global $db;
     $old_file=isset($params['old_file'])?get_post($params['old_file'], ''):get_post('old_file', '');
     $p = $old_file;
     $user_file=isset($params['user_file'])?$params['user_file']:'user_file';
@@ -381,7 +380,7 @@ function generate_page_link($page, $base_url, $query_string)
 */
 function get_page_block($page_url, $parent_id, $table)
 {
-	global $db;
+	global $app;
 	
 	$sql = '
 		SELECT
@@ -411,14 +410,14 @@ function get_page_block($page_url, $parent_id, $table)
 		FROM
 			tcms_' . $table . '_gallery
 		WHERE
-			id_row = ' . $db->check_value($parent_id) . '
+			id_row = ' . $app['db']->check_value($parent_id) . '
 		AND
-			modifyurl = ' . $db->check_value($page_url) . '
+			modifyurl = ' . $app['db']->check_value($page_url) . '
 		AND
 			activation = 1';
-	$db->query($sql);
-	$row = $db->fetchrow();
-	$db->freeresult();
+	$app['db']->query($sql);
+	$row = $app['db']->fetchrow();
+	$app['db']->freeresult();
 	
 	return $row;
 }
