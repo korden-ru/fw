@@ -21,7 +21,10 @@ class smarty extends \Smarty
 		
 		if( defined('IN_ACP') )
 		{
-			$this->setTemplateDir(SITE_DIR . 'acp/templates/');
+			$this->setTemplateDir(array(
+				'acp'    => SITE_DIR . 'acp/templates/',
+				'engine' => FW_DIR . 'templates',
+			));
 		}
 		else
 		{
