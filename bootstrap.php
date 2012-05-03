@@ -10,10 +10,6 @@ namespace engine;
 
 use engine\core\application;
 use engine\core\errorhandler;
-// use engine\logger\logger;
-// use engine\logger\handlers\db as db_logger;
-// use Monolog\Handler\NativeMailerHandler;
-// use Monolog\Handler\StreamHandler;
 
 /**
 * Настройки, необходимые для
@@ -48,32 +44,13 @@ $app['autoloader']->register_namespaces(array(
 
 $app['db']->_set_cache($app['cache']);
 
-// $log = new logger('main');
-// $log->push_handler(new StreamHandler(SITE_DIR . '../logs/file', logger::DEBUG));
-// $log->push_handler(new NativeMailerHandler('src-work@ivacuum.ru', 'Monolog', 'www@bsd.korden.net', logger::DEBUG););
-// $log->push_processor(function($record) {
-// 	$record['extra']['ary'] = 'My message';
-// 	
-// 	return $record;
-// });
-// $log->info('hello');
-
 /* Собственный обработчик ошибок */
 errorhandler::register();
-
-$request = $app['request'];
-// $log->push_handler(new db_logger($app['db']));
-// $log->info('Привет!');
 
 if( false === strpos($app['request']->server('SERVER_NAME'), '.korden.net') )
 {
 	/* Принудительная установка кодировки для хостинг-провайдеров */
 	$app['db']->query('SET NAMES utf8');
 }
-
-/* Инициализация классов */
-$template = $app['template'];
-$user     = $app['user'];
-$config   = $app['config'];
 
 $app['template']->assign('cfg', $app['config']);
