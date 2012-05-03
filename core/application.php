@@ -74,7 +74,7 @@ class application implements \ArrayAccess
 		
 		/* Маршрутизатор запросов */
 		$this['router'] = $this->share(function() use ($app) {
-			return new router($app['cache'], $app['config'], $app['db'], $app['request'], $app['template'], $app['user']);
+			return new router($app['cache'], $app['config'], $app['db'], $app['profiler'], $app['request'], $app['template'], $app['user']);
 		});
 	}
 	

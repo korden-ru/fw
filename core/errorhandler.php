@@ -109,6 +109,7 @@ class errorhandler
 					$handler->_set_cache($app['cache'])
 						->_set_config($app['config'])
 						->_set_db($app['db'])
+						->_set_profiler($app['profiler'])
 						->_set_request($app['request'])
 						->_set_template($app['template'])
 						->_set_user($app['user'])
