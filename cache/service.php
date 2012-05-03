@@ -72,6 +72,7 @@ class service
 	*/
 	public function obtain_handlers_urls($site_id)
 	{
+		global $app;
 		static $cache_entry, $handlers;
 		
 		if( !$site_id )
@@ -94,6 +95,7 @@ class service
 					left_id ASC';
 			$this->db->query($sql);
 			$traversal = new traverse_handlers_urls();
+			$traversal->_set_config($app['config']);
 			
 			while( $row = $this->db->fetchrow() )
 			{
@@ -114,6 +116,8 @@ class service
 	*/
 	public function obtain_menu($site_id)
 	{
+		global $app;
+		
 		if( !$site_id )
 		{
 			return false;
@@ -134,6 +138,7 @@ class service
 					left_id ASC';
 			$this->db->query($sql);
 			$traversal = new traverse_menu(true);
+			$traversal->_set_config($app['config']);
 			
 			while( $row = $this->db->fetchrow() )
 			{
