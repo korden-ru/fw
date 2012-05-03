@@ -69,11 +69,9 @@ class forms
 	array('name' => 'image', 'title' => 'Image', 'type' => 'file', 'old' => 'old_image', 'value' => 'image1.jpg', 'size' => array(BIG_WIDTH, BIG_HEIGHT, MIN_WIDTH, MIN_HEIGHT))
 
 */
-	function __construct()
+	function __construct($template)
 	{
-		global $template;
-		
-		$this->template =& $template;
+		$this->template = $template;
 	}
 
 	public function add_ajax_checkbox($value)
@@ -83,7 +81,7 @@ class forms
 
 	public function createEditFields($fields_array)
 	{
-		global $user;
+		global $app;
 		
 		$output = '';
 	
@@ -91,7 +89,7 @@ class forms
 		{
 			$this->template->assign('input', $data);
 			
-			if( (isset($data['perms']) && in_array($user->group, $data['perms'])) || !isset($data['perms']) )
+			if( (isset($data['perms']) && in_array($app['user']->group, $data['perms'])) || !isset($data['perms']) )
 			{
 				switch( $data['type'] )
 				{
@@ -146,7 +144,7 @@ class forms
 	*/
 	public function saveIntoDB(array $fieldset)
 	{
-		global $app, $request, $user;
+		global $app;
 
 		if( empty($fieldset) )
 		{
@@ -165,9 +163,9 @@ class forms
 			//внесение в БД тестовых полей
 			if( $data['type'] != 'file' && $data['type'] != 'date' && $data['name'] != 'modifyurl' )
 			{
-				if( (isset($data['perms']) && in_array($user->group, $data['perms'])) || !isset($data['perms']) )
+				if( (isset($data['perms']) && in_array($app['user']->group, $data['perms'])) || !isset($data['perms']) )
 				{ 
-					$value = $request->post($data['name'], '');
+					$value = $app['request']->post($data['name'], '');
 	
 					$sql_ary[$data['name']] = ($data['type'] == 'textarea') ? htmlspecialchars_decode($value) : $value;
 				}
@@ -176,7 +174,7 @@ class forms
 			//превращение времени в mktime
 			if( $data['type'] == 'date' )
 			{
-				$value = $request->post($data['name'], '');
+				$value = $app['request']->post($data['name'], '');
 				preg_match("/([0-9]{1,2}).([0-9]{1,2}).([0-9]{4})/iu", $value, $reg);
 				if (isset($reg[1]) && isset($reg[2]) && isset($reg[3]))
 				{
@@ -395,9 +393,9 @@ class forms
 			}
 		}
 		
-		if( $request->is_set_post('title') && $request->is_set_post('modifyurl') )
+		if( $app['request']->is_set_post('title') && $app['request']->is_set_post('modifyurl') )
 		{
-			$sql_ary['modifyurl'] = modifyUrl($request->post('title', '') . ' ' . $this->table_row_id);
+			$sql_ary['modifyurl'] = modifyUrl($app['request']->post('title', '') . ' ' . $this->table_row_id);
 		}
 		
 		$sql = '

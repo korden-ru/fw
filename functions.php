@@ -486,7 +486,7 @@ function humn_size($size, $rounder = '', $min = '', $space = '&nbsp;')
 * Внутренняя ссылка
 *
 * @param	string	$url		ЧПУ ссылка
-* @param	string	$prefix		Префикс (по умолчанию $config['site_root_path'])
+* @param	string	$prefix		Префикс (по умолчанию $app['config']['site_root_path'])
 *
 * @return	string				Готовый URL
 */
@@ -575,9 +575,9 @@ function load_constants()
 */
 function navigation_link($url, $text, $image = false)
 {
-	global $template;
+	global $app;
 	
-	$template->append('nav_links', array(
+	$app['template']->append('nav_links', array(
 		'IMAGE' => $image,
 		'TEXT'  => $text,
 		'URL'   => $url
@@ -596,9 +596,9 @@ function navigation_link($url, $text, $image = false)
 */
 function num_format($value, $decimals = 0)
 {
-	global $config;
+	global $app;
 	
-	return number_format($value, $decimals, $config['number_dec_point'], $config['number_thousands_sep']);
+	return number_format($value, $decimals, $app['config']['number_dec_point'], $app['config']['number_thousands_sep']);
 }
 
 /**
@@ -641,17 +641,17 @@ function make_random_string($length = 10)
 */
 function pagination($on_page, $overall, $link, $page_var = 'p')
 {
-	global $request, $template;
+	global $app;
 
 	/**
 	* Определяем переменные
 	*/
 	$base_url     = $link;
-	$p            = $request->variable($page_var, 1);
+	$p            = $app['request']->variable($page_var, 1);
 	$query_string = '';
-	$sort_count   = $request->variable('sc', $on_page);
-	$sort_dir     = $request->variable('sd', 'd');
-	$sort_key     = $request->variable('sk', 'a');
+	$sort_count   = $app['request']->variable('sc', $on_page);
+	$sort_dir     = $app['request']->variable('sd', 'd');
+	$sort_key     = $app['request']->variable('sk', 'a');
 	$start        = ($p * $sort_count) - $sort_count;
 
 	/**
@@ -715,7 +715,7 @@ function pagination($on_page, $overall, $link, $page_var = 'p')
 		$url_prev = $p - 1;
 	}
 	
-	$template->assign(array(
+	$app['template']->assign(array(
 		'pagination' => array(
 			'ITEMS'   => $overall,
 			'NEXT'    => generate_page_link($url_next, $base_url, $query_string),
@@ -788,8 +788,6 @@ function plural($n = 0, $forms, $format = '%s %s')
 */
 function redirect($url, $status_code = 302)
 {
-	global $config, $user;
-	
 	if( false !== strpos(urldecode($url), "\n") || false !== strpos(urldecode($url), "\r") )
 	{
 		trigger_error('Bad URL.', E_USER_ERROR);
@@ -834,7 +832,7 @@ function set_constants($constants)
 */
 function send_status_line($code, $message = '')
 {
-	global $request;
+	global $app;
 	
 	if( !$message )
 	{
@@ -874,7 +872,7 @@ function send_status_line($code, $message = '')
 		return;
 	}
 	
-	if( false != $version = $request->server('SERVER_PROTOCOL') )
+	if( false != $version = $app['request']->server('SERVER_PROTOCOL') )
 	{
 		header(sprintf('%s %d %s', $version, $code, $message), true, $code);
 		return;

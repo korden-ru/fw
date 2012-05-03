@@ -300,24 +300,24 @@ class upload
 				$format = "jpeg";
 		}
 		
-		global $config;
+		global $app;
 		
 		if( $format == 'gif' )
 		{
 			/* -sample не нарушает gif-анимацию */
-			// @passthru(sprintf('%sconvert "%s" -sample %dx%d +profile "*" "%s"', escapeshellcmd($config['imagemagick_dir']), $prop['tmp_name'], $width, $height, $filename));
+			// @passthru(sprintf('%sconvert "%s" -sample %dx%d +profile "*" "%s"', escapeshellcmd($app['config']['imagemagick_dir']), $prop['tmp_name'], $width, $height, $filename));
 		}
 		else
 		{
 			if( $trim )
 			{
-				@passthru(sprintf('%sconvert "%s" -quality %d -filter triangle -trim -resize %dx%d\> -gravity south -background None -extent %dx%d +repage "%s"', escapeshellcmd($config['imagemagick_dir']), $prop['tmp_name'], 75, $width, $height, $width, $height, $filename));
+				@passthru(sprintf('%sconvert "%s" -quality %d -filter triangle -trim -resize %dx%d\> -gravity south -background None -extent %dx%d +repage "%s"', escapeshellcmd($app['config']['imagemagick_dir']), $prop['tmp_name'], 75, $width, $height, $width, $height, $filename));
 				
 				return true;
 			}
 			else
 			{
-				// @passthru(sprintf('%sconvert -size %dx%d "%s" -quality %d -filter triangle -resize %dx%d\> +repage "%s"', escapeshellcmd($config['imagemagick_dir']), $width, $height, $prop['tmp_name'], 75, $width, $height, $filename));
+				// @passthru(sprintf('%sconvert -size %dx%d "%s" -quality %d -filter triangle -resize %dx%d\> +repage "%s"', escapeshellcmd($app['config']['imagemagick_dir']), $width, $height, $prop['tmp_name'], 75, $width, $height, $filename));
 			}
 		}
 		
@@ -378,17 +378,17 @@ class upload
 				$format = "jpeg";
 		}
 		
-		// global $config;
+		// global $app;
 		// 
 		// if( $format == 'gif' )
 		// {
 		// 	/* -sample не нарушает gif-анимацию */
-		// 	@passthru(sprintf('%sconvert "%s" -sample %dx%d +profile "*" "%s"', escapeshellcmd($config['imagemagick_dir']), $prop['tmp_name'], $width, $height, $filename));
+		// 	@passthru(sprintf('%sconvert "%s" -sample %dx%d +profile "*" "%s"', escapeshellcmd($app['config']['imagemagick_dir']), $prop['tmp_name'], $width, $height, $filename));
 		// }
 		// else
 		// {
-		// 	@passthru(sprintf('%sconvert -size %dx%d "%s" -quality %d -filter triangle %s -resize %dx%d> +repage "%s"', escapeshellcmd($config['imagemagick_dir']), $width, $height, $prop['tmp_name'], 75, (($trim) ? '-trim' : ''), $width, $height, $filename));
-		// 	printf('%sconvert -size %dx%d "%s" -quality %d -filter triangle %s -resize %dx%d> +repage "%s"', escapeshellcmd($config['imagemagick_dir']), $width, $height, $prop['tmp_name'], 75, (($trim) ? '-trim' : ''), $width, $height, $filename);
+		// 	@passthru(sprintf('%sconvert -size %dx%d "%s" -quality %d -filter triangle %s -resize %dx%d> +repage "%s"', escapeshellcmd($app['config']['imagemagick_dir']), $width, $height, $prop['tmp_name'], 75, (($trim) ? '-trim' : ''), $width, $height, $filename));
+		// 	printf('%sconvert -size %dx%d "%s" -quality %d -filter triangle %s -resize %dx%d> +repage "%s"', escapeshellcmd($app['config']['imagemagick_dir']), $width, $height, $prop['tmp_name'], 75, (($trim) ? '-trim' : ''), $width, $height, $filename);
 		// 	exit;
 		// }
 		// 
@@ -506,10 +506,10 @@ class upload
 				$format = "jpeg";
 		}
 		
-		global $config;
+		global $app;
 		
 		/* -size ускоряет создание превью, фильтр немного замыливает изображение */
-		@passthru(sprintf('%sconvert -size %dx%d "%s" -quality %d -filter triangle -resize %dx%d\^ -gravity Center -crop %dx%d+0+0 +repage "%s"', escapeshellcmd($config['imagemagick_dir']), $width, $height, $prop['tmp_name'], 75, $width, $height, $width, $height, $filename));
+		@passthru(sprintf('%sconvert -size %dx%d "%s" -quality %d -filter triangle -resize %dx%d\^ -gravity Center -crop %dx%d+0+0 +repage "%s"', escapeshellcmd($app['config']['imagemagick_dir']), $width, $height, $prop['tmp_name'], 75, $width, $height, $width, $height, $filename));
 		
 		return true;
 		

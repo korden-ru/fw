@@ -179,8 +179,8 @@ class profiler extends console
 		}
 
 		fwrite($fp, json_encode(array(
-			// 'domain' => $user->domain,
-			// 'page'   => $user->page,
+			// 'domain' => $app['user']->domain,
+			// 'page'   => $app['user']->page,
 			
 			'logs' => $this->output['logs'],
 			
