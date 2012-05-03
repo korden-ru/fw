@@ -43,7 +43,7 @@ class db extends config
 	*/
 	public function delete($key, $site_id = false)
 	{
-		$site_id = ( $site_id !== false ) ? intval($site_id) : $this->site_id;
+		$site_id = false !== $site_id ? intval($site_id) : $this->site_id;
 		
 		$sql = '
 			DELETE
@@ -69,7 +69,7 @@ class db extends config
 				unset($this->config[$key]);
 			}
 			
-			$this->cache->_delete('src_config');
+			$this->cache->_delete('fw_config');
 		}
 		elseif( $site_id > 0 && $site_id !== $this->site_id )
 		{
@@ -85,7 +85,7 @@ class db extends config
 	*/
 	public function increment($key, $increment = 1, $site_id = false)
 	{
-		$site_id = ( $site_id !== false ) ? intval($site_id) : $this->site_id;
+		$site_id = false !== $site_id ? intval($site_id) : $this->site_id;
 		
 		if( $site_id !== 0 && $site_id !== $this->site_id )
 		{
@@ -132,7 +132,7 @@ class db extends config
 				$this->config[$key] += $increment;
 			}
 			
-			$this->cache->_delete('src_config');
+			$this->cache->_delete('fw_config');
 		}
 	}
 
@@ -210,7 +210,7 @@ class db extends config
 				$this->config[$key] = $new_value;
 			}
 			
-			$this->cache->_delete('src_config');
+			$this->cache->_delete('fw_config');
 		}
 		elseif( $site_id > 0 && $site_id !== $this->site_id )
 		{
@@ -228,7 +228,7 @@ class db extends config
 	*/
 	private function load_config($site_id)
 	{
-		$cache_entry = ( $site_id === 0 ) ? 'src_config' : sprintf('%s_config_%s', $this->domain, $this->language);
+		$cache_entry = ( $site_id === 0 ) ? 'fw_config' : sprintf('%s_config_%s', $this->domain, $this->language);
 		
 		if( false === $config = $this->cache->_get($cache_entry) )
 		{
