@@ -35,12 +35,12 @@ class mysqli
 	*/
 	function __construct($dbhost, $dbuser, $dbpass, $dbname, $dbport = false, $dbsock = '', $persistent = false)
 	{
-		$this->server = $dbhost;
-		$this->user = $dbuser;
+		$this->server   = $dbhost;
+		$this->user     = $dbuser;
 		$this->password = $dbpass;
 		$this->database = $dbname;
-		$this->port = ( !$dbport ) ? null : $dbport;
-		$this->socket = $dbsock;
+		$this->port     = !$dbport ? null : $dbport;
+		$this->socket   = $dbsock;
 		
 		if( $persistent !== false && version_compare(PHP_VERSION, '5.3.0', '>=') )
 		{

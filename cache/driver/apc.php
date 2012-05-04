@@ -16,16 +16,6 @@ class apc extends memory
 	protected $extension = 'apc';
 	
 	/**
-	* Очистка кэша
-	*/
-	public function purge()
-	{
-		apc_clear_cache('user');
-		
-		parent::purge();
-	}
-
-	/**
 	* Удаление записи из кэша
 	*/
 	public function _delete($var)
@@ -47,5 +37,15 @@ class apc extends memory
 	public function _set($var, $data, $ttl = 2592000)
 	{
 		return apc_store($this->prefix . $var, $data, $ttl);
+	}
+	
+	/**
+	* Очистка кэша
+	*/
+	public function purge()
+	{
+		apc_clear_cache('user');
+		
+		parent::purge();
 	}
 }

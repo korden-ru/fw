@@ -22,11 +22,17 @@ class service
 	protected $driver;
 	protected $site_info;
 
-	function __construct($driver, $db)
+	function __construct($driver)
+	{
+		$this->set_driver($driver);
+	}
+	
+	public function _set_db($db)
 	{
 		$this->db = $db;
+		$this->driver->_set_db($db);
 		
-		$this->set_driver($driver);
+		return $this;
 	}
 	
 	public function _set_site_info($site_info)

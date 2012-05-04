@@ -25,10 +25,8 @@ class file
 
 	private $db;
 	
-	function __construct($prefix = '', $db)
+	function __construct($prefix = '')
 	{
-		$this->db = $db;
-		
 		$this->set_prefix($prefix);
 		$this->cache_dir = SITE_DIR . '../cache/';
 	}
@@ -225,6 +223,13 @@ class file
 		}
 		
 		return false;
+	}
+	
+	public function _set_db($db)
+	{
+		$this->db = $db;
+		
+		return $this;
 	}
 	
 	/**

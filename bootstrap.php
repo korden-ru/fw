@@ -42,7 +42,10 @@ $app['autoloader']->register_namespaces(array(
 	'acp'     => SITE_DIR . 'acp/includes',
 ));
 
+/* Внедрение зависимостей */
+$app['cache']->_set_db($app['db']);
 $app['db']->_set_cache($app['cache']);
+$app['db']->_set_profiler($app['profiler']);
 $app['user']->_set_db($app['db']);
 
 /* Собственный обработчик ошибок */

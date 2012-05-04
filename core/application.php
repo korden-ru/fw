@@ -51,16 +51,13 @@ class application implements \ArrayAccess
 		
 		/* Подключение к базе данных */
 		$this['db'] = $this->share(function() use ($app) {
-			$db = new db_mysqli($app['db.host'], $app['db.user'], $app['db.pass'], $app['db.name'], $app['db.port'], $app['db.sock'], $app['db.pers']);
-			$db->_set_profiler($app['profiler']);
-			
-			return $db;
+			return new db_mysqli($app['db.host'], $app['db.user'], $app['db.pass'], $app['db.name'], $app['db.port'], $app['db.sock'], $app['db.pers']);
 		});
 		
 		/* Инициализация кэша */
 		$this['cache'] = $this->share(function() use ($app) {
 			$class = '\\engine\\cache\\driver\\' . $app['acm.type'];
-			return new cache_service(new $class($app['acm.prefix'], $app['db']), $app['db']);
+			return new cache_service(new $class($app['acm.prefix']));
 		});
 
 		/* Пользователь */
