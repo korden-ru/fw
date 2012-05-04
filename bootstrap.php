@@ -47,6 +47,12 @@ $app['db']->_set_cache($app['cache']);
 /* Собственный обработчик ошибок */
 errorhandler::register();
 
+if( false === $app['site_info'] = get_site_info_by_url($app['user']->domain, $app['user']->page) )
+{
+	/* Определение сайта */
+	$app['site_info'] = get_site_info_by_url($app['user']->domain);
+}
+
 if( false === strpos($app['request']->server('SERVER_NAME'), '.korden.net') )
 {
 	/* Принудительная установка кодировки для хостинг-провайдеров */
