@@ -13,13 +13,14 @@ namespace engine\config;
 */
 class db extends config
 {
-	protected $cache;
-	protected $db;
 	protected $domain;
 	protected $language;
 	protected $site_id;
 	protected $site_vars;
 	protected $table;
+
+	protected $cache;
+	protected $db;
 	
 	function __construct($cache, $db, $site_info, $table = false)
 	{
@@ -28,12 +29,13 @@ class db extends config
 			trigger_error('Сайт не найден', E_USER_ERROR);
 		}
 		
-		$this->cache    = $cache;
-		$this->db       = $db;
+		$this->cache = $cache;
+		$this->db    = $db;
+		
 		$this->domain   = $site_info['domain'];
 		$this->language = $site_info['language'];
 		$this->site_id  = $site_info['id'];
-		$this->table    = ( $table ) ?: CONFIG_TABLE;
+		$this->table    = $table ?: CONFIG_TABLE;
 		
 		parent::__construct(array_merge($this->load_config(0), $this->load_config($this->site_id)));
 	}
@@ -149,7 +151,7 @@ class db extends config
 	*/
 	public function set_atomic($key, $old_value, $new_value, $site_id = false)
 	{
-		$site_id = ( $site_id !== false ) ? intval($site_id) : $this->site_id;
+		$site_id = false !== $site_id ? intval($site_id) : $this->site_id;
 		
 		$sql = '
 			UPDATE
@@ -228,7 +230,7 @@ class db extends config
 	*/
 	private function load_config($site_id)
 	{
-		$cache_entry = ( $site_id === 0 ) ? 'fw_config' : sprintf('%s_config_%s', $this->domain, $this->language);
+		$cache_entry = 0 === $site_id ? 'fw_config' : sprintf('%s_config_%s', $this->domain, $this->language);
 		
 		if( false === $config = $this->cache->_get($cache_entry) )
 		{
