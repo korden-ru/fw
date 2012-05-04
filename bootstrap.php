@@ -43,6 +43,7 @@ $app['autoloader']->register_namespaces(array(
 ));
 
 $app['db']->_set_cache($app['cache']);
+$app['user']->_set_db($app['db']);
 
 /* Собственный обработчик ошибок */
 errorhandler::register();
@@ -52,6 +53,8 @@ if( false === $app['site_info'] = get_site_info_by_url($app['user']->domain, $ap
 	/* Определение сайта */
 	$app['site_info'] = get_site_info_by_url($app['user']->domain);
 }
+
+$app['cache']->_set_site_info($app['site_info']);
 
 if( false === strpos($app['request']->server('SERVER_NAME'), '.korden.net') )
 {

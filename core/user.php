@@ -32,12 +32,9 @@ class user implements \ArrayAccess, \IteratorAggregate, \Countable
 	protected $db;
 	protected $request;
 	
-	function __construct($cache, $config, $db, $request)
+	function __construct($request)
 	{
 		$this->request = $request;
-		$this->cache   = $cache;
-		$this->config  = $config;
-		$this->db      = $db;
 		
 		/**
 		* Данные посетителя
@@ -53,7 +50,14 @@ class user implements \ArrayAccess, \IteratorAggregate, \Countable
 		$this->page          = $this->extract_page();
 		$this->referer       = $this->request->header('Referer');
 	}
-
+	
+	public function _set_db($db)
+	{
+		$this->db = $db;
+		
+		return $this;
+	}
+	
 	function login_full($login,$password,$remember)	//полноценная авторизация
 	{	
 		//возвращает '' если логин пустой, login_activate если пользователь не активировал учетную запись и login_fail в случае неверного логина и пароля.

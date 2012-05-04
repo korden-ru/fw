@@ -22,12 +22,18 @@ class service
 	protected $driver;
 	protected $site_info;
 
-	function __construct($driver, $db, $site_info)
+	function __construct($driver, $db)
 	{
-		$this->db        = $db;
-		$this->site_info = $site_info;
+		$this->db = $db;
 		
 		$this->set_driver($driver);
+	}
+	
+	public function _set_site_info($site_info)
+	{
+		$this->site_info = $site_info;
+		
+		return $this;
 	}
 	
 	/**
@@ -152,6 +158,32 @@ class service
 		}
 		
 		return $menu;
+	}
+
+	/**
+	* Список сайтов
+	*/
+	public function obtain_sites()
+	{
+		static $sites;
+		
+		if( empty($sites) && (false === $sites = $this->driver->_get('fw_sites')) )
+		{
+			$sql = '
+				SELECT
+					*
+				FROM
+					' . SITES_TABLE . '
+				ORDER BY
+					site_url ASC,
+					site_language ASC';
+			$this->db->query($sql);
+			$sites = $this->db->fetchall();
+			$this->db->freeresult();
+			$this->driver->_set('fw_sites', $sites);
+		}
+
+		return $sites;
 	}
 }
 

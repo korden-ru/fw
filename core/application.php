@@ -60,7 +60,12 @@ class application implements \ArrayAccess
 		/* Инициализация кэша */
 		$this['cache'] = $this->share(function() use ($app) {
 			$class = '\\engine\\cache\\driver\\' . $app['acm.type'];
-			return new cache_service(new $class($app['acm.prefix'], $app['db']), $app['db'], $app['site_info']);
+			return new cache_service(new $class($app['acm.prefix'], $app['db']), $app['db']);
+		});
+
+		/* Пользователь */
+		$this['user'] = $this->share(function() use ($app) {
+			return new user($app['request']);
 		});
 
 		/* Настройки сайта и движка */
@@ -68,10 +73,6 @@ class application implements \ArrayAccess
 			return new config_db($app['cache'], $app['db'], $app['site_info'], CONFIG_TABLE);
 		});
 
-		$this['user'] = $this->share(function() use ($app) {
-			return new user($app['cache'], $app['config'], $app['db'], $app['request']);
-		});
-		
 		/* Маршрутизатор запросов */
 		$this['router'] = $this->share(function() use ($app) {
 			return new router($app['cache'], $app['config'], $app['db'], $app['profiler'], $app['request'], $app['template'], $app['user']);
