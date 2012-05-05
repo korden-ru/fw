@@ -51,6 +51,13 @@ class user implements \ArrayAccess, \IteratorAggregate, \Countable
 		$this->referer       = $this->request->header('Referer');
 	}
 	
+	public function _set_config($config)
+	{
+		$this->config = $config;
+		
+		return $this;
+	}
+	
 	public function _set_db($db)
 	{
 		$this->db = $db;
@@ -237,6 +244,18 @@ class user implements \ArrayAccess, \IteratorAggregate, \Countable
 		$page .= ( $query_string ) ? '?' . $query_string : '';
 		
 		return $page;
+	}
+
+	/**
+	* Установка cookies
+	*/
+	public function set_cookie($name, $data, $time)
+	{
+		$cookie_name   = rawurlencode($this->config['cookie.name'] . '_' . $name) . '=' . rawurlencode($data);
+		$cookie_expire = gmdate('D, d-M-Y H:i:s \\G\\M\\T', $time);
+		$cookie_domain = !$this->config['cookie.domain'] || $this->config['cookie.domain'] == 'localhost' || $this->config['cookie.domain'] == '127.0.0.1' ? '' : '; domain=' . $this->config['cookie.domain'];
+
+		header('Set-Cookie: ' . $cookie_name . (($cookie_expire) ? '; expires=' . $cookie_expire : '') . '; path=' . $this->config['cookie.path'] . $cookie_domain . ((!$this->config['cookie.secure']) ? '' : '; secure') . '; HttpOnly', false);
 	}
 
 	/**

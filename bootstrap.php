@@ -58,6 +58,7 @@ if( false === $app['site_info'] = get_site_info_by_url($app['user']->domain, $ap
 }
 
 $app['cache']->_set_site_info($app['site_info']);
+$app['user']->_set_config($app['config']);
 
 if( false === strpos($app['request']->server('SERVER_NAME'), '.korden.net') )
 {
