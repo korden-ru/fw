@@ -29,6 +29,14 @@ $app = array(
 		'Текстовая с блоками'  => 2,
 		'Блоки'                => 3,
 	),
+	
+	/* Типы публикаций */
+	'publication.types' => array(
+		'articles'     => 1,
+		'news'         => 2,
+		'publications' => 3,
+		'services'     => 4,
+	),
 );
 
 /**
