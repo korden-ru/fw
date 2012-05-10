@@ -477,6 +477,10 @@ class forms
 					unset($value['style_tr']);
 				}
 				
+				$skip_delete = isset($value['skip_delete']) && $value['skip_delete'];
+				$skip_edit = isset($value['skip_edit']) && $value['skip_edit'];
+				unset($value['skip_delete'], $value['skip_edit']);
+				
 				$row = ' class="row'.($i%2+1).'" '.$sortId . $style_tr;
 				$cols .= '<tr '.$row. (!empty($this->U_EDIT) ? ' ondblclick="Redirect(arguments, \''.str_replace('\\', '\\\\', $this->U_EDIT).$value[$this->primary_id].'\');"' : '') . '>';
 			
@@ -517,11 +521,13 @@ class forms
 							$cols .= '<td>'.$td_data.'</td>';
 					}
 				}
+				
+				$cols .= '<td>';
 
 				//кнопка редактирования
-				if(!empty($this->U_EDIT))
+				if( !empty($this->U_EDIT) && !$skip_edit )
 				{
-					$cols .= '<td>
+					$cols .= '
 						<input class="button1" style="width:100%;" type="button" value="Изменить" onclick="Redirect(arguments, \''.str_replace('\\', '\\\\', $this->U_EDIT).$value[$this->primary_id].'\');" />
 						<br />';
 				}
@@ -537,15 +543,12 @@ class forms
 				}
 
 				//кнопка удаления
-				if(!empty($this->U_DEL))
+				if( !empty($this->U_DEL) && !$skip_delete )
 				{
-					$cols .= '<input class="button1" style="width:100%;" type="button" value="Удалить" onclick="if(confirm(\'Будет удалена вся информация связанная с этой записью! Продолжить?\')) {Redirect(arguments, \''.$this->U_DEL.$value[$this->primary_id].'\');}" />
-						</td>';
+					$cols .= '<input class="button1" style="width:100%;" type="button" value="Удалить" onclick="if(confirm(\'Будет удалена вся информация связанная с этой записью! Продолжить?\')) {Redirect(arguments, \''.$this->U_DEL.$value[$this->primary_id].'\');}">';
 				}
 
-
-
-				$cols .= '</tr>';
+				$cols .= '</td></tr>';
 			}
 		$i++;
 		}
