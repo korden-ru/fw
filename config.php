@@ -54,6 +54,7 @@ if( false === load_constants() )
 		'I18N_TABLE'              => 'tcms_i18n',
 		'IMAGE_WATERMARKS_TABLE'  => 'tcms_image_watermarks',
 		'LANGUAGES_TABLE'         => 'tcms_languages',
+		'MENUS_TABLE'             => 'tcms_menus',
 		'PAGES_TABLE'             => 'tcms_pages',
 		'SITES_TABLE'             => 'tcms_sites',
 	));

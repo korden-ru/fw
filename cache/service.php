@@ -165,6 +165,39 @@ class service
 		
 		return $menu;
 	}
+	
+	/**
+	* Список меню
+	*/
+	public function obtain_menus()
+	{
+		global $app;
+		static $menus;
+		
+		if( empty($menus) && (false === $menus = $this->driver->get('menus')) )
+		{
+			$sql = '
+				SELECT
+					*
+				FROM
+					' . MENUS_TABLE . '
+				WHERE
+					activation = 1
+				ORDER BY
+					sort ASC';
+			$this->db->query($sql);
+			
+			while( $row = $this->db->fetchrow() )
+			{
+				$menus[$row['alias']] = $row;
+			}
+			
+			$this->db->freeresult();
+			$this->driver->set('menus', $menus);
+		}
+		
+		return $menus;
+	}
 
 	/**
 	* Список сайтов
@@ -173,7 +206,7 @@ class service
 	{
 		static $sites;
 		
-		if( empty($sites) && (false === $sites = $this->driver->_get('fw_sites')) )
+		if( empty($sites) && (false === $sites = $this->driver->get('sites')) )
 		{
 			$sql = '
 				SELECT
@@ -186,7 +219,7 @@ class service
 			$this->db->query($sql);
 			$sites = $this->db->fetchall();
 			$this->db->freeresult();
-			$this->driver->_set('fw_sites', $sites);
+			$this->driver->set('sites', $sites);
 		}
 
 		return $sites;
