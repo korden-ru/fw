@@ -104,7 +104,7 @@ class errorhandler
 				{
 					$handler = new \app\models\page();
 					$handler->data['site_id'] = $app['site_info']['id'];
-					$handler->format = ( !empty($app['router']) ) ? $app['router']->format : $app['config']['router.default_extension'];
+					$handler->format = !empty($app['router']) ? $app['router']->format : $app['config']['router.default_extension'];
 					
 					$handler->_set_cache($app['cache'])
 						->_set_config($app['config'])
@@ -114,6 +114,12 @@ class errorhandler
 						->_set_template($app['template'])
 						->_set_user($app['user'])
 						->set_site_menu();
+					
+					/* Предустановки */
+					if( method_exists($handler, '_setup') )
+					{
+						call_user_func(array($handler, '_setup'));
+					}
 				}
 			
 				/* Запрет индексирования страницы */
