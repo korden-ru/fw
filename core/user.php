@@ -49,6 +49,8 @@ class user implements \ArrayAccess, \IteratorAggregate, \Countable
 		$this->lang['.']     = 'ru';
 		$this->page          = $this->extract_page();
 		$this->referer       = $this->request->header('Referer');
+		
+		$this->session_id = session_id();
 	}
 	
 	public function _set_config($config)
