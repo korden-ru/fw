@@ -31,6 +31,11 @@ class file
 		$this->cache_dir = SITE_DIR . '../cache/';
 	}
 	
+	public function _delete($filename)
+	{
+		$this->remove_file($this->cache_dir . $filename . '.php');
+	}
+	
 	/**
 	* Получение данных из кэша
 	*/
