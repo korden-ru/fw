@@ -462,16 +462,16 @@ class router
 	*/
 	protected function get_site_id($domain, $language)
 	{
+		$hostnames = $this->cache->obtain_hostnames();
 		$sites = $this->cache->obtain_sites();
 		
-		foreach( $sites as $row )
+		if( isset($hostnames[$domain . '_' . $language]) )
 		{
-			if( $domain == $row['site_url'] && $language == $row['site_language'] )
-			{
-				setlocale(LC_ALL, $row['site_locale']);
-				
-				return (int) $row['site_id'];
-			}
+			$site_id = $hostnames[$domain . '_' . $language];
+			
+			setlocale(LC_ALL, $sites[$site_id]['site_locale']);
+			
+			return (int) $site_id;
 		}
 		
 		return false;
