@@ -448,16 +448,15 @@ function get_site_info_by_id($site_id)
 	
 	$sites = $app['cache']->obtain_sites();
 	
-	foreach( $sites as $row )
+	if( isset($sites[$site_id]) )
 	{
-		if( $site_id == $row['site_id'] )
-		{
-			return array(
-				'domain'   => $row['site_url'],
-				'language' => $row['site_language'],
-				'title'    => $row['site_title']
-			);
-		}
+		return array(
+			'default'  => (int) $sites[$site_id]['site_default'],
+			'domain'   => $sites[$site_id]['site_url'],
+			'id'       => (int) $sites[$site_id]['site_id'],
+			'language' => $sites[$site_id]['site_language'],
+			'title'    => $sites[$site_id]['site_title']
+		);
 	}
 	
 	return false;
@@ -483,20 +482,16 @@ function get_site_info_by_url($url, $page = '')
 		$language = $params[0];
 	}
 	
-	$sites = $app['cache']->obtain_sites();
-	
-	foreach( $sites as $row )
+	if( $language )
 	{
-		if( $url == $row['site_url'] && (($row['site_default'] && !$language) || ($language && $language == $row['site_language'])) )
-		{
-			return array(
-				'default'  => (int) $row['site_default'],
-				'domain'   => $row['site_url'],
-				'id'       => (int) $row['site_id'],
-				'language' => $row['site_language'],
-				'title'    => $row['site_title']
-			);
-		}
+		return get_site_info_by_url_lang($url, $language);
+	}
+	
+	$hostnames = $app['cache']->obtain_hostnames();
+	
+	if( isset($hostnames[$url]) )
+	{
+		return get_site_info_by_id($hostnames[$url]);
 	}
 	
 	return false;
@@ -509,17 +504,11 @@ function get_site_info_by_url_lang($url, $lang)
 {
 	global $app;
 	
-	$sites = $app['cache']->obtain_sites();
+	$hostnames = $app['cache']->obtain_hostnames();
 	
-	foreach( $sites as $row )
+	if( isset($hostnames[$url . '_' . $lang]) )
 	{
-		if( $url == $row['site_url'] && $lang == $row['site_language'] )
-		{
-			return array(
-				'id'    => (int) $row['site_id'],
-				'title' => $row['site_title']
-			);
-		}
+		return get_site_info_by_id($hostnames[$url . '_' . $lang]);
 	}
 	
 	return false;

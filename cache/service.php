@@ -122,6 +122,54 @@ class service
 		
 		return $handlers;
 	}
+	
+	/**
+	* Список всех поддерживаемых доменов
+	*/
+	public function obtain_hostnames()
+	{
+		static $hostnames;
+		
+		if( empty($hostnames) && (false === $hostnames = $this->driver->get('hostnames')) )
+		{
+			$sql = '
+				SELECT
+					*
+				FROM
+					' . SITES_TABLE . '
+				ORDER BY
+					site_id ASC';
+			$this->db->query($sql);
+			
+			while( $row = $this->db->fetchrow() )
+			{
+				if( $row['site_default'] )
+				{
+					$hostnames[$row['site_url']] = $row['site_id'];
+				}
+				
+				$hostnames[sprintf('%s_%s', $row['site_url'], $row['site_language'])] = $row['site_id'];
+				
+				if( !empty($row['site_aliases']) )
+				{
+					foreach( explode(' ', $row['site_aliases']) as $key => $hostname )
+					{
+						if( $row['site_default'] )
+						{
+							$hostnames[$row['site_url']] = $row['site_id'];
+						}
+						
+						$hostnames[sprintf('%s_%s', $hostname, $row['site_language'])] = $row['site_id'];
+					}
+				}
+			}
+			
+			$this->db->freeresult();
+			$this->driver->set('hostnames', $hostnames);
+		}
+
+		return $hostnames;
+	}
 
 	/**
 	* Глобальное меню сайта (page_display = 2)
@@ -214,10 +262,9 @@ class service
 				FROM
 					' . SITES_TABLE . '
 				ORDER BY
-					site_url ASC,
-					site_language ASC';
+					site_id ASC';
 			$this->db->query($sql);
-			$sites = $this->db->fetchall();
+			$sites = $this->db->fetchall(false, 'site_id');
 			$this->db->freeresult();
 			$this->driver->set('sites', $sites);
 		}
