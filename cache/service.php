@@ -156,7 +156,7 @@ class service
 					{
 						if( $row['site_default'] )
 						{
-							$hostnames[$row['site_url']] = $row['site_id'];
+							$hostnames[$hostname] = $row['site_id'];
 						}
 						
 						$hostnames[sprintf('%s_%s', $hostname, $row['site_language'])] = $row['site_id'];
