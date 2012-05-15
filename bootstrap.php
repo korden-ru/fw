@@ -60,6 +60,16 @@ if( false === $app['site_info'] = get_site_info_by_url($app['user']->domain, $ap
 $app['cache']->_set_site_info($app['site_info']);
 $app['user']->_set_config($app['config']);
 
+if( $app['config']['templates.dir'] )
+{
+	$app['template']->setTemplateDir(array_merge(
+		array('app' => SITE_DIR . '../templates/' . $app['config']['templates.dir']),
+		$app['template']->getTemplateDir()
+	));
+	
+	$app['template']->setCompileDir(SITE_DIR . '../cache/templates/' . $app['config']['templates.dir']);
+}
+
 if( false === strpos($app['request']->server('SERVER_NAME'), '.korden.net') )
 {
 	/* Принудительная установка кодировки для хостинг-провайдеров */

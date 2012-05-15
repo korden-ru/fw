@@ -29,8 +29,8 @@ class smarty extends \Smarty
 		else
 		{
 			$this->setTemplateDir(array(
-				'app'    => SITE_DIR . '../templates',
-				'engine' => FW_DIR . 'templates',
+				'app_shared' => SITE_DIR . '../templates',
+				'engine'     => FW_DIR . 'templates',
 			));
 		}
 
