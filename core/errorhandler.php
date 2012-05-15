@@ -17,13 +17,13 @@ class errorhandler
 	{
 		global $app;
 		
-		/* Выходим, если проверка отключена через @ */
-		/*
+		/**
+		* Выходим, если проверка отключена через @
+		*/
 		if( error_reporting() == 0 && $type != E_USER_ERROR && $type != E_USER_WARNING && $type != E_USER_NOTICE )
 		{
 			return;
 		}
-		*/
 		
 		$file = str_replace($app['request']->server('DOCUMENT_ROOT'), '', $file);
 		
