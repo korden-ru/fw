@@ -47,7 +47,7 @@ class smarty extends \Smarty
 	/**
 	* Обработка и вывод шаблона
 	*/
-	public function display($file = '')
+	public function display($file = null, $cache_id = null, $compile_id = null, $parent = null)
 	{
 		$this->file = $file ?: $this->file;
 		
