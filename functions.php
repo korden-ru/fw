@@ -718,9 +718,6 @@ function pagination($on_page, $overall, $link, $page_var = 'p')
 {
 	global $app;
 
-	/**
-	* Определяем переменные
-	*/
 	$base_url     = $link;
 	$p            = $app['request']->variable($page_var, 1);
 	$query_string = '';
@@ -736,17 +733,17 @@ function pagination($on_page, $overall, $link, $page_var = 'p')
 	{
 		if( $sort_count != $on_page )
 		{
-			$link .= ( ( strpos($link, '?') !== false ) ? '&' : '?' ) . 'sc=' . $sort_count;
+			$link .= ((false !== strpos($link, '?')) ? '&' : '?') . 'sc=' . $sort_count;
 		}
 
 		if( $sort_dir != 'd' )
 		{
-			$link .= ( ( strpos($link, '?') !== false ) ? '&' : '?' ) . 'sd=' . $sort_dir;
+			$link .= ((false !== strpos($link, '?')) ? '&' : '?') . 'sd=' . $sort_dir;
 		}
 
 		if( $sort_key != 'a' )
 		{
-			$link .= ( ( strpos($link, '?') !== false ) ? '&' : '?' ) . 'sk=' . $sort_key;
+			$link .= ((false !== strpos($link, '?')) ? '&' : '?') . 'sk=' . $sort_key;
 		}
 	}
 
@@ -759,7 +756,7 @@ function pagination($on_page, $overall, $link, $page_var = 'p')
 		trigger_error('PAGE_NOT_FOUND');
 	}
 
-	if( ( $q_pos = strpos($base_url, '?') ) !== false )
+	if( false !== $q_pos = strpos($base_url, '?') )
 	{
 		/**
 		* Если в адресе присутствует query_string:
@@ -773,7 +770,7 @@ function pagination($on_page, $overall, $link, $page_var = 'p')
 		$base_url     = substr($base_url, 0, $q_pos);
 	}
 
-	$url_delim = ( !$query_string ) ? '?' : '&amp;';
+	$url_delim = !$query_string ? '?' : '&amp;';
 	$url_next = $url_prev = 0;
 
 	if( $pages > $p )

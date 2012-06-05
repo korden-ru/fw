@@ -121,7 +121,7 @@ class errorhandler
 						call_user_func(array($handler, '_setup'));
 					}
 				}
-			
+				
 				/* Запрет индексирования страницы */
 				$handler->data['page_noindex'] = 1;
 
