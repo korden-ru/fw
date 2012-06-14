@@ -99,7 +99,7 @@ function hidden_fields($row)
 
 function debug($array, $exit=1)
 {
-	if (isset($_GET['admin']) || $_SERVER['REMOTE_ADDR'] == '79.175.20.190' || $_SERVER['REMOTE_ADDR'] == '127.0.0.1')
+	if (isset($_GET['admin']) || isset($_COOKIE['debug_mode']) || $_SERVER['REMOTE_ADDR'] == '79.175.20.190' || $_SERVER['REMOTE_ADDR'] == '127.0.0.1')
 	{
 		echo '<pre>';
 		print_r($array);
