@@ -80,6 +80,39 @@ class service
 	}
 
 	/**
+	* Список типов баннеров
+	*/
+	public function obtain_banners_types()
+	{
+		global $app;
+		static $types;
+		
+		if( empty($types) && (false === $types = $this->driver->get('banners_types')) )
+		{
+			$sql = '
+				SELECT
+					*
+				FROM
+					' . BANNERS_TYPES_TABLE . '
+				WHERE
+					activation = 1
+				ORDER BY
+					sort ASC';
+			$this->db->query($sql);
+			
+			while( $row = $this->db->fetchrow() )
+			{
+				$menus[$row['alias']] = $row;
+			}
+			
+			$this->db->freeresult();
+			$this->driver->set('banners_types', $types);
+		}
+		
+		return $types;
+	}
+
+	/**
 	* Список динамических страниц
 	*/
 	public function obtain_handlers_urls($site_id)
