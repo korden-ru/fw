@@ -892,6 +892,11 @@ function set_constants($constants)
 		return;
 	}
 	
+	if( !$app['acm.prefix'] )
+	{
+		return;
+	}
+	
 	apc_define_constants($app['acm.prefix'] . '_constants', $constants);
 }
 
