@@ -344,7 +344,7 @@ class file
 	}
 
 	/**
-	* Сброс кэша
+	* Сброс кэша для конкретного сайта
 	*/
 	public function purge()
 	{
@@ -360,6 +360,29 @@ class file
 				continue;
 			}
 			
+			$this->remove_file($this->cache_dir . $entry);
+		}
+		
+		closedir($dir);
+		
+		unset($this->data, $this->data_expires, $this->sql_rowset, $this->sql_row_pointer);
+
+		$this->data = $this->data_expires = $this->sql_rowset = $this->sql_row_pointer = array();
+		$this->is_modified = false;
+	}
+	
+	/**
+	* Сброс кэша для всех сайтов
+	*/
+	public function purge_all()
+	{
+		if( false === $dir = opendir($this->cache_dir) )
+		{
+			return;
+		}
+		
+		while( false !== $entry = readdir($dir) )
+		{
 			$this->remove_file($this->cache_dir . $entry);
 		}
 		
