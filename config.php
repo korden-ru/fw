@@ -49,11 +49,14 @@ if( false === load_constants() )
 {
 	set_constants(array(
 		/* Таблицы сайта */
+		'BANNERS_TABLE'           => 'tcms_banners',
+		'BANNERS_TYPES_TABLE'     => 'tcms_banners_types',
 		'CONFIG_TABLE'            => 'tcms_config',
 		'CRON_TABLE'              => 'tcms_cron',
 		'I18N_TABLE'              => 'tcms_i18n',
 		'IMAGE_WATERMARKS_TABLE'  => 'tcms_image_watermarks',
 		'LANGUAGES_TABLE'         => 'tcms_languages',
+		'LOGS_TABLE'              => 'tcms_logs',
 		'MENUS_TABLE'             => 'tcms_menus',
 		'PAGES_TABLE'             => 'tcms_pages',
 		'SITES_TABLE'             => 'tcms_sites',
