@@ -102,7 +102,7 @@ class service
 			
 			while( $row = $this->db->fetchrow() )
 			{
-				$menus[$row['alias']] = $row;
+				$types[$row['alias']] = $row;
 			}
 			
 			$this->db->freeresult();
