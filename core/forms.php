@@ -379,7 +379,7 @@ class forms
 							
 						$this->uploader->dir_dest = SITE_DIR.'uploads/'.$this->upload_folder.'/'; 
 						if (!is_dir($this->uploader->dir_dest))
-							mkdir($this->uploader->dir_dest, "0777", true);
+							mkdir($this->uploader->dir_dest, 0777, true);
 							
 						$this->uploader->Save($filename);	
 					}
