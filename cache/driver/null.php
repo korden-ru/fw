@@ -1,9 +1,7 @@
 <?php
 /**
-*
 * @package fw.korden.net
-* @copyright (c) 2012 vacuum
-*
+* @copyright (c) 2012
 */
 
 namespace engine\cache\driver;
