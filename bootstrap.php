@@ -49,6 +49,12 @@ $app['user']->_set_db($app['db']);
 /* Собственный обработчик ошибок */
 errorhandler::register();
 
+if( false === strpos($app['request']->server('SERVER_NAME'), '.korden.net') )
+{
+	/* Принудительная установка кодировки для хостинг-провайдеров */
+	$app['db']->query('SET NAMES utf8');
+}
+
 if( false === $app['site_info'] = get_site_info_by_url($app['user']->domain, $app['user']->page) )
 {
 	/* Определение сайта */
@@ -66,12 +72,6 @@ if( $app['config']['templates.dir'] )
 	));
 	
 	$app['template']->setCompileDir(SITE_DIR . '../cache/templates/' . $app['config']['templates.dir']);
-}
-
-if( false === strpos($app['request']->server('SERVER_NAME'), '.korden.net') )
-{
-	/* Принудительная установка кодировки для хостинг-провайдеров */
-	$app['db']->query('SET NAMES utf8');
 }
 
 $app['template']->assign('cfg', $app['config']);
