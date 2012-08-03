@@ -198,6 +198,13 @@ class service
 			$this->db->freeresult();
 			$this->driver->set('hostnames', $hostnames);
 		}
+		
+		if( empty($hostnames) )
+		{
+			install_site();
+			
+			return $this->obtain_hostnames();
+		}
 
 		return $hostnames;
 	}

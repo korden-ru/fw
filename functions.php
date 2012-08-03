@@ -443,6 +443,17 @@ function get_preg_expression($type)
 	return false;
 }
 
+function get_server_name()
+{
+	global $app;
+	
+	$hostname = $app['request']->header('Host') ?: $app['request']->server('SERVER_NAME');
+	$hostname = 0 === strpos($hostname, 'www.') ? substr($hostname, 4) : $hostname;
+	$hostname = (false !== $pos = strpos($hostname, ':')) ? substr($hostname, 0, $pos) : $hostname;
+		
+	return $hostname;
+}
+
 /**
 * Поиск URL сайта по его уникальному идентификатору
 */
@@ -628,6 +639,24 @@ function ilink($url = '', $prefix = false)
 	}
 	
 	return sprintf('%s/', $link);
+}
+
+function install_site()
+{
+	global $app;
+	
+	$sql_ary = array(
+		'site_id'       => 1,
+		'site_language' => 'ru',
+		'site_locale'   => 'ru_RU.utf8',
+		'site_title'    => '',
+		'site_url'      => get_server_name(),
+		'site_aliases'  => '',
+		'site_default'  => 1
+	);
+			
+	$sql = 'INSERT INTO ' . SITES_TABLE . ' ' . $app['db']->build_array('INSERT', $sql_ary);
+	$app['db']->query($sql);
 }
 
 /**

@@ -46,7 +46,7 @@ class user implements \ArrayAccess, \IteratorAggregate, \Countable
 		$this->browser       = $this->request->header('User-Agent');
 		$this->cookie        = array('u' => 0, 'k' => '');
 		$this->ctime         = time();
-		$this->domain        = $this->get_server_name();
+		$this->domain        = get_server_name();
 		$this->forwarded_for = $this->request->header('X-Forwarded-For');
 		$this->ip            = $this->request->server('REMOTE_ADDR');
 		$this->isp           = $this->request->header('Provider', 'internet');
@@ -264,15 +264,6 @@ class user implements \ArrayAccess, \IteratorAggregate, \Countable
 		header('Set-Cookie: ' . $cookie_name . (($time) ? '; expires=' . $cookie_expire : '') . '; path=' . $this->config['cookie.path'] . $cookie_domain . ((!$this->config['cookie.secure']) ? '' : '; secure') . '; HttpOnly', false);
 	}
 	
-	protected function get_server_name()
-	{
-		$hostname = $this->request->header('Host') ?: $this->request->server('SERVER_NAME');
-		$hostname = 0 === strpos($hostname, 'www.') ? substr($hostname, 4) : $hostname;
-		$hostname = (false !== $pos = strpos($hostname, ':')) ? substr($hostname, 0, $pos) : $hostname;
-		
-		return $hostname;
-	}
-
 	/**
 	* Реализация интерфейса Countable
 	*/
