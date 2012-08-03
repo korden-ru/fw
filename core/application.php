@@ -16,7 +16,7 @@ use engine\template\smarty;
 */
 class application implements \ArrayAccess
 {
-	const VERSION = '3.5';
+	const VERSION = '3.6-dev';
 	
 	private $values;
 	

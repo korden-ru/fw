@@ -17,7 +17,7 @@ $app = array(
 	'db.pers' => false,
 	
 	/* Настройки кэша */
-	'acm.prefix' => 'src_3.5',
+	'acm.prefix' => 'src_3.6-dev',
 	'acm.type'   => 'null',
 	
 	/* Типы страниц */
