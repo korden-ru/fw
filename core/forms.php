@@ -125,11 +125,9 @@ class forms
 	}
 
 	//добавление кнопки
-	function addAdditionalButton($path, $name, $plus)
+	function addAdditionalButton($path, $value)
 	{
-		$button = '<input class="button1" style="width:100%;" type="button" value="'.$value.'" onclick="Redirect(arguments, \''.$path.'\');" />
-				<br />';
-		$this->additional_buttons($button);
+		$this->additional_buttons .= sprintf('<a href="%s" class="btn btn-mini btn-block">%s</a>', $path, $value);
 	}
 
 	//экспорт формы в шаблон и вывод на экран
@@ -531,9 +529,7 @@ class forms
 				//кнопка редактирования
 				if( !empty($this->U_EDIT) && !$skip_edit )
 				{
-					$cols .= '
-						<input class="button1" style="width:100%;" type="button" value="Изменить" onclick="Redirect(arguments, \''.str_replace('\\', '\\\\', $this->U_EDIT).$value[$this->primary_id].'\');" />
-						<br />';
+					$cols .= sprintf('<a href="%s" class="btn btn-mini btn-block">Изменить</a>', str_replace('\\', '\\\\', $this->U_EDIT) . $value[$this->primary_id]);
 				}
 
 				//если есть дополнительные кнопки, добавляем их
@@ -549,7 +545,7 @@ class forms
 				//кнопка удаления
 				if( !empty($this->U_DEL) && !$skip_delete )
 				{
-					$cols .= '<input class="button1" style="width:100%;" type="button" value="Удалить" onclick="if(confirm(\'Будет удалена вся информация связанная с этой записью! Продолжить?\')) {Redirect(arguments, \''.$this->U_DEL.$value[$this->primary_id].'\');}">';
+					$cols .= sprintf('<a href="%s" class="btn btn-mini btn-block" onclick="return confirm(\'Будет удалена вся информация связанная с этой записью! Продолжить?\');">Удалить</a>', str_replace('\\', '\\\\', $this->U_DEL) . $value[$this->primary_id]);
 				}
 
 				$cols .= '</td></tr>';
