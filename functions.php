@@ -447,7 +447,7 @@ function get_server_name()
 {
 	global $app;
 	
-	$hostname = $app['request']->header('Host') ?: $app['request']->server('SERVER_NAME');
+	$hostname = mb_strtolower($app['request']->header('Host') ?: $app['request']->server('SERVER_NAME'));
 	$hostname = 0 === strpos($hostname, 'www.') ? substr($hostname, 4) : $hostname;
 	$hostname = (false !== $pos = strpos($hostname, ':')) ? substr($hostname, 0, $pos) : $hostname;
 		
