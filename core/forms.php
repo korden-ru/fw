@@ -484,7 +484,7 @@ class forms
 				unset($value['skip_delete'], $value['skip_edit']);
 				
 				$row = ' class="row'.($i%2+1).'" '.$sortId . $style_tr;
-				$cols .= '<tr '.$row. (!empty($this->U_EDIT) ? ' ondblclick="Redirect(arguments, \''.str_replace('\\', '\\\\', $this->U_EDIT).$value[$this->primary_id].'\');"' : '') . '>';
+				$cols .= '<tr '.$row. (!empty($this->U_EDIT) ? ' ondblclick="document.location=\''.str_replace('\\', '\\\\', $this->U_EDIT).$value[$this->primary_id].'\';"' : '') . '>';
 			
 
 				//добавляем данные
@@ -529,7 +529,7 @@ class forms
 				//кнопка редактирования
 				if( !empty($this->U_EDIT) && !$skip_edit )
 				{
-					$cols .= sprintf('<a href="%s" class="btn btn-mini btn-block">Изменить</a>', str_replace('\\', '\\\\', $this->U_EDIT) . $value[$this->primary_id]);
+					$cols .= sprintf('<a href="%s" class="btn btn-mini btn-block"><i class="icon-pencil"></i> Изменить</a>', str_replace('\\', '\\\\', $this->U_EDIT) . $value[$this->primary_id]);
 				}
 
 				//если есть дополнительные кнопки, добавляем их
@@ -545,7 +545,7 @@ class forms
 				//кнопка удаления
 				if( !empty($this->U_DEL) && !$skip_delete )
 				{
-					$cols .= sprintf('<a href="%s" class="btn btn-mini btn-block" onclick="return confirm(\'Будет удалена вся информация связанная с этой записью! Продолжить?\');">Удалить</a>', str_replace('\\', '\\\\', $this->U_DEL) . $value[$this->primary_id]);
+					$cols .= sprintf('<a href="%s" class="btn btn-mini btn-block" onclick="return confirm(\'Будет удалена вся информация связанная с этой записью! Продолжить?\');"><i class="icon-remove"></i> Удалить</a>', str_replace('\\', '\\\\', $this->U_DEL) . $value[$this->primary_id]);
 				}
 
 				$cols .= '</td></tr>';
