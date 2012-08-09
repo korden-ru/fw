@@ -412,7 +412,7 @@ function get_page_block($page_url, $parent_id, $table)
 			image AS page_poster,
 			1 AS is_block
 		FROM
-			tcms_' . $table . '_gallery
+			' . SQL_PREFIX . $table . '_gallery
 		WHERE
 			id_row = ' . $app['db']->check_value($parent_id) . '
 		AND

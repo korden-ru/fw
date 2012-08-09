@@ -37,7 +37,7 @@ $app = array(
 	),
 );
 
-define('SQL_PREFIX', 'tcms_');
+define('SQL_PREFIX', 'site_');
 
 /**
 * Константы
@@ -47,16 +47,27 @@ if( false === load_constants() )
 {
 	set_constants(array(
 		/* Таблицы сайта */
-		'BANNERS_TABLE'           => 'tcms_banners',
-		'BANNERS_TYPES_TABLE'     => 'tcms_banners_types',
-		'CONFIG_TABLE'            => 'tcms_config',
-		'CRON_TABLE'              => 'tcms_cron',
-		'I18N_TABLE'              => 'tcms_i18n',
-		'IMAGE_WATERMARKS_TABLE'  => 'tcms_image_watermarks',
-		'LANGUAGES_TABLE'         => 'tcms_languages',
-		'LOGS_TABLE'              => 'tcms_logs',
-		'MENUS_TABLE'             => 'tcms_menus',
-		'PAGES_TABLE'             => 'tcms_pages',
-		'SITES_TABLE'             => 'tcms_sites',
+		'BANNERS_TABLE'              => 'site_banners',
+		'BANNERS_TYPES_TABLE'        => 'site_banners_types',
+		'CONFIG_TABLE'               => 'site_config',
+		'CRON_TABLE'                 => 'site_cron',
+		'FORMS_TABLE'                => 'site_forms',
+		'I18N_TABLE'                 => 'site_i18n',
+		'IMAGE_WATERMARKS_TABLE'     => 'site_image_watermarks',
+		'LANGUAGES_TABLE'            => 'site_languages',
+		'LOGS_TABLE'                 => 'site_logs',
+		'MAILLIST_TABLE'             => 'site_maillist',
+		'MAILLIST_GROUPS_TABLE'      => 'site_maillist_groups',
+		'MAILLIST_GROUP_USERS_TABLE' => 'site_maillist_group_users',
+		'MAILLIST_SIGNATURE_TABLE'   => 'site_maillist_signature',
+		'MAILLIST_SPOOL_TABLE'       => 'site_maillist_spool',
+		'MENUS_TABLE'                => 'site_menus',
+		'MODULES_TABLE'              => 'site_modules',
+		'PAGES_TABLE'                => 'site_pages',
+		'PUBLICATIONS_TABLE'         => 'site_publications',
+		'PUBLICATIONS_GALLERY_TABLE' => 'site_publications_gallery',
+		'SITES_TABLE'                => 'site_sites',
+		'VACANCIES_TABLE'            => 'site_vacancies',
+		'VACANCY_APPLICATIONS_TABLE' => 'site_vacancy_applications',
 	));
 }

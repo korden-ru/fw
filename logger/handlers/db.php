@@ -32,6 +32,6 @@ class db extends AbstractProcessingHandler
 			'ip'      => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '',
 		);
 		
-		$this->db->query('INSERT INTO tcms_logs ' . $this->db->build_array('INSERT', $sql_ary));
+		$this->db->query('INSERT INTO ' . LOGS_TABLE . ' ' . $this->db->build_array('INSERT', $sql_ary));
 	}
 }
