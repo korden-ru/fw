@@ -52,6 +52,8 @@ if( false === load_constants() )
 		'CONFIG_TABLE'               => 'site_config',
 		'CRON_TABLE'                 => 'site_cron',
 		'FORMS_TABLE'                => 'site_forms',
+		'FORM_FIELDS_TABLE'          => 'site_form_fields',
+		'FORM_TABS_TABLE'            => 'site_form_tabs',
 		'GALLERIES_TABLE'            => 'site_galleries',
 		'GALLERY_PHOTOS_TABLE'       => 'site_gallery_photos',
 		'I18N_TABLE'                 => 'site_i18n',
