@@ -32,11 +32,12 @@ class router
 	protected $template;
 	protected $user;
 
-	function __construct($cache, $config, $db, $profiler, $request, $template, $user)
+	function __construct($cache, $config, $db, $form, $profiler, $request, $template, $user)
 	{
 		$this->cache    = $cache;
 		$this->config   = $config;
 		$this->db       = $db;
+		$this->form     = $form;
 		$this->profiler = $profiler;
 		$this->request  = $request;
 		$this->template = $template;
@@ -364,6 +365,7 @@ class router
 		$this->handler->_set_cache($this->cache)
 			->_set_config($this->config)
 			->_set_db($this->db)
+			->_set_form($this->form)
 			->_set_profiler($this->profiler)
 			->_set_request($this->request)
 			->_set_template($this->template)

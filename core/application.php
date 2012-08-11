@@ -68,9 +68,14 @@ class application implements \ArrayAccess
 			return new config_db($app['cache'], $app['db'], $app['site_info'], CONFIG_TABLE);
 		});
 
+		/* Формы */
+		$this['form'] = $this->share(function() use ($app) {
+			return new form($app['db'], $app['template']);
+		});
+
 		/* Маршрутизатор запросов */
 		$this['router'] = $this->share(function() use ($app) {
-			return new router($app['cache'], $app['config'], $app['db'], $app['profiler'], $app['request'], $app['template'], $app['user']);
+			return new router($app['cache'], $app['config'], $app['db'], $app['form'], $app['profiler'], $app['request'], $app['template'], $app['user']);
 		});
 	}
 	

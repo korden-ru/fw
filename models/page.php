@@ -24,6 +24,7 @@ class page
 	protected $cache;
 	protected $config;
 	protected $db;
+	protected $form;
 	protected $profiler;
 	protected $request;
 	protected $template;
@@ -50,6 +51,13 @@ class page
 	public function _set_db($db)
 	{
 		$this->db = $db;
+		
+		return $this;
+	}
+	
+	public function _set_form($form)
+	{
+		$this->form = $form;
 		
 		return $this;
 	}
