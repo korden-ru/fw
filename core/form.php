@@ -12,7 +12,6 @@ namespace engine\core;
 class form
 {
 	protected $data = array();
-	protected $fields = array();
 	protected $tabs = array();
 	
 	protected $db;
@@ -31,7 +30,6 @@ class form
 	{
 		$this->template->assign('forms', array($this->data['form_alias'] => array(
 			'data'   => $this->data,
-			'fields' => $this->fields,
 			'tabs'   => $this->tabs,
 		)));
 		
@@ -80,7 +78,9 @@ class form
 		
 		while( $row = $this->db->fetchrow() )
 		{
-			$this->tabs[] = $row;
+			$row['fields'] = array();
+			
+			$this->tabs[$row['tab_id']] = $row;
 		}
 		
 		$this->db->freeresult();
@@ -104,15 +104,10 @@ class form
 		
 		while( $row = $this->db->fetchrow() )
 		{
-			$this->fields[] = $row;
+			$this->tabs[$row['tab_id']]['fields'][] = $row;
 		}
 		
 		$this->db->freeresult();
-		
-		if( empty($this->fields) )
-		{
-			trigger_error('У формы нет полей.');
-		}
 		
 		return $this;
 	}

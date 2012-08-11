@@ -6,9 +6,31 @@
 
 <form action="{$form.data.form_action}" class="{$form.data.form_class}" enctype="{$form.data.form_enctype|default:'application/x-www-form-urlencoded'}" id="{$form.data.form_alias}_form" method="{$form.data.form_method}">
 	
-	{foreach $form.fields as $row}
-		{include "form/{$row.field_type}.html" field=$row form=$form.data}
-	{/foreach}
+	{if count($form.tabs) > 1}
+		<div class="tabbable">
+			<ul class="nav nav-tabs">
+				{foreach $form.tabs as $tab}
+					<li class="{if $tab@iteration == 1}active{/if}"><a href="#{$form.data.form_alias}_tab{$tab@iteration}" data-toggle="tab">{$tab.tab_title}</a></li>
+				{/foreach}
+			</ul>
+			<div class="tab-content">
+				{foreach $form.tabs as $tab}
+					<div class="tab-pane {if $tab@iteration == 1}active{/if}" id="{$form.data.form_alias}_tab{$tab@iteration}">
+						{foreach $tab.fields as $row}
+							{include "form/{$row.field_type}.html" field=$row form=$form.data}
+						{/foreach}
+					</div>
+				{/foreach}
+			</div>
+		</div>
+	{else}
+		{foreach $form.tabs as $tab}
+			{foreach $tab.fields as $row}
+				{include "form/{$row.field_type}.html" field=$row form=$form.data}
+			{/foreach}
+		{/foreach}
+	{/if}
+	
 	
 	<input class="{$form.data.form_submit_class|default:$cfg['form.submit_class']}" type="submit" name="submit" value="{$form.data.form_submit_text|default:'Отправить'}">
 
