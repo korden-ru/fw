@@ -7,19 +7,22 @@
 namespace engine\core;
 
 /**
-* Автозагрузчик классов
+* Форма
 */
 class form
 {
 	protected $data = array();
+	protected $fields = array();
 	protected $tabs = array();
 	
 	protected $db;
+	protected $request;
 	protected $template;
 	
-	function __construct($db, $template)
+	function __construct($db, $request, $template)
 	{
 		$this->db       = $db;
+		$this->request  = $request;
 		$this->template = $template;
 	}
 	
@@ -30,8 +33,22 @@ class form
 	{
 		$this->template->assign('forms', array($this->data['form_alias'] => array(
 			'data'   => $this->data,
+			'fields' => $this->fields,
 			'tabs'   => $this->tabs,
 		)));
+		
+		return $this;
+	}
+	
+	public function bind_request()
+	{
+		foreach( $this->tabs as $tab )
+		{
+			foreach( $tab['fields'] as $field )
+			{
+				
+			}
+		}
 		
 		return $this;
 	}
@@ -104,7 +121,8 @@ class form
 		
 		while( $row = $this->db->fetchrow() )
 		{
-			$this->tabs[$row['tab_id']]['fields'][] = $row;
+			$this->fields[$row['field_id']] = $row;
+			$this->tabs[$row['tab_id']]['fields'][] = $row['field_id'];
 		}
 		
 		$this->db->freeresult();

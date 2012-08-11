@@ -16,8 +16,8 @@
 			<div class="tab-content">
 				{foreach $form.tabs as $tab}
 					<div class="tab-pane {if $tab@iteration == 1}active{/if}" id="{$form.data.form_alias}_tab{$tab@iteration}">
-						{foreach $tab.fields as $row}
-							{include "form/{$row.field_type}.html" field=$row form=$form.data}
+						{foreach $tab.fields as $field_id}
+							{include "form/{$form.fields.$field_id.field_type}.html" field=$form.fields.$field_id form=$form.data}
 						{/foreach}
 					</div>
 				{/foreach}
@@ -26,7 +26,7 @@
 	{else}
 		{foreach $form.tabs as $tab}
 			{foreach $tab.fields as $row}
-				{include "form/{$row.field_type}.html" field=$row form=$form.data}
+				{include "form/{$form.fields.$field_id.field_type}.html" field=$form.fields.$field_id form=$form.data}
 			{/foreach}
 		{/foreach}
 	{/if}
