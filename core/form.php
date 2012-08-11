@@ -144,5 +144,7 @@ class form
 		{
 			$this->is_valid = $this->is_valid && $field->validate();
 		}
+		
+		return $this->is_valid;
 	}
 }
