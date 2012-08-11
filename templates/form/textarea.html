@@ -1,0 +1,12 @@
+<div class="control-group">
+	<label class="control-label" for="{$form.form_alias}_{$field.field_alias}">{$field.field_title}</label>
+	<div class="controls">
+		<textarea id="{$form.form_alias}_{$field.field_alias}" name="{$form.form_alias}_{$field.field_alias}" placeholder="{$field.field_placeholder}" style="{if $form.form_fields_width or $field.field_width}width: {$form.form_fields_width|default:$field.field_width};{/if} {if $field.field_height}height: {$field.field_height};{/if}" {if $field.field_required}required{/if} {if $field.field_disabled}disabled{/if} {if $field.field_readonly}readonly{/if} {if $field.field_maxlength}maxlength="{$field.field_maxlength}"{/if}>{$field.field_value}</textarea>
+		{if $field.field_help_inline}
+			<span class="help-inline">{$field.field_help_inline}</span>
+		{/if}
+		{if $field.field_help}
+			<p class="help-block">{$field.field_help}</p>
+		{/if}
+	</div>
+</div>
