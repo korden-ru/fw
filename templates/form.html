@@ -1,0 +1,68 @@
+{*
+{if isset($smarty.get.success)}
+<p>{$formdata.message_aftersend}</p>
+{else}
+*}
+
+<form action="{$form.data.form_action}" class="{$form.data.form_class}" enctype="{$form.data.form_enctype|default:'application/x-www-form-urlencoded'}" id="{$form.data.form_alias}_form" method="{$form.data.form_method}">
+	
+	{foreach $form.fields as $row}
+		{include "form/{$row.field_type}.html" field=$row form=$form.data}
+	{/foreach}
+	
+	<input class="{$form.data.form_submit_class|default:$cfg['form.submit_class']}" type="submit" name="submit" value="{$form.data.form_submit_text|default:'Отправить'}">
+
+{*
+{if isset($form_errors) and $form_errors}
+<div class="alert alert-block alert-error">
+<b>При отправке формы произошли ошибки:</b><br>
+<ul style="margin-left: 1.4em;">
+		{foreach $form_errors as $row}
+			<li>{$row}</li>
+		{/foreach}
+	</ul>
+</div>
+{/if}
+
+{foreach $forminputs AS $inp}
+
+{if !empty($inp.title)}<label for="order_fio">{$inp.title}{if $inp.is_requare} <span>*</span>{/if}</label>{/if}
+{if ($inp.type == 'text')}
+	<input type="text" name="{$inp.inputname}" class="itext" value="" size="{$inp.size}" maxlength="{$inp.maxlength}" />
+{elseif $inp.type == 'textarea'}
+	<textarea name="{$inp.inputname}" rows="{$inp.rows}" cols="{$inp.cols}"></textarea>
+{elseif $inp.type == 'select'}
+	<select name="{$inp.inputname}">
+	{foreach $inp.list_elements AS $k => $s}
+	<option value="{$k}"{if in_array($s, $inp.default_element)} selected="selected"{/if}>{$s}</option>
+	{/foreach}
+	</select>
+{elseif $inp.type == 'checkbox_list'}
+	{foreach $inp.list_elements AS $k => $s}
+	<input name="{$inp.inputname}[{$k}]" type="checkbox" value="1" {if in_array($s, $inp.default_element)}checked="checked"{/if}/> {$s}{if !$s@last}<br/>{/if}
+	{/foreach}
+{elseif $inp.type == 'radiogroup'}
+	{foreach $inp.list_elements AS $k => $s}
+	<input name="{$inp.inputname}" type="radio" name="radio{$inp.id}" value="{$k}" {if in_array($s, $inp.default_element)}checked="checked"{/if}/> {$s}{if !$s@last}<br/>{/if}
+	{/foreach}
+{elseif $inp.type == 'html'}
+	<div style="margin:15px 0">{$inp.html}</div>
+{elseif $inp.type == 'checkbox'}
+	<input type="checkbox" name="{$inp.inputname}" value="1" />
+{/if}
+
+{if !empty($inp.note)}
+	<div style="color:gray; font: 11px Tahoma;">{$inp.note}</div>
+{/if}
+{/foreach}
+
+{if (count($forminputs))}
+<br/><br/>
+<input type="submit" class="btn" name="submit" value="{$formdata.button_name}" />
+{/if}
+
+*}
+</form>
+{*
+{/if}
+*}
