@@ -11,6 +11,8 @@ namespace engine\core;
 */
 class form
 {
+	public $is_valid = true;
+	
 	protected $data = array();
 	protected $fields = array();
 	protected $tabs = array();
@@ -121,12 +123,26 @@ class form
 		
 		while( $row = $this->db->fetchrow() )
 		{
-			$this->fields[$row['field_id']] = $row;
+			$class_name = '\\engine\\form\\field\\' . $row['field_type'];
+			$this->fields[$row['field_id']] = new $class_name($row);
 			$this->tabs[$row['tab_id']]['fields'][] = $row['field_id'];
 		}
 		
 		$this->db->freeresult();
 		
 		return $this;
+	}
+	
+	/**
+	* Проверка значений полей формы
+	*/
+	public function validate()
+	{
+		$this->is_valid = true;
+		
+		foreach( $this->fields as $field )
+		{
+			$this->is_valid = $this->is_valid && $field->validate();
+		}
 	}
 }

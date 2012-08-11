@@ -9,9 +9,10 @@ namespace engine\form\field;
 /**
 * Поле формы
 */
-class abstract implements \ArrayAccess, \IteratorAggregate, \Countable
+class generic implements \ArrayAccess, \IteratorAggregate, \Countable
 {
-	protected $data = array();
+	public $data = array();
+	public $is_valid = true;
 	
 	function __construct($data)
 	{
@@ -20,6 +21,7 @@ class abstract implements \ArrayAccess, \IteratorAggregate, \Countable
 	
 	public function validate()
 	{
+		return true;
 	}
 
 	/**

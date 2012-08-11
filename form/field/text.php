@@ -9,6 +9,15 @@ namespace engine\form\field;
 /**
 * Текстовое поле
 */
-class text extends abstract
+class text extends generic
 {
+	public function validate()
+	{
+		if( $this->data['field_required'] && !$this->data['field_value'] )
+		{
+			$this->is_valid = false;
+		}
+		
+		return $this->is_valid;
+	}
 }
