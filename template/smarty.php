@@ -6,7 +6,7 @@
 
 namespace engine\template;
 
-define('SMARTY_DIR', FW_DIR . '../lib/smarty/3.1.8/Smarty/');
+define('SMARTY_DIR', FW_DIR . '../lib/smarty/3.1.11/Smarty/');
 require(SMARTY_DIR . 'Smarty.class.php');
 
 class smarty extends \Smarty
