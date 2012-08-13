@@ -11,6 +11,7 @@ namespace engine\core;
 */
 class form
 {
+	public $is_bound = false;
 	public $is_valid = true;
 	
 	protected $data = array();
@@ -34,7 +35,11 @@ class form
 	public function append_template()
 	{
 		$this->template->assign('forms', array($this->data['form_alias'] => array(
-			'data'   => $this->data,
+			'data' => array_merge(array(
+				'is_bound' => $this->is_bound,
+				'is_valid' => $this->is_valid
+			), $this->data),
+			
 			'fields' => $this->fields,
 			'tabs'   => $this->tabs,
 		)));
@@ -44,13 +49,12 @@ class form
 	
 	public function bind_request()
 	{
-		foreach( $this->tabs as $tab )
+		foreach( $this->fields as $field )
 		{
-			foreach( $tab['fields'] as $field )
-			{
-				
-			}
+			$field['value'] = $this->request->post(sprintf('%s_%s', $this->data['form_alias'], $field['field_alias']), $field['field_value']);
 		}
+		
+		$this->is_bound = true;
 		
 		return $this;
 	}
@@ -118,6 +122,7 @@ class form
 			WHERE
 				form_id = ' . $this->db->check_value($this->data['form_id']) . '
 			ORDER BY
+				tab_id ASC,
 				field_sort ASC';
 		$this->db->query($sql);
 		
@@ -138,13 +143,18 @@ class form
 	*/
 	public function validate()
 	{
+		if( !$this->is_bound )
+		{
+			trigger_error('Значения полей не связаны с полями формы.');
+		}
+		
 		$this->is_valid = true;
 		
 		foreach( $this->fields as $field )
 		{
-			$this->is_valid = $this->is_valid && $field->validate();
+			$this->is_valid = $field->validate() && $this->is_valid;
 		}
 		
-		return $this->is_valid;
+		return $this;
 	}
 }

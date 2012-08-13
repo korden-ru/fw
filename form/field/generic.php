@@ -12,10 +12,12 @@ namespace engine\form\field;
 class generic implements \ArrayAccess, \IteratorAggregate, \Countable
 {
 	public $data = array();
-	public $is_valid = true;
 	
 	function __construct($data)
 	{
+		$data['is_valid'] = true;
+		$data['value'] = '';
+		
 		$this->data = $data;
 	}
 	

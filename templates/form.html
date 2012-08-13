@@ -4,35 +4,51 @@
 {else}
 *}
 
-<form action="{$form.data.form_action}" class="{$form.data.form_class}" enctype="{$form.data.form_enctype|default:'application/x-www-form-urlencoded'}" id="{$form.data.form_alias}_form" method="{$form.data.form_method}">
-	
-	{if count($form.tabs) > 1}
-		<div class="tabbable">
-			<ul class="nav nav-tabs">
-				{foreach $form.tabs as $tab}
-					<li class="{if $tab@iteration == 1}active{/if}"><a href="#{$form.data.form_alias}_tab{$tab@iteration}" data-toggle="tab">{$tab.tab_title}</a></li>
-				{/foreach}
-			</ul>
-			<div class="tab-content">
-				{foreach $form.tabs as $tab}
-					<div class="tab-pane {if $tab@iteration == 1}active{/if}" id="{$form.data.form_alias}_tab{$tab@iteration}">
-						{foreach $tab.fields as $field_id}
-							{include "form/{$form.fields.$field_id.field_type}.html" field=$form.fields.$field_id form=$form.data}
-						{/foreach}
-					</div>
-				{/foreach}
+{if $form.data.is_bound and $form.data.is_valid}
+	<div>{$form.data.form_message}</div>
+{else}
+	<form action="{$form.data.form_action}" class="{$form.data.form_class}" enctype="{$form.data.form_enctype|default:'application/x-www-form-urlencoded'}" id="{$form.data.form_alias}_form" method="{$form.data.form_method}">
+		
+		{if $form.data.is_bound and not $form.data.is_valid}
+			<div class="alert">
+				Проверьте правильность заполнения формы:
+				<ul>
+					{foreach $form.fields as $field}
+						{if not $field.is_valid and $field.field_invalid_message}
+							<li>{$field.field_invalid_message}</li>
+						{/if}
+					{/foreach}
+				</ul>
 			</div>
-		</div>
-	{else}
-		{foreach $form.tabs as $tab}
-			{foreach $tab.fields as $row}
-				{include "form/{$form.fields.$field_id.field_type}.html" field=$form.fields.$field_id form=$form.data}
+		{/if}
+	
+		{if count($form.tabs) > 1}
+			<div class="tabbable">
+				<ul class="nav nav-tabs">
+					{foreach $form.tabs as $tab}
+						<li class="{if $tab@iteration == 1}active{/if}"><a href="#{$form.data.form_alias}_tab{$tab@iteration}" data-toggle="tab">{$tab.tab_title}</a></li>
+					{/foreach}
+				</ul>
+				<div class="tab-content">
+					{foreach $form.tabs as $tab}
+						<div class="tab-pane {if $tab@iteration == 1}active{/if}" id="{$form.data.form_alias}_tab{$tab@iteration}">
+							{foreach $tab.fields as $field_id}
+								{include "form/{$form.fields.$field_id.field_type}.html" field=$form.fields.$field_id form=$form.data}
+							{/foreach}
+						</div>
+					{/foreach}
+				</div>
+			</div>
+		{else}
+			{foreach $form.tabs as $tab}
+				{foreach $tab.fields as $row}
+					{include "form/{$form.fields.$field_id.field_type}.html" field=$form.fields.$field_id form=$form.data}
+				{/foreach}
 			{/foreach}
-		{/foreach}
-	{/if}
+		{/if}
 	
 	
-	<input class="{$form.data.form_submit_class|default:$cfg['form.submit_class']}" type="submit" name="submit" value="{$form.data.form_submit_text|default:'Отправить'}">
+		<input class="{$form.data.form_submit_class|default:$cfg['form.submit_class']}" type="submit" name="submit" value="{$form.data.form_submit_text|default:'Отправить'}">
 
 {*
 {if isset($form_errors) and $form_errors}
@@ -84,7 +100,8 @@
 {/if}
 
 *}
-</form>
+	</form>
+{/if}
 {*
 {/if}
 *}

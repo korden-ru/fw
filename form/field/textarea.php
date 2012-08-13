@@ -11,4 +11,13 @@ namespace engine\form\field;
 */
 class textarea extends generic
 {
+	public function validate()
+	{
+		if( $this->data['field_required'] && !$this->data['value'] )
+		{
+			$this->data['is_valid'] = false;
+		}
+		
+		return $this->data['is_valid'];
+	}
 }

@@ -13,11 +13,11 @@ class text extends generic
 {
 	public function validate()
 	{
-		if( $this->data['field_required'] && !$this->data['field_value'] )
+		if( $this->data['field_required'] && !$this->data['value'] )
 		{
-			$this->is_valid = false;
+			$this->data['is_valid'] = false;
 		}
 		
-		return $this->is_valid;
+		return $this->data['is_valid'];
 	}
 }
