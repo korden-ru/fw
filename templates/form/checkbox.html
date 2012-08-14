@@ -1,0 +1,9 @@
+<div class="control-group {if $form.is_bound and $field.field_required}{if $field.is_valid}success{else}error{/if}{/if}">
+	<label class="checkbox danger">
+		<input type="checkbox" id="{$form.form_alias}_{$field.field_alias}" name="{$form.form_alias}_{$field.field_alias}" value="{$field.field_value|default:1}" {if $field.value}checked{/if} {*if $field.field_required}required{/if*} {if $field.field_disabled}disabled{/if} {if $field.field_autofocus}autofocus{/if} {if $field.field_tabindex}tabindex="{$field.field_tabindex}"{/if} {$field.field_attr|default:''}>
+		{$field.field_title}
+	</label>
+	{if $field.field_help}
+		<p class="help-block">{$field.field_help}</p>
+	{/if}
+</div>

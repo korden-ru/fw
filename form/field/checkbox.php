@@ -11,4 +11,18 @@ namespace engine\form\field;
 */
 class checkbox extends generic
 {
+	public function validate()
+	{
+		if( $this->data['field_disabled'] )
+		{
+			return true;
+		}
+		
+		if( $this->data['field_required'] && !$this->data['value'] )
+		{
+			$this->data['is_valid'] = false;
+		}
+		
+		return $this->data['is_valid'];
+	}
 }
