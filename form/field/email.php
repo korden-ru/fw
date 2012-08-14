@@ -15,9 +15,14 @@ class email extends generic
 	{
 		if( $this->data['field_required'] && !$this->data['value'] )
 		{
-			$this->data['is_valid'] = false;
+			return false;
 		}
 		
-		return $this->data['is_valid'];
+		if( !preg_match(sprintf('#%s#', get_preg_expression('email')), $this->data['value'], $matches) )
+		{
+			return false;
+		}
+		
+		return true;
 	}
 }

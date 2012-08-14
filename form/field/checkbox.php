@@ -20,9 +20,9 @@ class checkbox extends generic
 		
 		if( $this->data['field_required'] && !$this->data['value'] )
 		{
-			$this->data['is_valid'] = false;
+			return false;
 		}
 		
-		return $this->data['is_valid'];
+		return true;
 	}
 }

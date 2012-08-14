@@ -152,7 +152,7 @@ class form
 		
 		foreach( $this->fields as $field )
 		{
-			$this->is_valid = $field->validate() && $this->is_valid;
+			$this->is_valid = $field->is_valid() && $this->is_valid;
 		}
 		
 		return $this;
