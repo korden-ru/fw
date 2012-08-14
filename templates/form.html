@@ -6,6 +6,7 @@
 
 {if $form.data.is_bound and $form.data.is_valid}
 	<div>{$form.data.form_message}</div>
+	<pre>{foreach $form.fields as $field}<b>{$field.field_title}</b> ({$field.field_alias}): {$field.value}<br>{/foreach}</pre>
 {else}
 	<form action="{$form.data.form_action}" class="{$form.data.form_class}" enctype="{$form.data.form_enctype|default:'application/x-www-form-urlencoded'}" id="{$form.data.form_alias}_form" method="{$form.data.form_method}">
 		
