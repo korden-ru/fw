@@ -13,6 +13,9 @@
 							<li>{$field.field_invalid_message}</li>
 						{/if}
 					{/foreach}
+					{if not $form.data.is_csrf_token_valid}
+						<li>Произошла ошибка отправки формы, попробуйте снова</li>
+					{/if}
 				</ul>
 			</div>
 		{/if}
@@ -44,7 +47,7 @@
 		
 		<input class="{$form.data.form_submit_class|default:$cfg['form.submit_class']}" type="submit" name="submit" value="{$form.data.form_submit_text|default:'Отправить'}">
 		
-		<input type="hidden" name="{$form.data.form_alias}_csrf_token" value="">
+		<input type="hidden" name="{$form.data.form_alias}_csrf_token" value="{$form.data.csrf_token}">
 
 {*
 {foreach $forminputs AS $inp}

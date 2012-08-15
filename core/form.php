@@ -13,7 +13,9 @@ class form
 {
 	public $is_bound = false;
 	public $is_valid = true;
+	public $is_csrf_token_valid = true;
 	
+	protected $csrf_token;
 	protected $data = array();
 	protected $fields = array();
 	protected $tabs = array();
@@ -36,8 +38,10 @@ class form
 	{
 		$this->template->assign('forms', array($this->data['form_alias'] => array(
 			'data' => array_merge(array(
-				'is_bound' => $this->is_bound,
-				'is_valid' => $this->is_valid
+				'csrf_token'          => $this->csrf_token,
+				'is_bound'            => $this->is_bound,
+				'is_csrf_token_valid' => $this->is_csrf_token_valid,
+				'is_valid'            => $this->is_valid
 			), $this->data),
 			
 			'fields' => $this->fields,
@@ -47,6 +51,17 @@ class form
 		return $this;
 	}
 	
+	/**
+	* Связывание строки из БД с полями формы
+	*/
+	public function bind_data($row)
+	{
+		return $this;
+	}
+	
+	/**
+	* Связывание пользовательского ввода с полями формы
+	*/
 	public function bind_request()
 	{
 		foreach( $this->fields as $field )
@@ -55,6 +70,7 @@ class form
 		}
 		
 		$this->is_bound = true;
+		$this->is_csrf_token_valid = $this->validate_csrf_token();
 		
 		return $this;
 	}
@@ -134,6 +150,7 @@ class form
 		}
 		
 		$this->db->freeresult();
+		$this->csrf_token = $this->get_csrf_token();
 		
 		return $this;
 	}
@@ -148,13 +165,51 @@ class form
 			trigger_error('Значения полей не связаны с полями формы.');
 		}
 		
-		$this->is_valid = true;
+		$this->is_valid = true && $this->is_csrf_token_valid;
 		
 		foreach( $this->fields as $field )
 		{
 			$this->is_valid = $field->is_valid() && $this->is_valid;
 		}
 		
+		if( $this->is_valid )
+		{
+			/* Защита от повторной отправки формы */
+			$this->delete_csrf_token();
+		}
+		
 		return $this;
+	}
+	
+	/**
+	* Проверка значения CSRF-токена
+	*/
+	public function validate_csrf_token()
+	{
+		return $this->request->post(sprintf('%s_csrf_token', $this->data['form_alias']), '') === $this->csrf_token;
+	}
+	
+	/**
+	* Удаление CSRF-токена
+	*/
+	protected function delete_csrf_token()
+	{
+		unset($_SESSION['csrf'][$this->data['form_alias']]);
+	}
+
+	/**
+	* Генерация нового CSRF-токена
+	*/
+	protected function generate_csrf_token()
+	{
+		return $_SESSION['csrf'][$this->data['form_alias']] = make_random_string();
+	}
+
+	/**
+	* Значение CSRF-токена
+	*/
+	protected function get_csrf_token()
+	{
+		return isset($_SESSION['csrf'][$this->data['form_alias']]) ? $_SESSION['csrf'][$this->data['form_alias']] : $this->generate_csrf_token();
 	}
 }
