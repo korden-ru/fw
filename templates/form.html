@@ -1,14 +1,8 @@
-{*
-{if isset($smarty.get.success)}
-<p>{$formdata.message_aftersend}</p>
-{else}
-*}
-
 {if $form.data.is_bound and $form.data.is_valid}
 	<div>{$form.data.form_message}</div>
 	<pre>{foreach $form.fields as $field}<b>{$field.field_title}</b> ({$field.field_alias}): {$field.value}<br>{/foreach}</pre>
 {else}
-	<form action="{$form.data.form_action}" class="{$form.data.form_class}" enctype="{$form.data.form_enctype|default:'application/x-www-form-urlencoded'}" id="{$form.data.form_alias}_form" method="{$form.data.form_method}">
+	<form novalidate action="{$form.data.form_action}" class="{$form.data.form_class}" enctype="{$form.data.form_enctype|default:'application/x-www-form-urlencoded'}" id="{$form.data.form_alias}_form" method="{$form.data.form_method}">
 		
 		{if $form.data.is_bound and not $form.data.is_valid}
 			<div class="alert">
@@ -47,22 +41,12 @@
 				{/foreach}
 			{/foreach}
 		{/if}
-	
-	
+		
 		<input class="{$form.data.form_submit_class|default:$cfg['form.submit_class']}" type="submit" name="submit" value="{$form.data.form_submit_text|default:'Отправить'}">
+		
+		<input type="hidden" name="{$form.data.form_alias}_csrf_token" value="">
 
 {*
-{if isset($form_errors) and $form_errors}
-<div class="alert alert-block alert-error">
-<b>При отправке формы произошли ошибки:</b><br>
-<ul style="margin-left: 1.4em;">
-		{foreach $form_errors as $row}
-			<li>{$row}</li>
-		{/foreach}
-	</ul>
-</div>
-{/if}
-
 {foreach $forminputs AS $inp}
 
 {if !empty($inp.title)}<label for="order_fio">{$inp.title}{if $inp.is_requare} <span>*</span>{/if}</label>{/if}
@@ -94,15 +78,6 @@
 	<div style="color:gray; font: 11px Tahoma;">{$inp.note}</div>
 {/if}
 {/foreach}
-
-{if (count($forminputs))}
-<br/><br/>
-<input type="submit" class="btn" name="submit" value="{$formdata.button_name}" />
-{/if}
-
 *}
 	</form>
 {/if}
-{*
-{/if}
-*}
