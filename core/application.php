@@ -70,7 +70,7 @@ class application implements \ArrayAccess
 
 		/* Формы */
 		$this['form'] = $this->share(function() use ($app) {
-			return new form($app['db'], $app['request'], $app['template']);
+			return new form($app['config'], $app['db'], $app['request'], $app['template']);
 		});
 
 		/* Маршрутизатор запросов */

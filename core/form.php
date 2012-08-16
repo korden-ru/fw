@@ -20,12 +20,14 @@ class form
 	protected $fields = array();
 	protected $tabs = array();
 	
+	protected $config;
 	protected $db;
 	protected $request;
 	protected $template;
 	
-	function __construct($db, $request, $template)
+	function __construct($config, $db, $request, $template)
 	{
+		$this->config   = $config;
 		$this->db       = $db;
 		$this->request  = $request;
 		$this->template = $template;
@@ -145,7 +147,7 @@ class form
 		while( $row = $this->db->fetchrow() )
 		{
 			$class_name = '\\engine\\form\\field\\' . $row['field_type'];
-			$this->fields[$row['field_id']] = new $class_name($row);
+			$this->fields[$row['field_id']] = new $class_name($row, $this->config);
 			$this->tabs[$row['tab_id']]['fields'][] = $row['field_id'];
 		}
 		

@@ -13,11 +13,14 @@ class generic implements \ArrayAccess, \IteratorAggregate, \Countable
 {
 	public $data = array();
 	
-	function __construct($data)
+	protected $config;
+	
+	function __construct($data, $config)
 	{
 		$data['is_valid'] = true;
 		$data['value'] = '';
 		
+		$this->config = $config;
 		$this->data = $data;
 	}
 	
