@@ -18,6 +18,13 @@ class url extends generic
 			return false;
 		}
 		
+		if( $this->data['value'] && 5 > mb_strlen($this->data['value']) )
+		{
+			$this->data['value'] = '';
+			
+			return !$this->data['field_required'];
+		}
+		
 		if( $this->data['field_default_protocol'] )
 		{
 			if( !preg_match('#^(https?|ftp)://#', $this->data['value']) )
@@ -31,7 +38,12 @@ class url extends generic
 			return false;
 		}
 
-		$ary = parse_url($this->data['value']);
+		if( false === $ary = parse_url($this->data['value']) )
+		{
+			$this->data['value'] = '';
+			
+			return !$this->data['field_required'];
+		}
 		
 		/* Сбор нового URL без имени и пароля */
 		$this->data['value'] = $ary['scheme'] . '://' . $ary['host'] . (isset($ary['port']) ? ':' . $ary['port'] : '') . (isset($ary['path']) ? $ary['path'] : '/') . (isset($ary['query']) ? '?' . $ary['query'] : '') . (isset($ary['fragment']) ? '#' . $ary['fragment'] : '');
