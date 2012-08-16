@@ -18,11 +18,15 @@ class url extends generic
 			return false;
 		}
 		
-		if( $this->data['value'] && 5 > mb_strlen($this->data['value']) )
+		if( $this->data['value'] )
 		{
-			$this->data['value'] = '';
-			
-			return !$this->data['field_required'];
+			if( ($this->data['field_min'] && $this->data['field_min'] > mb_strlen($this->data['value'])) ||
+				($this->config['form.url.min_chars'] > mb_strlen($this->data['value'])) )
+			{
+				$this->data['value'] = '';
+
+				return !$this->data['field_required'];
+			}
 		}
 		
 		if( $this->data['field_default_protocol'] )
