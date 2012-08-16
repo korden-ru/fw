@@ -1,6 +1,7 @@
 {extends "base.html"}
 
 {block name=content}
+{strip}
 <h1>{$page.page_name}</h1>
 <ul>
 {foreach $pages as $row}
@@ -23,4 +24,5 @@
 	</li>
 {/foreach}
 </ul>
+{/strip}
 {/block}

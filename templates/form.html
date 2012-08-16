@@ -1,3 +1,4 @@
+{strip}
 {if $form.data.is_bound and $form.data.is_valid}
 	<div>{$form.data.form_message}</div>
 	<pre>{foreach $form.fields as $field}<b>{$field.field_title}</b> ({$field.field_alias}): {$field.value}<br>{/foreach}</pre>
@@ -84,3 +85,4 @@
 *}
 	</form>
 {/if}
+{/strip}
