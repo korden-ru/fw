@@ -1,8 +1,18 @@
-{strip}
 <div class="control-group {if $form.is_bound and $field.field_required}{if $field.is_valid}success{else}error{/if}{/if}">
 	<label class="control-label" for="{$form.form_alias}_{$field.field_alias}">{$field.field_title} {if $field.field_required and not $form.is_bound}<span style="color: {$cfg['form.required_color']};">*</span>{/if}</label>
 	<div class="controls">
-		<textarea id="{$form.form_alias}_{$field.field_alias}" name="{$form.form_alias}_{$field.field_alias}" placeholder="{$field.field_placeholder}" style="{if $form.form_fields_width or $field.field_width}width: {$form.form_fields_width|default:$field.field_width};{/if} {if $field.field_height}height: {$field.field_height};{/if}" {if $field.field_required}required{/if} {if $field.field_disabled}disabled{/if} {if $field.field_readonly}readonly{/if} {if $field.field_max}maxlength="{$field.field_max}"{/if} {if $field.field_autofocus}autofocus{/if} {$field.field_attr|default:''}>{$field.value|default:''}</textarea>
+		{capture "input"}
+		<textarea id="{$form.form_alias}_{$field.field_alias}"
+			name="{$form.form_alias}_{$field.field_alias}"
+			placeholder="{$field.field_placeholder}"
+			style="{if $form.form_fields_width or $field.field_width}width: {$form.form_fields_width|default:$field.field_width};{/if} {if $field.field_height}height: {$field.field_height};{/if}"
+			{if $field.field_required}required{/if}
+			{if $field.field_disabled}disabled{/if}
+			{if $field.field_readonly}readonly{/if}
+			{if $field.field_max}maxlength="{$field.field_max}"{/if}
+			{if $field.field_autofocus}autofocus{/if}
+			{$field.field_attr|default:''}>{/capture}
+		{$smarty.capture.input|regex_replace:"#[\n\r\t]+#":" "}{$field.value|default:''}</textarea>
 		{if $form.is_bound and not $field.is_valid}
 			<span class="help-inline">{$field.field_invalid_message}</span>
 		{elseif $field.field_help_inline}
@@ -13,4 +23,3 @@
 		{/if}
 	</div>
 </div>
-{/strip}
