@@ -23,6 +23,16 @@ class integer extends generic
 			return false;
 		}
 		
+		if( $this->data['field_min'] != '' && $this->data['value'] < $this->data['field_min'] )
+		{
+			return false;
+		}
+		
+		if( $this->data['field_max'] != '' && $this->data['value'] > $this->data['field_max'] )
+		{
+			return false;
+		}
+		
 		return true;
 	}
 }

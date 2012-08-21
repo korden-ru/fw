@@ -18,10 +18,15 @@ class url extends generic
 			return false;
 		}
 		
+		/**
+		* Проверка длины
+		* Видоизмененные данные перестанут быть корректными, поэтому сбрасываем ввод
+		*/
 		if( $this->data['value'] )
 		{
-			if( ($this->data['field_min'] && $this->data['field_min'] > mb_strlen($this->data['value'])) ||
-				($this->config['form.url.min_chars'] > mb_strlen($this->data['value'])) )
+			$len = mb_strlen($this->data['value']);
+			
+			if( $len < $this->config['form.url.min_chars'] || $len > $this->config['form.url.max_chars'] )
 			{
 				$this->data['value'] = '';
 
