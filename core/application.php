@@ -138,7 +138,7 @@ class application implements \ArrayAccess
 		{
 			static $object;
 			
-			if( is_null($object) )
+			if( null === $object )
 			{
 				$object = $callable($c);
 			}
@@ -147,9 +147,14 @@ class application implements \ArrayAccess
 		};
 	}
 	
+	public function keys()
+	{
+		return array_keys($this->values);
+	}
+	
 	public function offsetExists($id)
 	{
-		return isset($this->values[$id]);
+		return array_key_exists($id, $this->values);
 	}
 	
 	public function offsetGet($id)
