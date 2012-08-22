@@ -2,7 +2,7 @@
 <input type="{$field.field_type}"
 	id="{$form.form_alias}_{$field.field_alias}"
 	name="{$form.form_alias}_{$field.field_alias}"
-	value="{$field.value|default:''}"
+	value="{$field.field_value}"
 	{$field.field_attr|default:''}>
 {/capture}
 {$smarty.capture.input|regex_replace:"#[\n\r\t]+#":" "}
