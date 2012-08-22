@@ -121,7 +121,7 @@ class page
 			$base_url = isset($ary['extension']) ? $ary['dirname'] : $this->url;
 		}
 		
-		$url = ( $row['is_dir'] ) ? $row['page_url'] : (($row['page_url'] != $this->config['router.directory_index']) ? (($this->format) ? sprintf('%s.%s', $row['page_url'], $this->format) : $row['page_url']) : '');
+		$url = $row['is_dir'] ? $row['page_url'] : ($row['page_url'] != $this->config['router.directory_index'] ? ($this->format ? sprintf('%s.%s', $row['page_url'], $this->format) : $row['page_url']) : '');
 		
 		return ilink(sprintf('%s/%s', $base_url, $url));
 	}
@@ -482,6 +482,9 @@ class page
 		return $this;
 	}
 	
+	/**
+	* Подключение метода get_handler_url к шаблонизатору под именем url_for
+	*/
 	public function smarty_function_url_for($params, $template)
 	{
 		$handler = !empty($params['handler']) ? $params['handler'] : '';
@@ -503,21 +506,9 @@ class page
 	*/
 	protected function append_seo_params($row)
 	{
-		if( isset($row['seo_title']) && $row['seo_title'] )
-		{
-			$this->data['page_title'] = $row['seo_title'];
-		}
-		
-		if( isset($row['seo_keys']) && $row['seo_keys'] )
-		{
-			$this->data['page_keywords'] = $row['seo_keys'];
-		}
-		
-		if( isset($row['seo_desc']) && $row['seo_desc'] )
-		{
-			$this->data['page_description'] = $row['seo_desc'];
-		}
-		
+		$this->data['page_title']       = !empty($row['seo_title']) ? $row['seo_title'] : $this->data['page_title'];
+		$this->data['page_keywords']    = !empty($row['seo_keys']) ? $row['seo_keys'] : $this->data['page_keywords'];
+		$this->data['page_description'] = !empty($row['seo_desc']) ? $row['seo_desc'] : $this->data['page_description'];
 		$this->set_page_data();
 		
 		return $this;
@@ -530,10 +521,7 @@ class page
 	{
 		static $page_url;
 		
-		if( !$page_url )
-		{
-			$page_url = ilink($this->full_url);
-		}
+		$page_url = $page_url ?: ilink($this->full_url);
 		
 		for( $i = 0, $len = sizeof($menu); $i < $len; $i++ )
 		{

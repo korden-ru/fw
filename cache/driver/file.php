@@ -163,7 +163,7 @@ class file
 			
 			fclose($handle);
 			
-			$data = ( $data !== false ) ? @unserialize($data) : $data;
+			$data = false !== $data ? @unserialize($data) : $data;
 			
 			if( $data === false )
 			{
@@ -636,7 +636,7 @@ class file
 				return false;
 			}
 
-			return (time() > $this->data_expires[$var]) ? false : isset($this->data[$var]);
+			return time() > $this->data_expires[$var] ? false : isset($this->data[$var]);
 		}
 		else
 		{

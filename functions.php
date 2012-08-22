@@ -374,7 +374,7 @@ function generate_page_link($page, $base_url, $query_string)
 		return $base_url . $query_string;
 	}
 
-	$url_delim = ( !$query_string ) ? '?' : '&amp;';
+	$url_delim = !$query_string ? '?' : '&amp;';
 
 	return $base_url . sprintf('%s%sp=%d', $query_string, $url_delim, $page);
 }
@@ -615,8 +615,8 @@ function ilink($url = '', $prefix = false)
 	}
 	else
 	{
-		$link = ( $prefix === false ) ? $app['config']['site_root_path'] : $prefix;
-		$link .= ( substr($link, -1) == '/' ) ? '' : '/';
+		$link = false === $prefix ? $app['config']['site_root_path'] : $prefix;
+		$link .= substr($link, -1) == '/' ? '' : '/';
 	}
 
 	/**
@@ -722,9 +722,9 @@ function num_format($value, $decimals = 0)
 */
 function num_in_range($value, $min, $max = false)
 {
-	$max = ( $max ) ?: $value;
+	$max = $max ?: $value;
 
-	return ( $value < $min ) ? $min : (($value > $max) ? $max : $value);
+	return $value < $min ? $min : ($value > $max ? $max : $value);
 }
 
 /**
@@ -768,17 +768,17 @@ function pagination($on_page, $overall, $link, $page_var = 'p')
 	{
 		if( $sort_count != $on_page )
 		{
-			$link .= ((false !== strpos($link, '?')) ? '&' : '?') . 'sc=' . $sort_count;
+			$link .= (false !== strpos($link, '?') ? '&' : '?') . 'sc=' . $sort_count;
 		}
 
 		if( $sort_dir != 'd' )
 		{
-			$link .= ((false !== strpos($link, '?')) ? '&' : '?') . 'sd=' . $sort_dir;
+			$link .= (false !== strpos($link, '?') ? '&' : '?') . 'sd=' . $sort_dir;
 		}
 
 		if( $sort_key != 'a' )
 		{
-			$link .= ((false !== strpos($link, '?')) ? '&' : '?') . 'sk=' . $sort_key;
+			$link .= (false !== strpos($link, '?') ? '&' : '?') . 'sk=' . $sort_key;
 		}
 	}
 
@@ -872,7 +872,7 @@ function plural($n = 0, $forms, $format = '%s %s')
 				$forms[2] = $forms[1];
 			}
 
-			$plural = ($n % 10 == 1 && $n % 100 != 11) ? 0 : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
+			$plural = $n % 10 == 1 && $n % 100 != 11 ? 0 : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
 
 		break;
 		/**
@@ -880,7 +880,7 @@ function plural($n = 0, $forms, $format = '%s %s')
 		*/
 		default:
 
-			$plural = ($n == 1) ? 0 : 1;
+			$plural = $n == 1 ? 0 : 1;
 
 		break;
 	}

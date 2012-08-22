@@ -71,8 +71,8 @@ class mysqli
 	*/
 	private function add_num_queries($cached = false)
 	{
-		$this->num_queries['cached'] += ( $cached !== false ) ? 1 : 0;
-		$this->num_queries['normal'] += ( $cached !== false ) ? 0 : 1;
+		$this->num_queries['cached'] += false !== $cached ? 1 : 0;
+		$this->num_queries['normal'] += false !== $cached ? 0 : 1;
 		$this->num_queries['total']++;
 	}
 
@@ -81,7 +81,7 @@ class mysqli
 	*/
 	public function affected_rows()
 	{
-		return ( $this->connect_id ) ? mysqli_affected_rows($this->connect_id) : false;
+		return $this->connect_id ? mysqli_affected_rows($this->connect_id) : false;
 	}
 
 	/**
@@ -219,7 +219,7 @@ class mysqli
 		}
 		else
 		{
-			return ( is_bool($value) ) ? intval($value) : $value;
+			return is_bool($value) ? intval($value) : $value;
 		}
 	}
 
@@ -432,7 +432,7 @@ class mysqli
 	*/
 	public function insert_id()
 	{
-		return ( $this->connect_id ) ? mysqli_insert_id($this->connect_id) : false;
+		return $this->connect_id ? mysqli_insert_id($this->connect_id) : false;
 	}
 
 	/**
@@ -484,7 +484,7 @@ class mysqli
 	*/
 	public function num_queries($cached = false)
 	{
-		return ( $cached ) ? $this->num_queries['cached'] : $this->num_queries['normal'];
+		return $cached ? $this->num_queries['cached'] : $this->num_queries['normal'];
 	}
 
 	/**
@@ -499,7 +499,7 @@ class mysqli
 		
 		if( $query )
 		{
-			$this->query_result = ( $cache_ttl ) ? $this->cache->sql_load($query) : false;
+			$this->query_result = $cache_ttl ? $this->cache->sql_load($query) : false;
 			$this->add_num_queries($this->query_result);
 			$start_time = microtime(true);
 
@@ -572,7 +572,7 @@ class mysqli
 			return $this->cache->sql_rowseek($rownum, $query_id);
 		}
 
-		return ( $query_id !== false ) ? mysqli_data_seek($query_id, $rownum) : false;
+		return false !== $query_id ? mysqli_data_seek($query_id, $rownum) : false;
 	}
 	
 
@@ -658,7 +658,7 @@ class mysqli
 		$this->connect_id = mysqli_connect($this->server, $this->user, $this->password, $this->database, $this->port, $this->socket);
 		$this->password = '';
 
-		return ( $this->connect_id && $this->database ) ? $this->connect_id : $this->error();
+		return $this->connect_id && $this->database ? $this->connect_id : $this->error();
 	}
 
 	/**
@@ -668,8 +668,8 @@ class mysqli
 	{
 		global $error_ary;
 
-		$code = ( $this->connect_id ) ? mysqli_errno($this->connect_id) : mysqli_connect_errno();
-		$message = ( $this->connect_id ) ? mysqli_error($this->connect_id) : mysqli_connect_error();
+		$code = $this->connect_id ? mysqli_errno($this->connect_id) : mysqli_connect_errno();
+		$message = $this->connect_id ? mysqli_error($this->connect_id) : mysqli_connect_error();
 		
 		define('IN_SQL_ERROR', true);
 		

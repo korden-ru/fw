@@ -15,7 +15,7 @@ class rss extends task
 {
 	public function get_rss_xml_data($url, $timeout = false)
 	{
-		$timeout = ( $timeout !== false ) ? intval($timeout) : $this->config['cron_rss_timeout'];
+		$timeout = false !== $timeout ? intval($timeout) : $this->config['cron_rss_timeout'];
 		
 		$c = curl_init($url);
 		curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);

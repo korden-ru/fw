@@ -277,7 +277,7 @@ class upload
 		
 		$width = abs(intval($width));
 		$height = abs(intval($height));
-		$height = ( $height ) ?: $width;
+		$height = $height ?: $width;
 		
 		$prop = $this->GetPropertyFile();
 		

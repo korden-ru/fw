@@ -181,7 +181,7 @@ class db extends config
 			($site_id === 0 && !isset($this->config[$key]) && !isset($this->site_vars[$key])) ||
 			($site_id > 0 && $site_id !== $this->site_id) )
 		{
-			$insert = ( $site_id > 0 && $site_id !== $this->site_id ) ? 'INSERT IGNORE' : 'INSERT';
+			$insert = $site_id > 0 && $site_id !== $this->site_id ? 'INSERT IGNORE' : 'INSERT';
 			
 			$sql = $insert . ' INTO ' . $this->table . ' ' . $this->db->build_array('INSERT', array(
 				'config_name'  => $key,
