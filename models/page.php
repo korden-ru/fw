@@ -79,6 +79,7 @@ class page
 	public function _set_template($template)
 	{
 		$this->template = $template;
+		$this->template->registerPlugin('function', 'url_for', array($this, 'smarty_function_url_for'));
 		
 		return $this;
 	}
@@ -479,6 +480,14 @@ class page
 		}
 		
 		return $this;
+	}
+	
+	public function smarty_function_url_for($params, $template)
+	{
+		$handler = !empty($params['handler']) ? $params['handler'] : '';
+		$args    = !empty($params['params']) ? $params['params'] : array();
+		
+		return $this->get_handler_url($handler, $args);
 	}
 	
 	/**
