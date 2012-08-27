@@ -524,7 +524,7 @@ class forms
 					}
 				}
 				
-				$cols .= '<td>';
+				$cols .= '<td><div class="btn-group btn-group-vertical">';
 
 				//кнопка редактирования
 				if( !empty($this->U_EDIT) && !$skip_edit )
@@ -548,7 +548,7 @@ class forms
 					$cols .= sprintf('<a href="%s" class="btn btn-mini btn-block" onclick="return confirm(\'Будет удалена вся информация связанная с этой записью! Продолжить?\');"><i class="icon-remove"></i> Удалить</a>', str_replace('\\', '\\\\', $this->U_DEL) . $value[$this->primary_id]);
 				}
 
-				$cols .= '</td></tr>';
+				$cols .= '</div></td></tr>';
 			}
 		$i++;
 		}
