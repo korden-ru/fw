@@ -524,7 +524,7 @@ class forms
 					}
 				}
 				
-				$cols .= '<td><div class="btn-group btn-group-vertical">';
+				$cols .= '<td><div class="btn-group btn-group-vertical btn-block">';
 
 				//кнопка редактирования
 				if( !empty($this->U_EDIT) && !$skip_edit )
