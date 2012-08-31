@@ -36,8 +36,8 @@ $app = new application($app);
 $app['autoloader']->register_namespaces(array(
 	'engine'  => __DIR__,
 	'Monolog' => __DIR__ . '/../lib/monolog/1.0.3/Monolog',
-	'app'     => SITE_DIR . '../modules',
-	'acp'     => SITE_DIR . 'acp/includes',
+	'app'     => defined('IN_ACP') ? SITE_DIR . '../../modules' : SITE_DIR . '../modules',
+	'acp'     => defined('IN_ACP') ? SITE_DIR . '../includes' : SITE_DIR . '../acp/includes',
 ));
 
 /* Внедрение зависимостей */
@@ -55,23 +55,26 @@ if( false === strpos($app['request']->server('SERVER_NAME'), '.korden.net') )
 	$app['db']->query('SET NAMES utf8');
 }
 
-if( false === $app['site_info'] = get_site_info_by_url($app['user']->domain, $app['user']->page) )
+if( !defined('IN_INSTALL') )
 {
-	/* Определение сайта */
-	$app['site_info'] = get_site_info_by_url($app['user']->domain);
-}
+	if( false === $app['site_info'] = get_site_info_by_url($app['user']->domain, $app['user']->page) )
+	{
+		/* Определение сайта */
+		$app['site_info'] = get_site_info_by_url($app['user']->domain);
+	}
 
-$app['cache']->_set_site_info($app['site_info']);
-$app['user']->_set_config($app['config']);
+	$app['cache']->_set_site_info($app['site_info']);
+	$app['user']->_set_config($app['config']);
 
-if( $app['config']['templates.dir'] )
-{
-	$app['template']->setTemplateDir(array_merge(
-		array('app' => SITE_DIR . '../templates/' . $app['config']['templates.dir']),
-		$app['template']->getTemplateDir()
-	));
+	if( $app['config']['templates.dir'] )
+	{
+		$app['template']->setTemplateDir(array_merge(
+			array('app' => SITE_DIR . '../templates/' . $app['config']['templates.dir']),
+			$app['template']->getTemplateDir()
+		));
 	
-	$app['template']->setCompileDir(SITE_DIR . '../cache/templates/' . $app['config']['templates.dir']);
-}
+		$app['template']->setCompileDir(SITE_DIR . '../cache/templates/' . $app['config']['templates.dir']);
+	}
 
-$app['template']->assign('cfg', $app['config']);
+	$app['template']->assign('cfg', $app['config']);
+}

@@ -17,20 +17,10 @@ class smarty extends \Smarty
 	{
 		parent::__construct();
 		
-		if( defined('IN_ACP') )
-		{
-			$this->setTemplateDir(array(
-				'acp'    => SITE_DIR . 'acp/templates/',
-				'engine' => FW_DIR . 'templates',
-			));
-		}
-		else
-		{
-			$this->setTemplateDir(array(
-				'app_shared' => SITE_DIR . '../templates',
-				'engine'     => FW_DIR . 'templates',
-			));
-		}
+		$this->setTemplateDir(array(
+			'app'    => SITE_DIR . '../templates',
+			'engine' => FW_DIR . 'templates',
+		));
 		
 		$this->compile_dir  = SITE_DIR . '../cache/templates/';
 
