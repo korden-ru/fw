@@ -297,14 +297,15 @@ class page
 	/**
 	* Карта ссылок на методы обработчика
 	*/
-	public function obtain_handlers_urls()
+	public function obtain_handlers_urls($namespace)
 	{
 		$handler = get_class($this);
+		$namespace = ltrim($namespace, '\\');
 		$this->handlers_urls = $this->cache->obtain_handlers_urls($this->data['site_id']);
 		
-		if( 0 === strpos($handler, 'app\\') )
+		if( 0 === strpos($handler, $namespace) )
 		{
-			$handler = substr($handler, 4);
+			$handler = substr($handler, strlen($namespace));
 		}
 		
 		$pos = strlen($handler) + 2;

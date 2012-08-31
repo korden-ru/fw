@@ -370,7 +370,7 @@ class router
 			->_set_request($this->request)
 			->_set_template($this->template)
 			->_set_user($this->user)
-			->obtain_handlers_urls()
+			->obtain_handlers_urls($this->namespace)
 			->set_default_template()
 			->set_site_menu()
 			->set_page_data()
