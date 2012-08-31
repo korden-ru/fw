@@ -93,8 +93,8 @@ class forms
 		{
 			$this->template->assign('input', $data);
 			
-			if( (isset($data['perms']) && in_array($app['user']->group, $data['perms'])) || !isset($data['perms']) )
-			{
+			// if( (isset($data['perms']) && in_array($app['user']->group, $data['perms'])) || !isset($data['perms']) )
+			// {
 				switch( $data['type'] )
 				{
 					case 'text':     $output .= $this->createInputText(); break;
@@ -114,11 +114,11 @@ class forms
 						
 					break;
 				}
-			}
-			else
-			{
-				$output .= $this->createInputHidden($data);
-			}
+			// }
+			// else
+			// {
+			// 	$output .= $this->createInputHidden($data);
+			// }
 		}
 	
 		return $output;
@@ -165,12 +165,12 @@ class forms
 			//внесение в БД тестовых полей
 			if( $data['type'] != 'file' && $data['type'] != 'date' && $data['name'] != 'modifyurl' )
 			{
-				if( (isset($data['perms']) && in_array($app['user']->group, $data['perms'])) || !isset($data['perms']) )
-				{ 
+				// if( (isset($data['perms']) && in_array($app['user']->group, $data['perms'])) || !isset($data['perms']) )
+				// { 
 					$value = $app['request']->post($data['name'], '');
 	
 					$sql_ary[$data['name']] = ($data['type'] == 'textarea') ? htmlspecialchars_decode($value) : $value;
-				}
+				// }
 			}
 
 			//превращение времени в mktime
