@@ -18,7 +18,7 @@ class generic implements \ArrayAccess, \IteratorAggregate, \Countable
 	function __construct($data, $config)
 	{
 		$data['is_valid'] = true;
-		$data['value'] = '';
+		$data['value'] = $data['field_value'];
 		
 		$this->config = $config;
 		$this->data = $data;
