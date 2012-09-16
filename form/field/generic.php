@@ -26,9 +26,7 @@ class generic implements \ArrayAccess, \IteratorAggregate, \Countable
 	
 	public function is_valid()
 	{
-		$this->data['is_valid'] = $this->validate();
-		
-		return $this->data['is_valid'];
+		return $this->data['is_valid'] = $this->validate();
 	}
 	
 	public function validate()
