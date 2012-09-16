@@ -164,7 +164,9 @@ class application implements \ArrayAccess
 			trigger_error(sprintf('Ключ "%s" не найден.', $id));
 		}
 		
-		return $this->values[$id] instanceof \Closure ? $this->values[$id]($this) : $this->values[$id];
+		$is_factory = is_object($this->values[$id]) && method_exists($this->values[$id], '__invoke');
+		
+		return $is_factory ? $this->values[$id]($this) : $this->values[$id];
 	}
 	
 	public function offsetSet($id, $value)
