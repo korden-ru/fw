@@ -244,7 +244,7 @@ class user implements \ArrayAccess, \IteratorAggregate, \Countable
 				$query_string .= '&';
 			}
 
-			$query_string .= sprintf('%s=%s', $k, $v);
+			$query_string .= @sprintf('%s=%s', $k, $v);
 		}
 		
 		$page .= $query_string ? '?' . $query_string : '';
