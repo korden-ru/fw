@@ -18,6 +18,7 @@ class form
 	protected $csrf_token;
 	protected $data = array();
 	protected $fields = array();
+	protected $last_tab = 0;
 	protected $tabs = array();
 	
 	protected $config;
@@ -31,6 +32,93 @@ class form
 		$this->db       = $db;
 		$this->request  = $request;
 		$this->template = $template;
+	}
+	
+	public function add_field($row, $tab_id = false)
+	{
+		if( false == $type = @$row['field_type'] ?: @$row['type'] ?: '' )
+		{
+			trigger_error('Полю необходимо задать тип', E_USER_ERROR);
+		}
+		
+		$tab_id = false === $tab_id ? $this->last_tab : $tab_id;
+		
+		$class_name = '\\engine\\form\\field\\' . $type;
+		
+		$this->fields[] = new $class_name(array(
+			'field_type'             => $type,
+			'field_title'            => @$row['field_title'] ?: @$row['title'] ?: '',
+			'field_alias'            => @$row['field_alias'] ?: @$row['alias'] ?: '',
+			'field_required'         => @$row['field_required'] ?: @$row['required'] ?: 0,
+			'field_disabled'         => @$row['field_disabled'] ?: @$row['disabled'] ?: 0,
+			'field_readonly'         => @$row['field_readonly'] ?: @$row['readonly'] ?: 0,
+			'field_multiple'         => @$row['field_multiple'] ?: @$row['multiple'] ?: 0,
+			'field_trim'             => @$row['field_trim'] ?: @$row['trim'] ?: 1,
+			'field_rounding_mode'    => @$row['field_rounding_mode'] ?: @$row['rounding_mode'] ?: 0,
+			'field_precision'        => @$row['field_precision'] ?: @$row['precision'] ?: 2,
+			'field_always_empty'     => @$row['field_always_empty'] ?: @$row['always_empty'] ?: 0,
+			'field_default_protocol' => @$row['field_default_protocol'] ?: @$row['default_protocol'] ?: '',
+			'field_width'            => @$row['field_width'] ?: @$row['width'] ?: '',
+			'field_height'           => @$row['field_height'] ?: @$row['height'] ?: '',
+			'field_autofocus'        => @$row['field_autofocus'] ?: @$row['autofocus'] ?: 0,
+			'field_tabindex'         => @$row['field_tabindex'] ?: @$row['tabindex'] ?: 0,
+			'field_min'              => @$row['field_min'] ?: @$row['min'] ?: '',
+			'field_max'              => @$row['field_max'] ?: @$row['max'] ?: '',
+			'field_pattern'          => @$row['field_pattern'] ?: @$row['pattern'] ?: '',
+			'field_value'            => @$row['field_value'] ?: @$row['value'] ?: '',
+			'field_values'           => @$row['field_values'] ?: @$row['values'] ?: '',
+			'field_placeholder'      => @$row['field_placeholder'] ?: @$row['placeholder'] ?: '',
+			'field_prepend'          => @$row['field_prepend'] ?: @$row['prepend'] ?: '',
+			'field_append'           => @$row['field_append'] ?: @$row['append'] ?: '',
+			'field_help_inline'      => @$row['field_help_inline'] ?: @$row['help_inline'] ?: '',
+			'field_help'             => @$row['field_help'] ?: @$row['help'] ?: '',
+			'field_repeated'         => @$row['field_repeated'] ?: @$row['repeated'] ?: '',
+			'field_invalid_message'  => @$row['field_invalid_message'] ?: @$row['invalid_message'] ?: '',
+			'field_attr'             => @$row['field_attr'] ?: @$row['attr'] ?: '',
+		), $this->config);
+		
+		$this->tabs[$tab_id]['fields'][] = sizeof($this->fields) - 1;
+		
+		return $this;
+	}
+	
+	public function add_form($row)
+	{
+		$this->data = array(
+			'form_title'        => @$row['form_title'] ?: @$row['title'] ?: '',
+			'form_alias'        => @$row['form_alias'] ?: @$row['alias'] ?: '',
+			'form_email'        => @$row['form_email'] ?: @$row['email'] ?: '',
+			'form_class'        => @$row['form_class'] ?: @$row['class'] ?: '',
+			'form_action'       => @$row['form_action'] ?: @$row['action'] ?: '',
+			'form_enctype'      => @$row['form_enctype'] ?: @$row['enctype'] ?: '',
+			'form_method'       => @$row['form_method'] ?: @$row['method'] ?: 'post',
+			'form_message'      => @$row['form_message'] ?: @$row['message'] ?: '',
+			'form_fields_width' => @$row['form_fields_width'] ?: @$row['fields_width'] ?: '',
+			'form_submit_text'  => @$row['form_submit_text'] ?: @$row['submit_text'] ?: '',
+			'form_submit_class' => @$row['form_submit_class'] ?: @$row['submit_class'] ?: '',
+			'form_captcha'      => @$row['form_captcha'] ?: @$row['captcha'] ?: 0,
+		);
+
+		$this->csrf_token = $this->get_csrf_token();
+		
+		return $this;
+	}
+	
+	public function add_tab($row, $tab_id = false)
+	{
+		if( false === $tab_id )
+		{
+			$this->last_tab++;
+			$tab_id = $this->last_tab;
+		}
+		
+		$this->tabs[$tab_id] = array(
+			'tab_title' => @$row['tab_title'] ?: @$row['title'] ?: '',
+			
+			'fields' => array(),
+		);
+		
+		return $this;
 	}
 	
 	/**
@@ -119,9 +207,7 @@ class form
 		
 		while( $row = $this->db->fetchrow() )
 		{
-			$row['fields'] = array();
-			
-			$this->tabs[$row['tab_id']] = $row;
+			$this->add_tab($row, $row['tab_id']);
 		}
 		
 		$this->db->freeresult();
@@ -146,9 +232,7 @@ class form
 		
 		while( $row = $this->db->fetchrow() )
 		{
-			$class_name = '\\engine\\form\\field\\' . $row['field_type'];
-			$this->fields[$row['field_id']] = new $class_name($row, $this->config);
-			$this->tabs[$row['tab_id']]['fields'][] = $row['field_id'];
+			$this->add_field($row, $row['tab_id']);
 		}
 		
 		$this->db->freeresult();
