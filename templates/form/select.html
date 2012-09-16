@@ -9,8 +9,8 @@
 			{if $field.field_disabled}disabled{/if}
 			{if $field.field_autofocus}autofocus{/if}
 			{$field.field_attr|default:''}>
-			{foreach $field.field_values as $key => $row}
-				<option value="{$key}">{$row}</option>
+			{foreach $field.field_values as $key => $value}
+				<option value="{$key}" {if $field.value == $key}selected{/if}>{$value}</option>
 			{/foreach}
 		</select>
 		{/capture}
