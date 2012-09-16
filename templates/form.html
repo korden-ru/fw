@@ -40,7 +40,7 @@
 			</div>
 		{else}
 			{foreach $form.tabs as $tab}
-				{foreach $tab.fields as $row}
+				{foreach $tab.fields as $field_id}
 					{include "form/{$form.fields.$field_id.field_type}.html" field=$form.fields.$field_id form=$form.data}
 				{/foreach}
 			{/foreach}
