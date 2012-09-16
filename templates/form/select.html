@@ -1,0 +1,27 @@
+<div class="control-group {if $form.is_bound and $field.field_required}{if $field.is_valid}success{else}error{/if}{/if}">
+	<label class="control-label" for="{$form.form_alias}_{$field.field_alias}">{$field.field_title} {if $field.field_required and not $form.is_bound}<span style="color: {$cfg['form.required_color']};">*</span>{/if}</label>
+	<div class="controls">
+		{capture "input"}
+		<select id="{$form.form_alias}_{$field.field_alias}"
+			name="{$form.form_alias}_{$field.field_alias}"
+			style="{if $form.form_fields_width or $field.field_width}width: {$field.field_width|default:$form.form_fields_width};{/if} {if $field.field_height}height: {$field.field_height};{/if}"
+			{if $field.field_required}required{/if}
+			{if $field.field_disabled}disabled{/if}
+			{if $field.field_autofocus}autofocus{/if}
+			{$field.field_attr|default:''}>
+			{foreach $field.field_values as $key => $row}
+				<option value="{$key}">{$row}</option>
+			{/foreach}
+		</select>
+		{/capture}
+		{$smarty.capture.input|regex_replace:"#[\n\r\t]+#":" "}
+		{if $form.is_bound and not $field.is_valid}
+			<span class="help-inline">{$field.field_invalid_message}</span>
+		{elseif $field.field_help_inline}
+			<span class="help-inline">{$field.field_help_inline}</span>
+		{/if}
+		{if $field.field_help}
+			<p class="help-block">{$field.field_help}</p>
+		{/if}
+	</div>
+</div>
