@@ -166,6 +166,11 @@ class form
 	*/
 	public function bind_data($row)
 	{
+		foreach( $this->fields as $field )
+		{
+			$field['value'] = isset($row[$field['field_alias']]) ? $row[$field['field_alias']] : $field['value'];
+		}
+		
 		return $this;
 	}
 	
