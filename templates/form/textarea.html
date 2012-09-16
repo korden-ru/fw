@@ -5,7 +5,7 @@
 		<textarea id="{$form.form_alias}_{$field.field_alias}"
 			name="{$form.form_alias}_{$field.field_alias}"
 			placeholder="{$field.field_placeholder}"
-			style="{if $form.form_fields_width or $field.field_width}width: {$form.form_fields_width|default:$field.field_width};{/if} {if $field.field_height}height: {$field.field_height};{/if}"
+			style="{if $form.form_fields_width or $field.field_width}width: {$field.field_width|default:$form.form_fields_width};{/if} {if $field.field_height}height: {$field.field_height};{/if}"
 			{if $field.field_required}required{/if}
 			{if $field.field_disabled}disabled{/if}
 			{if $field.field_readonly}readonly{/if}
