@@ -38,9 +38,24 @@ class form
 	{
 		if( false == $type = @$row['field_type'] ?: @$row['type'] ?: '' )
 		{
-			trigger_error('Полю необходимо задать тип', E_USER_ERROR);
+			trigger_error('При создании поля не было указано обязательное поле type.');
 		}
 		
+		if( empty($this->data) )
+		{
+			trigger_error('Перед добавлением полей следует создать форму.');
+		}
+		
+		if( false === $tab_id && !$this->last_tab )
+		{
+			/**
+			* При ручном создании формы вкладка будет создана
+			* автоматически при добавлении первого поля
+			*/
+			$this->add_tab();
+		}
+		
+		/* При ручном создании формы поле попадает в последнюю вкладку */
 		$tab_id = false === $tab_id ? $this->last_tab : $tab_id;
 		
 		$class_name = '\\engine\\form\\field\\' . $type;
@@ -48,7 +63,7 @@ class form
 		$this->fields[] = new $class_name(array(
 			'field_type'             => $type,
 			'field_title'            => @$row['field_title'] ?: @$row['title'] ?: '',
-			'field_alias'            => @$row['field_alias'] ?: @$row['alias'] ?: '',
+			'field_alias'            => @$row['field_alias'] ?: @$row['alias'] ?: @$row['name'] ?: '',
 			'field_required'         => @$row['field_required'] ?: @$row['required'] ?: 0,
 			'field_disabled'         => @$row['field_disabled'] ?: @$row['disabled'] ?: 0,
 			'field_readonly'         => @$row['field_readonly'] ?: @$row['readonly'] ?: 0,
@@ -84,9 +99,14 @@ class form
 	
 	public function add_form($row)
 	{
+		if( false == $alias = @$row['form_alias'] ?: @$row['alias'] ?: '' )
+		{
+			trigger_error('При создании формы не было указано обязательное поле alias.');
+		}
+		
 		$this->data = array(
 			'form_title'        => @$row['form_title'] ?: @$row['title'] ?: '',
-			'form_alias'        => @$row['form_alias'] ?: @$row['alias'] ?: '',
+			'form_alias'        => $alias,
 			'form_email'        => @$row['form_email'] ?: @$row['email'] ?: '',
 			'form_class'        => @$row['form_class'] ?: @$row['class'] ?: '',
 			'form_action'       => @$row['form_action'] ?: @$row['action'] ?: '',
@@ -104,7 +124,7 @@ class form
 		return $this;
 	}
 	
-	public function add_tab($row, $tab_id = false)
+	public function add_tab($row = array(), $tab_id = false)
 	{
 		if( false === $tab_id )
 		{
