@@ -4,7 +4,7 @@
 		<input type="checkbox"
 			id="{$form.form_alias}_{$field.field_alias}"
 			name="{$form.form_alias}_{$field.field_alias}"
-			value="1"
+			value="{$field.field_value|default:1}"
 			{if $field.value}checked{/if}
 			{if $field.field_required}required{/if}
 			{if $field.field_disabled}disabled{/if}

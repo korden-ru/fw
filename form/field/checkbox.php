@@ -11,6 +11,13 @@ namespace engine\form\field;
 */
 class checkbox extends generic
 {
+	function __construct($data, $config)
+	{
+		$data['field_value'] = $data['field_value'] ?: 1;
+		
+		parent::__construct($data, $config);
+	}
+	
 	public function validate()
 	{
 		if( $this->data['field_disabled'] )
