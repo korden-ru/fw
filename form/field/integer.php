@@ -11,6 +11,16 @@ namespace engine\form\field;
 */
 class integer extends generic
 {
+	public function get_default_value($is_bound = false)
+	{
+		return (int) $this->data['field_value'];
+	}
+	
+	public function set_value($value)
+	{
+		$this->data['value'] = (int) $value;
+	}
+	
 	public function validate()
 	{
 		if( $this->data['field_disabled'] || $this->data['field_readonly'] )

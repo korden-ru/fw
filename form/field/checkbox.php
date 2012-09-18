@@ -11,11 +11,10 @@ namespace engine\form\field;
 */
 class checkbox extends generic
 {
-	function __construct($data, $config)
+	public function get_default_value($is_bound = false)
 	{
-		$data['field_value'] = $data['field_value'] ?: 1;
-		
-		parent::__construct($data, $config);
+		/* Возвращаем 0, если флажок не был установлен при отправке формы */
+		return $is_bound ? 0 : $this->data['field_value'];
 	}
 	
 	public function validate()

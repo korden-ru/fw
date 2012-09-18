@@ -7,10 +7,20 @@
 namespace engine\form\field;
 
 /**
-* Число
+* Число (с плавающей запятой)
 */
 class number extends generic
 {
+	public function get_default_value($is_bound = false)
+	{
+		return (float) sprintf('%.2f', $this->data['field_value']);
+	}
+	
+	public function set_value($value)
+	{
+		$this->data['value'] = (float) $value;
+	}
+	
 	public function validate()
 	{
 		if( $this->data['field_disabled'] || $this->data['field_readonly'] )
