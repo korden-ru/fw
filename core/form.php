@@ -68,7 +68,6 @@ class form
 			'field_disabled'         => @$row['field_disabled'] ?: @$row['disabled'] ?: 0,
 			'field_readonly'         => @$row['field_readonly'] ?: @$row['readonly'] ?: 0,
 			'field_multiple'         => @$row['field_multiple'] ?: @$row['multiple'] ?: 0,
-			'field_trim'             => @$row['field_trim'] ?: @$row['trim'] ?: 1,
 			'field_rounding_mode'    => @$row['field_rounding_mode'] ?: @$row['rounding_mode'] ?: 0,
 			'field_precision'        => @$row['field_precision'] ?: @$row['precision'] ?: 2,
 			'field_always_empty'     => @$row['field_always_empty'] ?: @$row['always_empty'] ?: 0,
@@ -181,9 +180,16 @@ class form
 	{
 		foreach( $this->fields as $field )
 		{
-			$field['value'] = $this->request->post(sprintf('%s_%s', $this->data['form_alias'], $field['field_alias']), $field['field_value']);
+			switch( $this->data['form_method'] )
+			{
+				case 'get':  $method = 'get'; break;
+				case 'post': $method = 'post'; break;
+				default:     $method = 'variable'; break;
+			}
+			
+			$field->set_value($this->request->$method(sprintf('%s_%s', $this->data['form_alias'], $field['field_alias']), $field->get_default_value(true)));
 		}
-		
+
 		$this->is_bound = true;
 		$this->is_csrf_token_valid = $this->validate_csrf_token();
 		
