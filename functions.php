@@ -650,7 +650,7 @@ function install_site()
 	$sql_ary = array(
 		'site_id'       => 1,
 		'site_language' => 'ru',
-		'site_locale'   => 'ru_RU.utf8',
+		'site_locale'   => 'ru_RU.UTF-8',
 		'site_title'    => '',
 		'site_url'      => get_server_name(),
 		'site_aliases'  => '',
