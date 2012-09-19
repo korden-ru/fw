@@ -13,12 +13,14 @@ class number extends generic
 {
 	public function get_default_value($is_bound = false)
 	{
-		return (float) sprintf('%.2f', $this->data['field_value']);
+		return (string) $this->data['field_value'];
 	}
 	
 	public function set_value($value)
 	{
-		$this->data['value'] = (float) $value;
+		$locale = localeconv();
+		
+		$this->data['value'] = (float) str_replace(array($locale['thousands_sep'], $locale['decimal_point']), array('', '.'), $value);
 	}
 	
 	public function validate()
