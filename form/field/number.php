@@ -22,6 +22,7 @@ class number extends generic
 	
 	public function set_value($value)
 	{
+		/* %F, чтобы php не ставил разделительный знак текущей локали перед дробной частью */
 		$format = '%.' . $this->data['field_precision'] . 'F';
 		$locale = localeconv();
 		
