@@ -340,7 +340,7 @@ function garbage_collection($display_profiler = true)
 			}
 		}
 
-		if( $app['config']['profiler.send_stats'] )
+		if( !defined('IN_SQL_ERROR') && $app['config']['profiler.send_stats'] )
 		{
 			$app['profiler']->send_stats($app['config']['profiler.remote_host'], $app['config']['profiler.remote_port']);
 		}
