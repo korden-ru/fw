@@ -18,7 +18,7 @@ class generic implements \ArrayAccess, \IteratorAggregate, \Countable
 	function __construct($data, $config)
 	{
 		$this->config = $config;
-		$this->data = $data;
+		$this->data = $this->fill_default_data($data);
 		
 		$this->data['is_valid'] = true;
 		$this->data['value'] = $this->get_default_value();
@@ -42,6 +42,11 @@ class generic implements \ArrayAccess, \IteratorAggregate, \Countable
 	public function validate()
 	{
 		return true;
+	}
+	
+	protected function fill_default_data($data)
+	{
+		return $data;
 	}
 
 	/**

@@ -9,16 +9,13 @@ namespace engine\form\field;
 /**
 * Число
 */
-class integer extends generic
+class integer extends number
 {
-	public function get_default_value($is_bound = false)
-	{
-		return (int) $this->data['field_value'];
-	}
-	
 	public function set_value($value)
 	{
-		$this->data['value'] = (int) $value;
+		parent::set_value($value);
+		
+		$this->data['value'] = (int) $this->data['value'];
 	}
 	
 	public function validate()
@@ -44,5 +41,10 @@ class integer extends generic
 		}
 		
 		return true;
+	}
+	
+	protected function fill_default_data($data)
+	{
+		return $data;
 	}
 }

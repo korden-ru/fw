@@ -69,7 +69,7 @@ class form
 			'field_readonly'         => @$row['field_readonly'] ?: @$row['readonly'] ?: 0,
 			'field_multiple'         => @$row['field_multiple'] ?: @$row['multiple'] ?: 0,
 			'field_rounding_mode'    => @$row['field_rounding_mode'] ?: @$row['rounding_mode'] ?: 0,
-			'field_precision'        => @$row['field_precision'] ?: @$row['precision'] ?: 2,
+			'field_precision'        => @$row['field_precision'] ?: @$row['precision'] ?: 0,
 			'field_always_empty'     => @$row['field_always_empty'] ?: @$row['always_empty'] ?: 0,
 			'field_default_protocol' => @$row['field_default_protocol'] ?: @$row['default_protocol'] ?: '',
 			'field_width'            => @$row['field_width'] ?: @$row['width'] ?: '',

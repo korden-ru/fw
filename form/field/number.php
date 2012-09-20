@@ -98,4 +98,11 @@ class number extends generic
 		
 		return true;
 	}
+	
+	protected function fill_default_data($data)
+	{
+		$data['field_precision'] = $data['field_precision'] ?: 2;
+		
+		return $data;
+	}
 }
