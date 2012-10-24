@@ -96,11 +96,36 @@ class number extends generic
 			return false;
 		}
 		
+		global $app;
+		$app['profiler']->log((int) $this->data['field_min'] != '');
+		$app['profiler']->log($this->data['value']);
+		
+		$app['profiler']->log(gettype($this->data['field_min']));
+		$app['profiler']->log(gettype($this->data['value']));
+		
+		if( $this->data['field_min'] !== '' && $this->data['value'] < $this->data['field_min'] )
+		{
+			$app['profiler']->log('pc');
+			return false;
+		}
+		
+		if( $this->data['field_max'] !== '' && $this->data['value'] > $this->data['field_max'] )
+		{
+			return false;
+		}
+
 		return true;
 	}
 	
 	protected function fill_default_data($data)
 	{
+		global $app;
+		
+		$app['profiler']->log($data);
+		$app['profiler']->log(gettype($data['field_min']) . ': ' . $data['field_min']);
+		$data['field_min'] = $data['field_min'] !== '' ? (float) $data['field_min'] : '';
+		$app['profiler']->log(gettype($data['field_min']) . ': ' . $data['field_min']);
+		$data['field_max'] = $data['field_max'] !== '' ? (float) $data['field_max'] : '';
 		$data['field_precision'] = $data['field_precision'] ?: 2;
 		
 		return $data;
