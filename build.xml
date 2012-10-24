@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="Korden Framework" default="build">
-  <target name="build" depends="prepare" />
+  <target name="build" depends="prepare,lint" />
   
   <target name="clean" description="Cleanup">
     <delete dir="${basedir}/build/coverage/" />
