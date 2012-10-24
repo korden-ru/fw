@@ -8,7 +8,7 @@
     <delete dir="${basedir}/build/logs/" />
   </target>
   
-  <target name="prepare" depends="clean" description="Prepare for build">
+  <target name="prepare" depends="clean" description="Prepare for build!">
     <mkdir dir="${basedir}/build/coverage/" />
     <mkdir dir="${basedir}/build/logs/" />
   </target>
