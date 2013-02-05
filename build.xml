@@ -19,6 +19,7 @@
       
       <fileset dir="${basedir}">
         <include name="**/*.php" />
+        <modified />
       </fileset>
     </apply>
   </target>

@@ -197,6 +197,8 @@ class errorhandler
 	*/
 	static public function log_mail($text, $title = '')
 	{
+		global $app;
+		
 		$call_stack = '';
 		$text       = is_array($text) ? print_r($text, true) : $text;
 		
@@ -212,7 +214,7 @@ class errorhandler
 			$call_stack = str_replace(array('/srv/www/vhosts'), array(''), ob_get_clean());
 		}
 		
-		mail('src-work@ivacuum.ru', $title, $text . "\n" . $call_stack . print_r($_SESSION, true) . "\n" . print_r($_SERVER, true) . "\n" . print_r($_REQUEST, true));
+		mail('src-work@ivacuum.ru', $title, $text . "\n" . $call_stack . print_r($_SESSION, true) . "\n" . print_r($_SERVER, true) . "\n" . print_r($_REQUEST, true), sprintf("From: %s@%s\r\n", $app['user']->domain, gethostname()));
 	}
 
 	/**

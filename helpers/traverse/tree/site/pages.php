@@ -30,6 +30,13 @@ class site_pages extends tree
 		return $this->tree;
 	}
 
+	public function set_base_url($url)
+	{
+		$this->base_url = explode('/', $url);
+		
+		return $this;
+	}
+
 	/**
 	* Ссылка на страницу
 	*/
