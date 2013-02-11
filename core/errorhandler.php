@@ -178,13 +178,16 @@ class errorhandler
 						return;
 					}
 
-					$error['file'] = str_replace($_SERVER['DOCUMENT_ROOT'], '', $error['file']);
+					$error['file'] = str_replace('/srv/www/vhosts/', '', $error['file']);
 
 					printf('<br><br><b style="color: red;">***</b> <b style="white-space: pre-line;">%s</b> on line <b>%d</b> in file <b>%s</b>.<br />', $error['message'], $error['line'], $error['file']);
 
 					if( function_exists('xdebug_print_function_stack') )
 					{
-						echo '<pre>', xdebug_print_function_stack(), '</pre>';
+						ob_start();
+						xdebug_print_function_stack();
+						$call_stack = str_replace(['/srv/www/vhosts/'], [''], ob_get_clean());
+						echo '<pre>', $call_stack, '</pre>';
 					}
 
 				break;
@@ -211,7 +214,7 @@ class errorhandler
 		{
 			ob_start();
 			xdebug_print_function_stack();
-			$call_stack = str_replace(array('/srv/www/vhosts'), array(''), ob_get_clean());
+			$call_stack = str_replace(array('/srv/www/vhosts/'), array(''), ob_get_clean());
 		}
 		
 		mail('src-work@ivacuum.ru', $title, $text . "\n" . $call_stack . print_r($_SESSION, true) . "\n" . print_r($_SERVER, true) . "\n" . print_r($_REQUEST, true), sprintf("From: %s@%s\r\n", $app['user']->domain, gethostname()));

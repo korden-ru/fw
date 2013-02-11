@@ -17,6 +17,7 @@ define('FW_DIR', __DIR__ . '/');
 define('SITE_DIR', rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/');
 
 date_default_timezone_set('Europe/Moscow');
+ini_set('display_errors', false);
 error_reporting(false !== strpos($_SERVER['SERVER_NAME'], '.korden.net') ? E_ALL : 0);
 mb_internal_encoding('utf-8');
 
@@ -36,8 +37,8 @@ $app = new application($app);
 $app['autoloader']->register_namespaces(array(
 	'engine'  => __DIR__,
 	'Monolog' => __DIR__ . '/../lib/monolog/1.0.3/Monolog',
-	'app'     => defined('IN_ACP') ? SITE_DIR . '../../modules' : SITE_DIR . '../modules',
-	'acp'     => defined('IN_ACP') ? SITE_DIR . '../includes' : SITE_DIR . '../acp/includes',
+	'app'     => SITE_DIR . '../modules',
+	'acp'     => SITE_DIR . 'acp/includes',
 ));
 
 /* Внедрение зависимостей */

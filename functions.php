@@ -662,6 +662,19 @@ function install_site()
 }
 
 /**
+* Вывод json данных
+*
+* @param	string	$output	Данные для выдачи
+*/
+function json_output($output)
+{
+	header('Content-Type: application/json; charset=utf-8');
+	echo json_encode($output, JSON_UNESCAPED_UNICODE);
+	garbage_collection(false);
+	exit;
+}
+
+/**
 * Загрузка констант
 */
 function load_constants()

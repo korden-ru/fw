@@ -17,7 +17,7 @@ $app = array(
 	'db.pers' => false,
 	
 	/* Настройки кэша */
-	'acm.prefix' => 'src_3.6-dev',
+	'acm.prefix' => 'src_3.5',
 	'acm.type'   => 'null',
 	
 	/* Типы страниц */
@@ -37,7 +37,7 @@ $app = array(
 	),
 );
 
-define('SQL_PREFIX', 'site_');
+define('SQL_PREFIX', 'tcms_');
 
 /**
 * Константы
@@ -47,33 +47,33 @@ if( false === load_constants() )
 {
 	set_constants(array(
 		/* Таблицы сайта */
-		'BANNERS_TABLE'              => 'site_banners',
-		'BANNERS_TYPES_TABLE'        => 'site_banners_types',
-		'CONFIG_TABLE'               => 'site_config',
-		'CRON_TABLE'                 => 'site_cron',
-		'FORMS_TABLE'                => 'site_forms',
-		'FORM_FIELDS_TABLE'          => 'site_form_fields',
-		'FORM_TABS_TABLE'            => 'site_form_tabs',
-		'GALLERIES_TABLE'            => 'site_galleries',
-		'GALLERY_PHOTOS_TABLE'       => 'site_gallery_photos',
-		'I18N_TABLE'                 => 'site_i18n',
-		'IMAGE_WATERMARKS_TABLE'     => 'site_image_watermarks',
-		'LANGUAGES_TABLE'            => 'site_languages',
-		'LOGS_TABLE'                 => 'site_logs',
-		'MAILLIST_TABLE'             => 'site_maillist',
-		'MAILLIST_GROUPS_TABLE'      => 'site_maillist_groups',
-		'MAILLIST_GROUP_USERS_TABLE' => 'site_maillist_group_users',
-		'MAILLIST_SIGNATURE_TABLE'   => 'site_maillist_signature',
-		'MAILLIST_SPOOL_TABLE'       => 'site_maillist_spool',
-		'MENUS_TABLE'                => 'site_menus',
-		'MODULES_TABLE'              => 'site_modules',
-		'PAGES_TABLE'                => 'site_pages',
-		'PAGES_GALLERY_TABLE'        => 'site_pages_gallery',
-		'PUBLICATIONS_TABLE'         => 'site_publications',
-		'PUBLICATIONS_GALLERY_TABLE' => 'site_publications_gallery',
-		'SEO_TABLE'                  => 'site_seo',
-		'SITES_TABLE'                => 'site_sites',
-		'VACANCIES_TABLE'            => 'site_vacancies',
-		'VACANCY_APPLICATIONS_TABLE' => 'site_vacancy_applications',
+		'BANNERS_TABLE'              => 'tcms_banners',
+		'BANNERS_TYPES_TABLE'        => 'tcms_banners_types',
+		'CONFIG_TABLE'               => 'tcms_config',
+		'CRON_TABLE'                 => 'tcms_cron',
+		'FORMS_TABLE'                => 'tcms_forms',
+		'FORM_FIELDS_TABLE'          => 'tcms_form_fields',
+		'FORM_TABS_TABLE'            => 'tcms_form_tabs',
+		'GALLERIES_TABLE'            => 'tcms_galleries',
+		'GALLERY_PHOTOS_TABLE'       => 'tcms_gallery_photos',
+		'I18N_TABLE'                 => 'tcms_i18n',
+		'IMAGE_WATERMARKS_TABLE'     => 'tcms_image_watermarks',
+		'LANGUAGES_TABLE'            => 'tcms_languages',
+		'LOGS_TABLE'                 => 'tcms_logs',
+		'MAILLIST_TABLE'             => 'tcms_maillist',
+		'MAILLIST_GROUPS_TABLE'      => 'tcms_maillist_groups',
+		'MAILLIST_GROUP_USERS_TABLE' => 'tcms_maillist_group_users',
+		'MAILLIST_SIGNATURE_TABLE'   => 'tcms_maillist_signature',
+		'MAILLIST_SPOOL_TABLE'       => 'tcms_maillist_spool',
+		'MENUS_TABLE'                => 'tcms_menus',
+		'MODULES_TABLE'              => 'tcms_modules',
+		'PAGES_TABLE'                => 'tcms_pages',
+		'PAGES_GALLERY_TABLE'        => 'tcms_pages_gallery',
+		'PUBLICATIONS_TABLE'         => 'tcms_publications',
+		'PUBLICATIONS_GALLERY_TABLE' => 'tcms_publications_gallery',
+		'SEO_TABLE'                  => 'tcms_seo',
+		'SITES_TABLE'                => 'tcms_sites',
+		'VACANCIES_TABLE'            => 'tcms_vacancies',
+		'VACANCY_APPLICATIONS_TABLE' => 'tcms_vacancy_applications',
 	));
 }

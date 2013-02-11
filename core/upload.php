@@ -274,10 +274,9 @@ class upload
 	 */
 	function ImageResized ($width = 150, $height = "", $filename, $is_resized = true, $is_watermark = false, $trim = false)
 	{
-		
 		$width = abs(intval($width));
 		$height = abs(intval($height));
-		$height = $height ?: $width;
+		$height = ( $height ) ?: $width;
 		
 		$prop = $this->GetPropertyFile();
 		
@@ -315,7 +314,14 @@ class upload
 		{
 			if( $trim )
 			{
-				@passthru(sprintf('%sconvert "%s" -quality %d -filter triangle -trim -resize %dx%d\> -gravity south -background None -extent %dx%d +repage "%s"', escapeshellcmd($app['config']['imagemagick_dir']), $prop['tmp_name'], 75, $width, $height, $width, $height, $filename));
+				@passthru(sprintf('/usr/local/bin/convert "%s" -quality %d -filter triangle -trim -resize %dx%d\> -gravity south -background None -extent %dx%d +repage "%s"', $prop['tmp_name'], 75, $width, $height, $width, $height, $filename));
+				
+				if (!file_exists($filename))
+				{
+					return false;
+				}
+				
+				chmod($filename, 0666);
 				
 				return true;
 			}
@@ -452,6 +458,8 @@ class upload
 		@ImageDestroy($img_upload);
 		@ImageDestroy($img_thumb);
 		
+		chmod($filename, 0666);
+		
 		return $flag_return;
 	}
 	
@@ -513,8 +521,28 @@ class upload
 		global $app;
 		
 		/* -size ускоряет создание превью, фильтр немного замыливает изображение */
-		@passthru(sprintf('%sconvert -size %dx%d "%s" -quality %d -filter triangle -resize %dx%d\^ -gravity Center -crop %dx%d+0+0 +repage "%s"', escapeshellcmd($app['config']['imagemagick_dir']), $width, $height, $prop['tmp_name'], 75, $width, $height, $width, $height, $filename));
 		
+		// альбомная ориентация
+		if ($width_orig > $height_orig)
+		{
+			@passthru(sprintf('/usr/local/bin/convert -size %dx%d "%s" -quality %d -filter triangle -resize %dx%d\^ -gravity Center -crop %dx%d+0+0 +repage "%s"', $width, $height, $prop['tmp_name'], 75, $width, $height, $width, $height, $filename));
+		}
+		// портрет
+		else
+		{
+			if ($width == $height)
+				@passthru(sprintf('/usr/local/bin/convert -size %dx%d "%s" -quality %d -filter triangle -resize %dx%d\^ -gravity Center -crop %dx%d+0+0 +repage "%s"', $width, $height, $prop['tmp_name'], 75, $width, $height, $width, $height, $filename));
+			else 
+				@passthru(sprintf('/usr/local/bin/convert -size %dx%d "%s" -quality %d -filter triangle -resize %dx%d\> -gravity Center -crop %dx%d+0+0 +repage "%s"', $width, $height, $prop['tmp_name'], 75, $width, $height, $width, $height, $filename));
+		}
+		
+		if (!file_exists($filename))
+		{
+			return false;
+		}
+
+		chmod($filename, 0666);
+			
 		return true;
 		
 		//проверяем поддерживает ли библиотека GD соответствующие функции
