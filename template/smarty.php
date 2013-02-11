@@ -31,7 +31,7 @@ class smarty extends \Smarty
 				'engine'     => FW_DIR . 'templates',
 			));
 		}
-		
+
 		$this->compile_dir  = SITE_DIR . '../cache/templates/';
 
 		$this->caching         = false;
@@ -49,6 +49,6 @@ class smarty extends \Smarty
 	{
 		$this->file = $file ?: $this->file;
 		
-		return parent::display($this->file, $cache_id, $compile_id, $parent);
+		return parent::display($this->file);
 	}
 }

@@ -339,7 +339,7 @@ function garbage_collection($display_profiler = true)
 				$app['profiler']->display();
 			}
 		}
-
+		
 		if( !defined('IN_SQL_ERROR') && $app['config']['profiler.send_stats'] )
 		{
 			$app['profiler']->send_stats($app['config']['profiler.remote_host'], $app['config']['profiler.remote_port']);
@@ -374,7 +374,7 @@ function generate_page_link($page, $base_url, $query_string)
 		return $base_url . $query_string;
 	}
 
-	$url_delim = !$query_string ? '?' : '&amp;';
+	$url_delim = ( !$query_string ) ? '?' : '&amp;';
 
 	return $base_url . sprintf('%s%sp=%d', $query_string, $url_delim, $page);
 }
@@ -412,7 +412,7 @@ function get_page_block($page_url, $parent_id, $table)
 			image AS page_poster,
 			1 AS is_block
 		FROM
-			' . SQL_PREFIX . $table . '_gallery
+			tcms_' . $table . '_gallery
 		WHERE
 			id_row = ' . $app['db']->check_value($parent_id) . '
 		AND
@@ -435,10 +435,8 @@ function get_page_block($page_url, $parent_id, $table)
 */
 function get_preg_expression($type)
 {
-	switch( $type )
+	switch($type)
 	{
-		case 'email': return '([\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+\.)*(?:[\w\!\#$\%\'\*\+\-\/\=\?\^\`{\|\}\~]|&amp;)+@((((([a-z0-9]{1}[a-z0-9\-]{0,62}[a-z0-9]{1})|[a-z])\.)+[a-z]{2,63})|(\d{1,3}\.){3}\d{1,3}(\:\d{1,5})?)';
-		case 'ipv4': return '#^(?:(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(?:\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$#';
 		case 'url_symbols': return '[a-z\d\_\-\.\x{7f}-\x{ff}\(\)]+';
 	}
 
@@ -615,8 +613,8 @@ function ilink($url = '', $prefix = false)
 	}
 	else
 	{
-		$link = false === $prefix ? $app['config']['site_root_path'] : $prefix;
-		$link .= substr($link, -1) == '/' ? '' : '/';
+		$link = ( $prefix === false ) ? $app['config']['site_root_path'] : $prefix;
+		$link .= ( substr($link, -1) == '/' ) ? '' : '/';
 	}
 
 	/**
@@ -659,19 +657,6 @@ function install_site()
 			
 	$sql = 'INSERT INTO ' . SITES_TABLE . ' ' . $app['db']->build_array('INSERT', $sql_ary);
 	$app['db']->query($sql);
-}
-
-/**
-* Вывод json данных
-*
-* @param	string	$output	Данные для выдачи
-*/
-function json_output($output)
-{
-	header('Content-Type: application/json; charset=utf-8');
-	echo json_encode($output, JSON_UNESCAPED_UNICODE);
-	garbage_collection(false);
-	exit;
 }
 
 /**
@@ -735,9 +720,9 @@ function num_format($value, $decimals = 0)
 */
 function num_in_range($value, $min, $max = false)
 {
-	$max = $max ?: $value;
+	$max = ( $max ) ?: $value;
 
-	return $value < $min ? $min : ($value > $max ? $max : $value);
+	return ( $value < $min ) ? $min : (($value > $max) ? $max : $value);
 }
 
 /**
@@ -781,17 +766,17 @@ function pagination($on_page, $overall, $link, $page_var = 'p')
 	{
 		if( $sort_count != $on_page )
 		{
-			$link .= (false !== strpos($link, '?') ? '&' : '?') . 'sc=' . $sort_count;
+			$link .= ((false !== strpos($link, '?')) ? '&' : '?') . 'sc=' . $sort_count;
 		}
 
 		if( $sort_dir != 'd' )
 		{
-			$link .= (false !== strpos($link, '?') ? '&' : '?') . 'sd=' . $sort_dir;
+			$link .= ((false !== strpos($link, '?')) ? '&' : '?') . 'sd=' . $sort_dir;
 		}
 
 		if( $sort_key != 'a' )
 		{
-			$link .= (false !== strpos($link, '?') ? '&' : '?') . 'sk=' . $sort_key;
+			$link .= ((false !== strpos($link, '?')) ? '&' : '?') . 'sk=' . $sort_key;
 		}
 	}
 
@@ -885,7 +870,7 @@ function plural($n = 0, $forms, $format = '%s %s')
 				$forms[2] = $forms[1];
 			}
 
-			$plural = $n % 10 == 1 && $n % 100 != 11 ? 0 : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
+			$plural = ($n % 10 == 1 && $n % 100 != 11) ? 0 : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
 
 		break;
 		/**
@@ -893,7 +878,7 @@ function plural($n = 0, $forms, $format = '%s %s')
 		*/
 		default:
 
-			$plural = $n == 1 ? 0 : 1;
+			$plural = ($n == 1) ? 0 : 1;
 
 		break;
 	}
@@ -1038,4 +1023,17 @@ function seo_url($url, $lang = 'ru')
 	$result = preg_replace(array('/\.{2,}/', '/_\./', '/_{2,}/', '/(.*)\./'), array('', '_', '_', '$1'), $result);
 
 	return $result;
+}
+
+/**
+ * Вывод json данных
+ *
+ * @param	string	$output	Данные для выдачи
+ */
+function json_output($output)
+{
+	header('Content-Type: application/json; charset=utf-8');
+	echo json_encode($output, JSON_UNESCAPED_UNICODE);
+	garbage_collection(false);
+	exit;
 }

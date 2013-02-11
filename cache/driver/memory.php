@@ -160,7 +160,7 @@ class memory
 	*/
 	public function set_prefix($prefix = '')
 	{
-		$this->prefix = $prefix ? $prefix . '_' : '';
+		$this->prefix = ( $prefix ) ? $prefix . '_' : '';
 	}
 
 	/**
@@ -281,7 +281,7 @@ class memory
 		foreach( $tables as $table_name )
 		{
 			/* Опускаем кавычки */
-			$table_name = $table_name[0] == '`' ? substr($table_name, 1, -1) : $table_name;
+			$table_name = ( $table_name[0] == '`' ) ? substr($table_name, 1, -1) : $table_name;
 			
 			if( false !== $pos = strpos($table_name, ' ') )
 			{

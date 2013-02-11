@@ -50,7 +50,7 @@ class user implements \ArrayAccess, \IteratorAggregate, \Countable
 		$this->forwarded_for = $this->request->header('X-Forwarded-For');
 		$this->ip            = $this->request->server('REMOTE_ADDR');
 		$this->isp           = $this->request->header('Provider', 'internet');
-		$this->lang['.']     = 'ru';
+		$this->lang['.']     = '';
 		$this->page          = $this->extract_page();
 		$this->referer       = $this->request->header('Referer');
 		
@@ -221,12 +221,12 @@ class user implements \ArrayAccess, \IteratorAggregate, \Countable
 	*/
 	private function extract_page()
 	{
-		$page = $this->request->is_set('path') ? sprintf('/%s', $this->request->get('path', '')) : '';
+		$page = ( $this->request->is_set('path') ) ? sprintf('/%s', $this->request->get('path', '')) : '';
 		
 		if( !$page )
 		{
 			$page = $this->request->server('PHP_SELF');
-			$page = $page ?: $this->request->server('REQUEST_URI');
+			$page = ( $page ) ?: $this->request->server('REQUEST_URI');
 			$page = str_replace('index.php', '', $page);
 		}
 		
@@ -247,7 +247,7 @@ class user implements \ArrayAccess, \IteratorAggregate, \Countable
 			$query_string .= @sprintf('%s=%s', $k, $v);
 		}
 		
-		$page .= $query_string ? '?' . $query_string : '';
+		$page .= ( $query_string ) ? '?' . $query_string : '';
 		
 		return $page;
 	}

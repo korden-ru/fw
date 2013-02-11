@@ -16,7 +16,7 @@ use engine\template\smarty;
 */
 class application implements \ArrayAccess
 {
-	const VERSION = '3.6-dev';
+	const VERSION = '3.5';
 	
 	private $values;
 	
@@ -68,14 +68,9 @@ class application implements \ArrayAccess
 			return new config_db($app['cache'], $app['db'], $app['site_info'], CONFIG_TABLE);
 		});
 
-		/* Формы */
-		$this['form'] = $this->share(function() use ($app) {
-			return new form($app['config'], $app['db'], $app['request'], $app['template']);
-		});
-
 		/* Маршрутизатор запросов */
 		$this['router'] = $this->share(function() use ($app) {
-			return new router($app['cache'], $app['config'], $app['db'], $app['form'], $app['profiler'], $app['request'], $app['template'], $app['user']);
+			return new router($app['cache'], $app['config'], $app['db'], $app['profiler'], $app['request'], $app['template'], $app['user']);
 		});
 	}
 	
@@ -138,7 +133,7 @@ class application implements \ArrayAccess
 		{
 			static $object;
 			
-			if( null === $object )
+			if( is_null($object) )
 			{
 				$object = $callable($c);
 			}
@@ -147,14 +142,9 @@ class application implements \ArrayAccess
 		};
 	}
 	
-	public function keys()
-	{
-		return array_keys($this->values);
-	}
-	
 	public function offsetExists($id)
 	{
-		return array_key_exists($id, $this->values);
+		return isset($this->values[$id]);
 	}
 	
 	public function offsetGet($id)
@@ -164,9 +154,7 @@ class application implements \ArrayAccess
 			trigger_error(sprintf('Ключ "%s" не найден.', $id));
 		}
 		
-		$is_factory = is_object($this->values[$id]) && method_exists($this->values[$id], '__invoke');
-		
-		return $is_factory ? $this->values[$id]($this) : $this->values[$id];
+		return $this->values[$id] instanceof \Closure ? $this->values[$id]($this) : $this->values[$id];
 	}
 	
 	public function offsetSet($id, $value)

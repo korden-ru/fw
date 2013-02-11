@@ -93,20 +93,21 @@ class forms
 		{
 			$this->template->assign('input', $data);
 			
-			// if( (isset($data['perms']) && in_array($app['user']->group, $data['perms'])) || !isset($data['perms']) )
-			// {
+			if( (isset($data['perms']) && in_array($app['user']->group, $data['perms'])) || !isset($data['perms']) )
+			{
 				switch( $data['type'] )
 				{
-					case 'text':     $output .= $this->createInputText(); break;
-					case 'textbig':  $output .= $this->createInputTextBig(); break;
-					case 'checkbox': $output .= $this->createInputCheckbox(); break;
-					case 'textarea': $output .= $this->createTextarea(); break;
-					case 'file':     $output .= $this->createInputFile($data); break;
-					case 'select':   $output .= $this->createInputSelect(); break;
-					case 'date':     $output .= $this->createInputDate(); break;
-					case 'code':     $output .= $data['html']; break;
-					case 'button':   $output .= $this->createInputButton(); break;
-					case 'noinput':  $output .= $this->createNoInput(); break;
+					case 'text':        $output .= $this->createInputText(); break;
+					case 'textbig':     $output .= $this->createInputTextBig(); break;
+					case 'checkbox':    $output .= $this->createInputCheckbox(); break;
+					case 'textarea':    $output .= $this->createTextarea(); break;
+					case 'file':        $output .= $this->createInputFile($data); break;
+					case 'select':      $output .= $this->createInputSelect(); break;
+					case 'multiselect': $output .= $this->createInputMultiSelect(); break;
+					case 'date':        $output .= $this->createInputDate(); break;
+					case 'code':        $output .= $data['html']; break;
+					case 'button':      $output .= $this->createInputButton(); break;
+					case 'noinput':     $output .= $this->createNoInput(); break;
 					case 'modifyurl':
 					case 'hidden':
 					
@@ -114,20 +115,22 @@ class forms
 						
 					break;
 				}
-			// }
-			// else
-			// {
-			// 	$output .= $this->createInputHidden($data);
-			// }
+			}
+			else
+			{
+				$output .= $this->createInputHidden($data);
+			}
 		}
 	
 		return $output;
 	}
 
 	//добавление кнопки
-	function addAdditionalButton($path, $value)
+	function addAdditionalButton($path, $name, $plus)
 	{
-		$this->additional_buttons .= sprintf('<a href="%s" class="btn btn-mini btn-block">%s</a>', $path, $value);
+		$button = '<input class="button1" style="width:100%;" type="button" value="'.$value.'" onclick="Redirect(arguments, \''.$path.'\');" />
+				<br />';
+		$this->additional_buttons($button);
 	}
 
 	//экспорт формы в шаблон и вывод на экран
@@ -165,12 +168,12 @@ class forms
 			//внесение в БД тестовых полей
 			if( $data['type'] != 'file' && $data['type'] != 'date' && $data['name'] != 'modifyurl' )
 			{
-				// if( (isset($data['perms']) && in_array($app['user']->group, $data['perms'])) || !isset($data['perms']) )
-				// { 
+				if( (isset($data['perms']) && in_array($app['user']->group, $data['perms'])) || !isset($data['perms']) )
+				{ 
 					$value = $app['request']->post($data['name'], '');
 	
 					$sql_ary[$data['name']] = ($data['type'] == 'textarea') ? htmlspecialchars_decode($value) : $value;
-				// }
+				}
 			}
 
 			//превращение времени в mktime
@@ -184,7 +187,7 @@ class forms
 					$reg[2] = intval($reg[2]);
 					$reg[3] = intval($reg[3]);
 				
-					if ($reg[1] > 0 && $reg[2] > 0 && $reg[2] < 13 && $reg[3] > 2000 && $reg[3] <= date("Y"))
+					if ($reg[1] > 0 && $reg[2] > 0 && $reg[2] < 13 && $reg[3] > 2000)
 					{
 						$dh = date('h');
 						$di = date('i');
@@ -252,7 +255,7 @@ class forms
 							}
 							else
 							{
-								$filename_noext = md5(mktime());
+								$filename_noext = md5(microtime(true));
 								$filename = $filename_noext.'.'.$this->uploader->GetExtension();
 							}
 
@@ -264,7 +267,7 @@ class forms
 								if(file_exists(SITE_DIR.'uploads/'.$this->upload_folder.'/'.$data['value']))
 									@unlink(SITE_DIR.'uploads/'.$this->upload_folder.'/'.$data['value']);
 	
-		                        if(file_exists(SITE_DIR.'uploads/'.$this->upload_folder.'/sm/'.$data['value']))
+					if(file_exists(SITE_DIR.'uploads/'.$this->upload_folder.'/sm/'.$data['value']))
 									@unlink(SITE_DIR.'uploads/'.$this->upload_folder.'/sm/'.$data['value']);
 	
 								if(file_exists(SITE_DIR.'uploads/'.$this->upload_folder.'/original/'.$data['value']))
@@ -484,7 +487,7 @@ class forms
 				unset($value['skip_delete'], $value['skip_edit']);
 				
 				$row = ' class="row'.($i%2+1).'" '.$sortId . $style_tr;
-				$cols .= '<tr '.$row. (!empty($this->U_EDIT) ? ' ondblclick="document.location=\''.str_replace('\\', '\\\\', $this->U_EDIT).$value[$this->primary_id].'\';"' : '') . '>';
+				$cols .= '<tr '.$row. (!empty($this->U_EDIT) ? ' ondblclick="Redirect(arguments, \''.str_replace('\\', '\\\\', $this->U_EDIT).$value[$this->primary_id].'\');"' : '') . '>';
 			
 
 				//добавляем данные
@@ -524,12 +527,14 @@ class forms
 					}
 				}
 				
-				$cols .= '<td><div class="btn-group btn-group-vertical btn-block">';
+				$cols .= '<td>';
 
 				//кнопка редактирования
 				if( !empty($this->U_EDIT) && !$skip_edit )
 				{
-					$cols .= sprintf('<a href="%s" class="btn btn-mini btn-block"><i class="icon-pencil"></i> Изменить</a>', str_replace('\\', '\\\\', $this->U_EDIT) . $value[$this->primary_id]);
+					$cols .= '
+						<input class="button1" style="width:100%;" type="button" value="Изменить" onclick="Redirect(arguments, \''.str_replace('\\', '\\\\', $this->U_EDIT).$value[$this->primary_id].'\');" />
+						<br />';
 				}
 
 				//если есть дополнительные кнопки, добавляем их
@@ -545,10 +550,10 @@ class forms
 				//кнопка удаления
 				if( !empty($this->U_DEL) && !$skip_delete )
 				{
-					$cols .= sprintf('<a href="%s" class="btn btn-mini btn-block" onclick="return confirm(\'Будет удалена вся информация связанная с этой записью! Продолжить?\');"><i class="icon-remove"></i> Удалить</a>', str_replace('\\', '\\\\', $this->U_DEL) . $value[$this->primary_id]);
+					$cols .= '<input class="button1" style="width:100%;" type="button" value="Удалить" onclick="if(confirm(\'Будет удалена вся информация связанная с этой записью! Продолжить?\')) {Redirect(arguments, \''.str_replace('\\', '\\\\', $this->U_DEL).$value[$this->primary_id].'\');}">';
 				}
 
-				$cols .= '</div></td></tr>';
+				$cols .= '</td></tr>';
 			}
 		$i++;
 		}
@@ -569,20 +574,20 @@ class forms
 		$(document).ready(function() {
 		    // Initialise the table
 			$("#'.$this->htmlTableId.'").tableDnD({
-	        	onDrop: function(table, row) {
-		        	$("#'.$this->htmlTableId.' tbody tr").each(function(i){
+			onDrop: function(table, row) {
+				$("#'.$this->htmlTableId.' tbody tr").each(function(i){
 						$(this).removeClass("row1 row2").addClass((i % 2) ? "row1" : "row2");
 					});
 					
 					$.ajax({
-					   type: "POST",
-					   url: "includes/ajax/changesort.php",
-					   data: ({ table: "'.$this->table_name.'", vorders: $("#'.$this->htmlTableId.'").tableDnDSerialize() })
-					});
-	       	},
-	        onDragClass: "myDragClass",
+					    type: "POST",
+					    url: "includes/ajax/changesort.php",
+					    data: ({ table: "'.$this->table_name.'", vorders: $("#'.$this->htmlTableId.'").tableDnDSerialize() })
+					    });
+		},
+		onDragClass: "myDragClass",
 		    dragHandle: "dragHandle"
-	    	});
+		});
 			
 			$(".dragHandle").css("cursor", "move");
 		});
@@ -642,13 +647,14 @@ class forms
 		{
 			$script_js_ready = '<script type="text/javascript">
 			$(document).ready(function() {';
-		
+			
 			foreach ($this->FiltersList AS $filter)
 			{
 				if (!is_array($filter['list']) || count($filter['list']) == 0)
 					continue;
 				if ($filter['get_param'] == '')
 					continue;
+				
 				
 				//генерим select
 				$select = '';
@@ -677,7 +683,7 @@ class forms
 			}
 		
 			$script_js_ready .= '});
-	        </script>';
+		</script>';
 		
 			$text = $script_js_ready . $text;
 		}
@@ -794,11 +800,11 @@ class forms
 					elseif (in_array($ext, $swf_format))
 					{
 						$old .= '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0" width="'.$img_width.'">
-									  <param name="movie" value="/uploads/'.$this->upload_folder.'/'.$dir_preview.$data['value'].'" />
-									  <param name="quality" value="high" />
-									  <param name="wmode" value="opaque" />
-									  <embed src="/uploads/'.$this->upload_folder.'/'.$dir_preview.$data['value'].'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="'.$img_width.'" wmode="opaque"></embed>
-								</object>';
+									    <param name="movie" value="/uploads/'.$this->upload_folder.'/'.$dir_preview.$data['value'].'" />
+									    <param name="quality" value="high" />
+									    <param name="wmode" value="opaque" />
+									    <embed src="/uploads/'.$this->upload_folder.'/'.$dir_preview.$data['value'].'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="'.$img_width.'" wmode="opaque"></embed>
+								    </object>';
 					}	
 					else 
 					{			
@@ -820,7 +826,7 @@ class forms
 					$("#butloading-'.$data['name'].'").hide();
 					$("#delete_element-'.$data['name'].'").click(function(){
 						$.ajax({
-					    	url: "'.$data['ajax_delete']['url'].'",
+						url: "'.$data['ajax_delete']['url'].'",
 							type: "post",
 							data: ('.$data['ajax_delete']['param'].'),
 						    dataType: "html",
@@ -829,27 +835,27 @@ class forms
 								$("#butloading-'.$data['name'].'").show();
 							},
 						    success: function(answ){
-						    	//alert(answ);
-						    	if (answ == "success") 
-						    	{ 
-						    		$("#filebox-'.$data['name'].'").parent().parent().hide();
+							//alert(answ);
+							if (answ == "success") 
+							{ 
+								$("#filebox-'.$data['name'].'").parent().parent().hide();
 									$("#old_' . $data['name'] . '").val("");
-						    	}
-						    	else 
-						    	{ 
-						    		$("#butdelete-'.$data['name'].'").show();
+							}
+							else 
+							{ 
+								$("#butdelete-'.$data['name'].'").show();
 									$("#butloading-'.$data['name'].'").hide();
-						    	}
+							}
 							},
 							error: function ( xhr, ajaxOptions, thrownError ) {
 								$("#butdelete-'.$data['name'].'").show();
 								$("#butloading-'.$data['name'].'").hide();
 							}
-		    			});
 					});
 					});
-	    		</script>
-	    		';
+					});
+			</script>
+			';
 			
 				$old .= '<div id="butdelete-'.$data['name'].'"><img src="images/cross_script.png" title="Удалить фото/файл" id="delete_element-'.$data['name'].'" style="cursor: pointer;"></div>';
 				$old .= '<div id="butloading-'.$data['name'].'"><img src="images/loading.gif" title="Подождите... Идет удаление файла"></div>';
@@ -874,6 +880,14 @@ class forms
 	protected function createInputHidden()
 	{
 		return $this->template->fetch('forms/hidden.html');
+	}
+	
+	/**
+	* Список с возможностью выбора нескольких элементов
+	*/
+	protected function createInputMultiSelect()
+	{
+		return $this->template->fetch('forms/multiselect.html');
 	}
 
 	/**

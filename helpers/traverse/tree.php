@@ -108,7 +108,7 @@ class tree
 	*/
 	protected function get_data()
 	{
-		return $this->return_as_tree ? array('children' => array()) : '';
+		return ( $this->return_as_tree ) ? array('children' => array()) : '';
 	}
 	
 	/**

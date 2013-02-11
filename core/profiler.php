@@ -16,6 +16,7 @@ class console
 	protected $file_size     = 0;
 	protected $file_largest  = 0;
 	protected $log_count     = 0;
+	protected $logs_count    = 0;
 	protected $memory_count  = 0;
 	protected $memory_total  = 0;
 	protected $memory_used   = 0;
@@ -176,8 +177,8 @@ class profiler extends console
 		}
 
 		fwrite($fp, json_encode(array(
-			// 'domain' => $app['user']->domain,
-			// 'page'   => $app['user']->page,
+			'domain' => $app['user']->domain,
+			'page'   => $app['user']->page,
 			
 			'logs' => $this->output['logs'],
 			
