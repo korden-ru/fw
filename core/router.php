@@ -79,9 +79,9 @@ class router
 			}
 			
 			$this->format = $ary['extension'];
-			$this->params = $ary['dirname'] != '.' ? explode('/', $ary['dirname']) : array();
+			$this->params = ( $ary['dirname'] != '.' ) ? explode('/', $ary['dirname']) : array();
 			$this->page   = $ary['filename'];
-			$this->url    = $ary['dirname'] != '.' ? $ary['dirname'] : '';
+			$this->url    = ( $ary['dirname'] != '.' ) ? $ary['dirname'] : '';
 		}
 		elseif( substr($url, -1) != '/' )
 		{
@@ -91,7 +91,7 @@ class router
 			*/
 			if( in_array('', explode(';', $this->config['router.allowed_extensions']), true) )
 			{
-				$this->params = $ary['dirname'] != '.' ? explode('/', $ary['dirname']) : array();
+				$this->params = ( $ary['dirname'] != '.' ) ? explode('/', $ary['dirname']) : array();
 				$this->page   = $ary['filename'];
 			}
 			else
@@ -152,7 +152,7 @@ class router
 			
 			if( $this->page != $this->config['router.directory_index'] )
 			{
-				$this->page_link[] = $this->format ? sprintf('%s.%s', $this->page, $this->format) : $this->page;
+				$this->page_link[] = ( $this->format ) ? sprintf('%s.%s', $this->page, $this->format) : $this->page;
 			}
 			else
 			{
@@ -242,7 +242,7 @@ class router
 
 				if( $this->page != $this->config['router.directory_index'] )
 				{
-					$this->page_link[] = $this->format ? sprintf('%s.%s', $this->page, $this->format) : $this->page;
+					$this->page_link[] = ( $this->format ) ? sprintf('%s.%s', $this->page, $this->format) : $this->page;
 				}
 
 				if( $row['page_url'] != '*' )
@@ -295,7 +295,7 @@ class router
 	*/
 	protected function load_handler($handler, $method, $params = array(), $redirect = false)
 	{
-		$class_name = 0 !== strpos($handler, '\\') ? $this->namespace . $handler : $handler;
+		$class_name = ( 0 !== strpos($handler, '\\') ) ? $this->namespace . $handler : $handler;
 		
 		$this->handler = new $class_name;
 		$this->method  = $method;
@@ -349,7 +349,7 @@ class router
 			}
 		}
 		
-		$full_url = $this->url . ($this->page != $this->config['router.directory_index'] ? ($this->format ? sprintf('/%s.%s', $this->page, $this->format) : $this->page) : '');
+		$full_url = $this->url . (($this->page != $this->config['router.directory_index']) ? (($this->format) ? sprintf('/%s.%s', $this->page, $this->format) : $this->page) : '');
 		
 		/* Параметры обработчика */
 		$this->handler->data     = $this->page_row;
@@ -368,7 +368,7 @@ class router
 			->_set_request($this->request)
 			->_set_template($this->template)
 			->_set_user($this->user)
-			->obtain_handlers_urls($this->namespace)
+			->obtain_handlers_urls()
 			->set_default_template()
 			->set_site_menu()
 			->set_page_data()

@@ -24,7 +24,6 @@ class page
 	protected $cache;
 	protected $config;
 	protected $db;
-	protected $form;
 	protected $profiler;
 	protected $request;
 	protected $template;
@@ -51,13 +50,6 @@ class page
 	public function _set_db($db)
 	{
 		$this->db = $db;
-		
-		return $this;
-	}
-	
-	public function _set_form($form)
-	{
-		$this->form = $form;
 		
 		return $this;
 	}
@@ -121,7 +113,7 @@ class page
 			$base_url = isset($ary['extension']) ? $ary['dirname'] : $this->url;
 		}
 		
-		$url = $row['is_dir'] ? $row['page_url'] : ($row['page_url'] != $this->config['router.directory_index'] ? ($this->format ? sprintf('%s.%s', $row['page_url'], $this->format) : $row['page_url']) : '');
+		$url = ( $row['is_dir'] ) ? $row['page_url'] : (($row['page_url'] != $this->config['router.directory_index']) ? (($this->format) ? sprintf('%s.%s', $row['page_url'], $this->format) : $row['page_url']) : '');
 		
 		return ilink(sprintf('%s/%s', $base_url, $url));
 	}
@@ -297,15 +289,14 @@ class page
 	/**
 	* Карта ссылок на методы обработчика
 	*/
-	public function obtain_handlers_urls($namespace)
+	public function obtain_handlers_urls()
 	{
 		$handler = get_class($this);
-		$namespace = ltrim($namespace, '\\');
 		$this->handlers_urls = $this->cache->obtain_handlers_urls($this->data['site_id']);
 		
-		if( 0 === strpos($handler, $namespace) )
+		if( 0 === strpos($handler, 'app\\') )
 		{
-			$handler = substr($handler, strlen($namespace));
+			$handler = substr($handler, 4);
 		}
 		
 		$pos = strlen($handler) + 2;
@@ -356,7 +347,7 @@ class page
 		
 		/* Вывод профайлера только для html-документов */
 		$display_profiler = $this->format === 'html';
-
+		
 		garbage_collection($display_profiler);
 		exit;
 	}
@@ -507,9 +498,21 @@ class page
 	*/
 	protected function append_seo_params($row)
 	{
-		$this->data['page_title']       = !empty($row['seo_title']) ? $row['seo_title'] : $this->data['page_title'];
-		$this->data['page_keywords']    = !empty($row['seo_keys']) ? $row['seo_keys'] : $this->data['page_keywords'];
-		$this->data['page_description'] = !empty($row['seo_desc']) ? $row['seo_desc'] : $this->data['page_description'];
+		if( isset($row['seo_title']) && $row['seo_title'] )
+		{
+			$this->data['page_title'] = $row['seo_title'];
+		}
+		
+		if( isset($row['seo_keys']) && $row['seo_keys'] )
+		{
+			$this->data['page_keywords'] = $row['seo_keys'];
+		}
+		
+		if( isset($row['seo_desc']) && $row['seo_desc'] )
+		{
+			$this->data['page_description'] = $row['seo_desc'];
+		}
+		
 		$this->set_page_data();
 		
 		return $this;
@@ -522,7 +525,10 @@ class page
 	{
 		static $page_url;
 		
-		$page_url = $page_url ?: ilink($this->full_url);
+		if( !$page_url )
+		{
+			$page_url = ilink($this->full_url);
+		}
 		
 		for( $i = 0, $len = sizeof($menu); $i < $len; $i++ )
 		{
