@@ -230,8 +230,8 @@ class forms
 					$this->uploader->max_file_size = 6 * 1024 * 1024;
 					$this->uploader->pic_width_max = 6000;
 					$this->uploader->pic_height_max = 6000;
-					$this->uploader->watermark_pos_x = isset($data['watermark_pos_x']) ? $data['watermark_pos_x'] : "right";
-					$this->uploader->watermark_pos_y = isset($data['watermark_pos_y']) ? $data['watermark_pos_y'] : "bottom";
+					$this->uploader->watermark_pos_x = isset($data['watermark_pos_x']) ? $data['watermark_pos_x'] : "center";
+					$this->uploader->watermark_pos_y = isset($data['watermark_pos_y']) ? $data['watermark_pos_y'] : "center";
 					$this->uploader->watermark_delta = 0;
 		
 
