@@ -11,21 +11,21 @@ namespace engine\db;
 */
 class mysqli
 {
-	private $connect_id;
-	private $query_result;
-	private $num_queries = 0;
-	private $transaction = false;
-	private $transactions = 0;
+	protected $connect_id;
+	protected $query_result;
+	protected $num_queries = ['cached' => 0, 'normal' => 0, 'total' => 0];
+	protected $transaction = false;
+	protected $transactions = 0;
 
-	private $server;
-	private $user;
-	private $password;
-	private $database;
-	private $port;
-	private $socket;
+	protected $server;
+	protected $user;
+	protected $password;
+	protected $database;
+	protected $port;
+	protected $socket;
 	
-	private $cache;
-	private $profiler;
+	protected $cache;
+	protected $profiler;
 	
 	/**
 	* Сбор параметров
@@ -44,12 +44,6 @@ class mysqli
 		{
 			$this->server = 'p:' . $this->server;
 		}
-		
-		$this->num_queries = array(
-			'cached' => 0,
-			'normal' => 0,
-			'total'  => 0
-		);
 	}
 	
 	public function _set_cache($cache)
