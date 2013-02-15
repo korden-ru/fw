@@ -63,7 +63,7 @@ class mysqli
 	/**
 	* Увеличение счетчика запросов
 	*/
-	private function add_num_queries($cached = false)
+	protected function add_num_queries($cached = false)
 	{
 		$this->num_queries['cached'] += ( $cached !== false ) ? 1 : 0;
 		$this->num_queries['normal'] += ( $cached !== false ) ? 0 : 1;
@@ -647,7 +647,7 @@ class mysqli
 	/**
 	* Установка подключения к БД
 	*/
-	private function connect()
+	protected function connect()
 	{
 		$this->connect_id = mysqli_connect($this->server, $this->user, $this->password, $this->database, $this->port, $this->socket);
 		$this->password = '';
@@ -658,7 +658,7 @@ class mysqli
 	/**
 	* SQL ошибки передаём нашему обработчику
 	*/
-	private function error($sql = '')
+	protected function error($sql = '')
 	{
 		global $error_ary;
 
