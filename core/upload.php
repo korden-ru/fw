@@ -33,8 +33,8 @@ class upload
 		$this->pic_width_max = 6000;			//6000 пкс. Максимальная ширина загружаемого изображения
 		$this->pic_height_max = 6000;			//6000 пкс. Максимальная высота загружаемого изображения
 		
-		$this->watermark_path = rtrim($_SERVER['DOCUMENT_ROOT'],"/").'/watermark.png';
-		$this->watermark_path_sm = rtrim($_SERVER['DOCUMENT_ROOT'],"/").'/watermark_sm.png';
+		$this->watermark_path = SITE_DIR . '../watermark.png';
+		$this->watermark_path_sm = SITE_DIR . '../watermark_sm.png';
 		$this->watermark_pos_x = "center";
 		$this->watermark_pos_y = "center";
 		$this->watermark_delta = 20;
