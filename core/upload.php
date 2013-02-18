@@ -308,13 +308,13 @@ class upload
 		if( $format == 'gif' )
 		{
 			/* -sample не нарушает gif-анимацию */
-			// @passthru(sprintf('%sconvert "%s" -sample %dx%d +profile "*" "%s"', escapeshellcmd($app['config']['imagemagick_dir']), $prop['tmp_name'], $width, $height, $filename));
+			// @passthru(sprintf('/usr/local/bin/gm convert "%s" -sample %dx%d +profile "*" "%s"', $prop['tmp_name'], $width, $height, $filename));
 		}
 		else
 		{
 			if( $trim )
 			{
-				@passthru(sprintf('/usr/local/bin/convert "%s" -quality %d -filter triangle -trim -resize %dx%d\> -gravity south -background None -extent %dx%d +repage "%s"', $prop['tmp_name'], 75, $width, $height, $width, $height, $filename));
+				@passthru(sprintf('/usr/local/bin/gm convert "%s" -quality %d -filter triangle -trim -resize %dx%d\> -gravity south -background None -extent %dx%d +repage "%s"', $prop['tmp_name'], 75, $width, $height, $width, $height, $filename));
 				
 				if (!file_exists($filename))
 				{
@@ -327,7 +327,7 @@ class upload
 			}
 			else
 			{
-				// @passthru(sprintf('%sconvert -size %dx%d "%s" -quality %d -filter triangle -resize %dx%d\> +repage "%s"', escapeshellcmd($app['config']['imagemagick_dir']), $width, $height, $prop['tmp_name'], 75, $width, $height, $filename));
+				// @passthru(sprintf('/usr/local/bin/gm convert -size %dx%d "%s" -quality %d -filter triangle -resize %dx%d\> +repage "%s"', $width, $height, $prop['tmp_name'], 75, $width, $height, $filename));
 			}
 		}
 		
@@ -393,12 +393,12 @@ class upload
 		// if( $format == 'gif' )
 		// {
 		// 	/* -sample не нарушает gif-анимацию */
-		// 	@passthru(sprintf('%sconvert "%s" -sample %dx%d +profile "*" "%s"', escapeshellcmd($app['config']['imagemagick_dir']), $prop['tmp_name'], $width, $height, $filename));
+		// 	@passthru(sprintf('/usr/local/bin/gm convert "%s" -sample %dx%d +profile "*" "%s"', $prop['tmp_name'], $width, $height, $filename));
 		// }
 		// else
 		// {
-		// 	@passthru(sprintf('%sconvert -size %dx%d "%s" -quality %d -filter triangle %s -resize %dx%d> +repage "%s"', escapeshellcmd($app['config']['imagemagick_dir']), $width, $height, $prop['tmp_name'], 75, (($trim) ? '-trim' : ''), $width, $height, $filename));
-		// 	printf('%sconvert -size %dx%d "%s" -quality %d -filter triangle %s -resize %dx%d> +repage "%s"', escapeshellcmd($app['config']['imagemagick_dir']), $width, $height, $prop['tmp_name'], 75, (($trim) ? '-trim' : ''), $width, $height, $filename);
+		// 	@passthru(sprintf('/usr/local/bin/gm convert -size %dx%d "%s" -quality %d -filter triangle %s -resize %dx%d> +repage "%s"', $width, $height, $prop['tmp_name'], 75, (($trim) ? '-trim' : ''), $width, $height, $filename));
+		// 	printf('/usr/local/bin/gm convert -size %dx%d "%s" -quality %d -filter triangle %s -resize %dx%d> +repage "%s"', $width, $height, $prop['tmp_name'], 75, (($trim) ? '-trim' : ''), $width, $height, $filename);
 		// 	exit;
 		// }
 		// 
@@ -525,15 +525,15 @@ class upload
 		// альбомная ориентация
 		if ($width_orig > $height_orig)
 		{
-			@passthru(sprintf('/usr/local/bin/convert -size %dx%d "%s" -quality %d -filter triangle -resize %dx%d\^ -gravity Center -crop %dx%d+0+0 +repage "%s"', $width, $height, $prop['tmp_name'], 75, $width, $height, $width, $height, $filename));
+			@passthru(sprintf('/usr/local/bin/gm convert -size %dx%d "%s" -quality %d -filter triangle -resize %dx%d\^ -gravity Center -crop %dx%d+0+0 +repage "%s"', $width, $height, $prop['tmp_name'], 75, $width, $height, $width, $height, $filename));
 		}
 		// портрет
 		else
 		{
 			if ($width == $height)
-				@passthru(sprintf('/usr/local/bin/convert -size %dx%d "%s" -quality %d -filter triangle -resize %dx%d\^ -gravity Center -crop %dx%d+0+0 +repage "%s"', $width, $height, $prop['tmp_name'], 75, $width, $height, $width, $height, $filename));
+				@passthru(sprintf('/usr/local/bin/gm convert -size %dx%d "%s" -quality %d -filter triangle -resize %dx%d\^ -gravity Center -crop %dx%d+0+0 +repage "%s"', $width, $height, $prop['tmp_name'], 75, $width, $height, $width, $height, $filename));
 			else 
-				@passthru(sprintf('/usr/local/bin/convert -size %dx%d "%s" -quality %d -filter triangle -resize %dx%d\> -gravity Center -crop %dx%d+0+0 +repage "%s"', $width, $height, $prop['tmp_name'], 75, $width, $height, $width, $height, $filename));
+				@passthru(sprintf('/usr/local/bin/gm convert -size %dx%d "%s" -quality %d -filter triangle -resize %dx%d\> -gravity Center -crop %dx%d+0+0 +repage "%s"', $width, $height, $prop['tmp_name'], 75, $width, $height, $width, $height, $filename));
 		}
 		
 		if (!file_exists($filename))
