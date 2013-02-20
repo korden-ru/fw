@@ -50,7 +50,7 @@ $app['user']->_set_db($app['db']);
 /* Собственный обработчик ошибок */
 errorhandler::register();
 
-if( false === strpos($app['request']->server('SERVER_NAME'), '.korden.net') )
+if( false === strpos(gethostname(), '.korden.net') )
 {
 	/* Принудительная установка кодировки для хостинг-провайдеров */
 	$app['db']->query('SET NAMES utf8');
