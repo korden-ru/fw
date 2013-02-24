@@ -13,7 +13,7 @@ class mysqli
 {
 	protected $connect_id;
 	protected $query_result;
-	protected $num_queries = ['cached' => 0, 'normal' => 0, 'total' => 0];
+	protected $num_queries = array('cached' => 0, 'normal' => 0, 'total' => 0);
 	protected $transaction = false;
 	protected $transactions = 0;
 
