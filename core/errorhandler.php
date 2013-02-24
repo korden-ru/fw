@@ -69,7 +69,7 @@ class errorhandler
 				echo '<p>Отчет о произошедшей ошибке отправлен администратору.</p>';
 				echo '<p>Приносим извинения за доставленные неудобства.</p>';
 				
-				if( $_SERVER['REMOTE_ADDR'] == '85.21.240.187' || $_SERVER['REMOTE_ADDR'] == '79.195.20.190' || $_SERVER['REMOTE_ADDR'] == '192.168.1.1' )
+				if( $_SERVER['REMOTE_ADDR'] == '95.31.213.80' || $_SERVER['REMOTE_ADDR'] == '79.195.20.190' || $_SERVER['REMOTE_ADDR'] == '192.168.1.1' )
 				{
 					if( defined('IN_SQL_ERROR') )
 					{
@@ -173,7 +173,7 @@ class errorhandler
 				
 					self::log_mail('Fatal error: ' . $error['message']);
 					
-					if( $_SERVER['REMOTE_ADDR'] != '79.175.20.190' && $_SERVER['REMOTE_ADDR'] != '85.21.240.187' && $_SERVER['REMOTE_ADDR'] != '192.168.1.1' )
+					if( $_SERVER['REMOTE_ADDR'] != '79.175.20.190' && $_SERVER['REMOTE_ADDR'] != '95.31.213.80' && $_SERVER['REMOTE_ADDR'] != '192.168.1.1' )
 					{
 						return;
 					}
