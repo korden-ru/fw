@@ -201,10 +201,11 @@ class errorhandler
 		
 		$call_stack = '';
 		$text       = is_array($text) ? print_r($text, true) : $text;
+		$title      = sprintf('[%s] ', $app['user']->domain);
 		
 		if( !$title )
 		{
-			$title = defined('IN_SQL_ERROR') ? 'E_USER_ERROR_SQL' : 'E_USER_ERROR';
+			$title .= defined('IN_SQL_ERROR') ? 'E_USER_ERROR_SQL' : 'E_USER_ERROR';
 		}
 		
 		if( function_exists('xdebug_print_function_stack') )
@@ -214,7 +215,7 @@ class errorhandler
 			$call_stack = str_replace(array('/srv/www/vhosts'), array(''), ob_get_clean());
 		}
 		
-		mail('src-work@ivacuum.ru', $title, $text . "\n" . $call_stack . print_r($_SESSION, true) . "\n" . print_r($_SERVER, true) . "\n" . print_r($_REQUEST, true), sprintf("From: %s@%s\r\n", $app['user']->domain, gethostname()));
+		mail('src-work@ivacuum.ru', $title, $text . "\n" . $call_stack . print_r($_SESSION, true) . "\n" . print_r($_SERVER, true) . "\n" . print_r($_REQUEST, true), sprintf("From: fw@%s\r\n", gethostname()));
 	}
 
 	/**
