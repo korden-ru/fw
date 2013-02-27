@@ -201,7 +201,7 @@ class errorhandler
 		
 		$call_stack = '';
 		$text       = is_array($text) ? print_r($text, true) : $text;
-		$title      = sprintf('[%s] %s', $app['user']->domain, $title);
+		$title      = $app['user']->domain . ($title ? ': ' . $title : '');
 		
 		if( function_exists('xdebug_print_function_stack') )
 		{
