@@ -1,80 +1,52 @@
 <?php
 /**
-* @package fw.korden.net
-* @copyright (c) 2012
+* @package korden.fw
+* @copyright (c) 2013
 */
 
-namespace engine;
+namespace fw;
 
-use engine\core\application;
-use engine\core\errorhandler;
+use fw\core\application;
+use fw\core\errorhandler;
 
-/**
-* Настройки, необходимые для
-* функционирования сайта
-*/
-define('FW_DIR', __DIR__ . '/');
+define('START_TIME', microtime(true));
+define('FW_DIR', __DIR__ . '/../../fw/master/');
+define('KORDEN_FW_DIR', __DIR__ . '/');
 define('SITE_DIR', rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/');
 
 date_default_timezone_set('Europe/Moscow');
-error_reporting(false !== strpos($_SERVER['SERVER_NAME'], '.korden.net') ? E_ALL : 0);
+ini_set('display_errors', false);
+error_reporting(E_ALL);
 mb_internal_encoding('utf-8');
 
-require(FW_DIR . 'core/profiler.php');
-require(FW_DIR . 'core/application.php');
+require(FW_DIR . 'traits/constants.php');
+require(KORDEN_FW_DIR . 'core/application.php');
 require(FW_DIR . 'core/autoloader.php');
 require(FW_DIR . 'functions.php');
+require(KORDEN_FW_DIR . 'functions.php');
 require(FW_DIR . 'config.php');
-
-if( file_exists(SITE_DIR . '../config.php') )
-{
-	require(SITE_DIR . '../config.php');
-}
+require(SITE_DIR . '../config.php');
 
 $app = new application($app);
+$app['autoloader']->register_namespaces([
+		'fw'  => [$app['dir.fw'], $app['dir.korden_fw']],
+		'app' => $app['dir.app'],
+	])
+	->register_pears([
+		'Swift' => "{$app['dir.lib']}/swiftmailer/{$app['version.swift']}/classes",
+	])
+	->set_namespace_prefix('korden.fw', $app::VERSION)
+	->set_pear_prefixes([
+		'Swift' => $app['version.swift'],
+	]);
 
-$app['autoloader']->register_namespaces(array(
-	'engine'  => __DIR__,
-	'Monolog' => __DIR__ . '/../lib/monolog/1.0.3/Monolog',
-	'app'     => defined('IN_ACP') ? SITE_DIR . '../../modules' : SITE_DIR . '../modules',
-	'acp'     => defined('IN_ACP') ? SITE_DIR . '../includes' : SITE_DIR . '../acp/includes',
-));
+require(FW_DIR . 'constants.php');
+require(SITE_DIR . '../constants.php');
 
 /* Внедрение зависимостей */
-$app['cache']->_set_db($app['db']);
 $app['db']->_set_cache($app['cache'])
 	->_set_profiler($app['profiler']);
-$app['user']->_set_db($app['db']);
+$app['cache']->_set_config($app['config']);
 
-/* Собственный обработчик ошибок */
 errorhandler::register();
-
-if( false === strpos($app['request']->server('SERVER_NAME'), '.korden.net') )
-{
-	/* Принудительная установка кодировки для хостинг-провайдеров */
-	$app['db']->query('SET NAMES utf8');
-}
-
-if( !defined('IN_INSTALL') )
-{
-	if( false === $app['site_info'] = get_site_info_by_url($app['user']->domain, $app['user']->page) )
-	{
-		/* Определение сайта */
-		$app['site_info'] = get_site_info_by_url($app['user']->domain);
-	}
-
-	$app['cache']->_set_site_info($app['site_info']);
-	$app['user']->_set_config($app['config']);
-
-	if( $app['config']['templates.dir'] )
-	{
-		$app['template']->setTemplateDir(array_merge(
-			array('app' => SITE_DIR . '../templates/' . $app['config']['templates.dir']),
-			$app['template']->getTemplateDir()
-		));
-	
-		$app['template']->setCompileDir(SITE_DIR . '../cache/templates/' . $app['config']['templates.dir']);
-	}
-
-	$app['template']->assign('cfg', $app['config']);
-}
+errorhandler::$mail = $app['mail.error'];

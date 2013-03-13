@@ -1,10 +1,10 @@
 <?php
 /**
-* @package fw.korden.net
+* @package korden.fw
 * @copyright (c) 2012
 */
 
-namespace engine\core;
+namespace fw\core;
 
 class upload
 {

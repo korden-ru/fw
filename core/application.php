@@ -1,22 +1,29 @@
 <?php
 /**
-* @package fw.korden.net
-* @copyright (c) 2012
+* @package korden.fw
+* @copyright (c) 2013
 */
 
-namespace engine\core;
+namespace fw\core;
 
-use engine\cache\service as cache_service;
-use engine\config\db as config_db;
-use engine\db\mysqli as db_mysqli;
-use engine\template\smarty;
+use fw\captcha\service as captcha_service;
+use fw\captcha\validator as captcha_validator;
+use fw\cron\manager as cron_manager;
+use fw\config\db as config_db;
+use fw\db\mysqli as db_mysqli;
+use fw\db\sphinx as db_sphinx;
+use fw\session\user;
+use fw\template\smarty;
+use fw\traits\constants;
 
 /**
 * Контейнер приложения
 */
 class application implements \ArrayAccess
 {
-	const VERSION = '3.6-dev';
+	use constants;
+	
+	const VERSION = 'master';
 	
 	private $values;
 	
@@ -26,41 +33,48 @@ class application implements \ArrayAccess
 		
 		$app = $this;
 		
-		/* Автозагрузчик классов */
+		$this['profiler'] = $this->share(function() {
+			return new profiler(START_TIME);
+		});
+		
 		$this['autoloader'] = $this->share(function() use ($app) {
-			$loader = new autoloader($app['acm.prefix']);
-			$loader->register();
-			
-			return $loader;
+			return (new autoloader($app['acm.prefix']))->register();
 		});
 		
-		$this['template'] = $this->share(function() {
-			return new smarty();
-		});
-		
-		$this['profiler'] = $this->share(function() use ($app) {
-			return new profiler($app['template']);
-		});
+		$this['template'] = $this->share(function() use ($app) {
+			define('SMARTY_DIR', "{$app['dir.lib']}/smarty/{$app['version.smarty']}/Smarty/");
+			require(SMARTY_DIR . 'Smarty.class.php');
 
-		/* Данные запроса */
-		$this['request'] = $this->share(function() {
-			return new request();
+			return new smarty([$app['dir.templates.app'], $app['dir.templates.fw']], $app['dir.templates.cache']);
 		});
 		
-		/* Подключение к базе данных */
+		$this['request'] = $this->share(function() use ($app) {
+			return new request($app['request.local_redirect.from'], $app['request.local_redirect.to']);
+		});
+		
 		$this['db'] = $this->share(function() use ($app) {
 			return new db_mysqli($app['db.host'], $app['db.user'], $app['db.pass'], $app['db.name'], $app['db.port'], $app['db.sock'], $app['db.pers']);
 		});
 		
-		/* Инициализация кэша */
 		$this['cache'] = $this->share(function() use ($app) {
-			$class = '\\engine\\cache\\driver\\' . $app['acm.type'];
-			return new cache_service(new $class($app['acm.prefix']));
+			$class = "\\fw\\cache\\driver\\{$app['acm.type']}";
+			
+			if (file_exists("{$app['dir.app']}/cache/service.php"))
+			{
+				return new \app\cache\service($app['db'], new $class($app['db'], $app['acm.prefix'], $app['acm.shared_prefix']));
+			}
+			
+			return new \fw\cache\service($app['db'], new $class($app['db'], $app['acm.prefix'], $app['acm.shared_prefix']));
 		});
 
-		/* Пользователь */
 		$this['user'] = $this->share(function() use ($app) {
-			return new user($app['request']);
+			return (new user($app['cache'], $app['config'], $app['db'], $app['request'], $app['session.config'], $app['site_info']['id'], $app['urls']['signin']))
+				->setup();
+		});
+		
+		$this['auth'] = $this->share(function() use ($app) {
+			return (new auth($app['cache'], $app['db'], $app['user']))
+				->init($app['user']->data);
 		});
 
 		/* Настройки сайта и движка */
@@ -68,14 +82,51 @@ class application implements \ArrayAccess
 			return new config_db($app['cache'], $app['db'], $app['site_info'], CONFIG_TABLE);
 		});
 
-		/* Формы */
-		$this['form'] = $this->share(function() use ($app) {
-			return new form($app['config'], $app['db'], $app['request'], $app['template']);
+		$this['router'] = $this->share(function() use ($app) {
+			return (new _router())
+				->_set_app($app);
 		});
 
-		/* Маршрутизатор запросов */
-		$this['router'] = $this->share(function() use ($app) {
-			return new router($app['cache'], $app['config'], $app['db'], $app['form'], $app['profiler'], $app['request'], $app['template'], $app['user']);
+		/* Информация об обслуживаемом сайте */
+		$this['site_info'] = $this->share(function() use ($app) {
+			if (false === $site_info = $app['cache']->get_site_info_by_url($app['request']->hostname, $app['request']->url))
+			{
+				trigger_error('Сайт не найден', E_USER_ERROR);
+			}
+			
+			$app['request']->set_language($site_info['language'])
+				->set_server_name($site_info['domain']);
+			
+			setlocale(LC_ALL, $site_info['locale']);
+			
+			return $site_info;
+		});
+
+		$this['captcha'] = $this->share(function() use ($app) {
+			$class = "\\fw\\captcha\\driver\\{$app['captcha.type']}";
+
+			return new captcha_service($app['config'], $app['db'], $app['request'], $app['user'], new $class($app['dir.fonts'], $app['captcha.fonts']));
+		});
+		
+		$this['captcha_validator'] = $this->share(function() use ($app) {
+			return new captcha_validator($app['config'], $app['db'], $app['request'], $app['user']);
+		});
+		
+		$this['cron'] = $this->share(function() use ($app) {
+			return (new cron_manager($app['dir.logs'], $app['file.cron.allowed'], $app['file.cron.running']))
+				->_set_app($app);
+		});
+		
+		$this['mailer'] = $this->share(function() use ($app) {
+			require("{$app['dir.lib']}/swiftmailer/{$app['version.swift']}/swift_init.php");
+
+			return new mailer($app['config'], $app['template']);
+		});
+		
+		$this['sphinx'] = $this->share(function() use ($app) {
+			return (new db_sphinx($app['sphinx.host'], '', '', '', $app['sphinx.port'], $app['sphinx.sock']))
+				->_set_cache($app['cache'])
+				->_set_profiler($app['profiler']);
 		});
 	}
 	
@@ -86,14 +137,14 @@ class application implements \ArrayAccess
 	*/
 	public function extend($id, \Closure $callable)
 	{
-		if( !array_key_exists($id, $this->values) )
+		if (!array_key_exists($id, $this->values))
 		{
 			trigger_error(sprintf('Ключ "%s" не найден.', $id));
 		}
 		
 		$factory = $this->values[$id];
 		
-		if( !($factory instanceof \Closure) )
+		if (!($factory instanceof \Closure))
 		{
 			trigger_error(sprintf('Ключ "%s" не содержит объект.', $id));
 		}
@@ -121,7 +172,7 @@ class application implements \ArrayAccess
 	*/
 	public function raw($id)
 	{
-		if( !array_key_exists($id, $this->values) )
+		if (!array_key_exists($id, $this->values))
 		{
 			trigger_error(sprintf('Ключ "%s" не найден.', $id));
 		}
@@ -138,7 +189,7 @@ class application implements \ArrayAccess
 		{
 			static $object;
 			
-			if( null === $object )
+			if (null === $object)
 			{
 				$object = $callable($c);
 			}
@@ -159,7 +210,7 @@ class application implements \ArrayAccess
 	
 	public function offsetGet($id)
 	{
-		if( !array_key_exists($id, $this->values) )
+		if (!array_key_exists($id, $this->values))
 		{
 			trigger_error(sprintf('Ключ "%s" не найден.', $id));
 		}

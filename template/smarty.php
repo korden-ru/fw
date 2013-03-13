@@ -1,44 +1,104 @@
 <?php
 /**
-* @package fw.korden.net
-* @copyright (c) 2012
+* @package korden.fw
+* @copyright (c) 2013
 */
 
-namespace engine\template;
+namespace fw\template;
 
-define('SMARTY_DIR', FW_DIR . '../lib/smarty/3.1.11/Smarty/');
-require(SMARTY_DIR . 'Smarty.class.php');
-
-class smarty extends \Smarty
+class smarty
 {
 	public $file;
 	
-	function __construct()
+	protected $dirs;
+	protected $env;
+	
+	function __construct(array $dirs, $cache_dir)
 	{
-		parent::__construct();
+		$this->dirs = $dirs;
 		
-		$this->setTemplateDir(array(
-			'app'    => SITE_DIR . '../templates',
-			'engine' => FW_DIR . 'templates',
-		));
+		$this->env = new \Smarty();
+		$this->env->setTemplateDir($dirs);
+		$this->env->compile_dir     = $cache_dir;
+		$this->env->caching         = false;
+		$this->env->compile_check   = true;
+		$this->env->debugging       = false;
+		$this->env->error_reporting = E_ALL ^ E_NOTICE;
+		$this->env->force_compile   = false;
+		$this->env->use_sub_dirs    = false;
+	}
+	
+	/**
+	* Переменные цикла
+	*/
+	public function append()
+	{
+		call_user_func_array([$this->env, 'append'], func_get_args());
 		
-		$this->compile_dir  = SITE_DIR . '../cache/templates/';
-
-		$this->caching         = false;
-		$this->compile_check   = true;
-		$this->debugging       = false;
-		$this->error_reporting = E_ALL ^ E_NOTICE;
-		$this->force_compile   = false;
-		$this->use_sub_dirs    = false;
+		return $this;
+	}
+	
+	/**
+	* Присвоение значения переменной
+	*/
+	public function assign()
+	{
+		call_user_func_array([$this->env, 'assign'], func_get_args());
+		
+		return $this;
 	}
 	
 	/**
 	* Обработка и вывод шаблона
 	*/
-	public function display($file = null, $cache_id = null, $compile_id = null, $parent = null)
+	public function display($file = '')
 	{
-		$this->file = $file ?: $this->file;
+		$file = $file ?: $this->file;
 		
-		return parent::display($this->file, $cache_id, $compile_id, $parent);
+		if (!$this->is_template_exist($file))
+		{
+			trigger_error('TEMPLATE_NOT_FOUND');
+		}
+		
+		echo $this->env->display($file);
+	}
+	
+	/**
+	* Обработка и возврат данных для вывода
+	*/
+	public function fetch($file = '')
+	{
+		$file = $file ?: $this->file;
+		
+		if (!$this->is_template_exist($file))
+		{
+			trigger_error('TEMPLATE_NOT_FOUND');
+		}
+		
+		return $this->env->fetch($file);
+	}
+	
+	/**
+	* Алиас $this->fetch()
+	*/
+	public function render($file = '')
+	{
+		return $this->fetch($file);
+	}
+	
+	/**
+	* Проверка существования шаблона
+	*/
+	protected function is_template_exist($file)
+	{
+		foreach ($this->dirs as $dir)
+		{
+			if (file_exists("{$dir}/{$file}"))
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

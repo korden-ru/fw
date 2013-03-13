@@ -1,10 +1,10 @@
 <?php
 /**
-* @package fw.korden.net
+* @package korden.fw
 * @copyright (c) 2012
 */
 
-namespace engine\core;
+namespace fw\core;
 
 class forms
 {
@@ -217,7 +217,7 @@ class forms
 			{
 				if( !$this->uploader )
 				{
-					$this->uploader = new \engine\core\upload();
+					$this->uploader = new \fw\core\upload();
 				}
 			
 				//ресаизим и перемещаем изображение
