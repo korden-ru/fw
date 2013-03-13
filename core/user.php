@@ -207,6 +207,7 @@ class user implements \ArrayAccess, \IteratorAggregate, \Countable
 					$this->role=$row['role'];
 					$this->mail=$row['mail'];
 					$this->group = $row['group'];
+					$this->data = $row;
 					$sql='UPDATE '.SQL_PREFIX.'users SET lastvisit='.time().' WHERE login ='.$this->db->check_value($_COOKIE['login']);//обновляем время последнего посещения
 					$this->db->query($sql);
 					return true;
