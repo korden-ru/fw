@@ -11,16 +11,6 @@ $app['acm.fw_prefix'] = $app::VERSION . '_korden.fw';
 if (false === $app->load_constants($app['acm.fw_prefix']))
 {
 	$app->set_constants($app['acm.fw_prefix'], [
-		/* Способы уведомления */
-		'NOTIFY_EMAIL' => 0,
-		'NOTIFY_IM'    => 1,
-		'NOTIFY_BOTH'  => 2,
-
-		/* Приоритеты доставки писем */
-		'MAIL_LOW_PRIORITY'    => 4,
-		'MAIL_NORMAL_PRIORITY' => 3,
-		'MAIL_HIGH_PRIORITY'   => 2,
-
 		/* Таблицы сайта */
 		'AUTH_GROUPS_TABLE'          => 'site_auth_groups',
 		'AUTH_OPTIONS_TABLE'         => 'site_auth_options',
@@ -28,6 +18,8 @@ if (false === $app->load_constants($app['acm.fw_prefix']))
 		'AUTH_ROLES_DATA_TABLE'      => 'site_auth_roles_data',
 		'AUTH_USERS_TABLE'           => 'site_auth_users',
 		'BANLIST_TABLE'              => 'site_banlist',
+		'BANNERS_TABLE'              => 'site_banners',
+		'BANNERS_TYPES_TABLE'        => 'site_banners_types',
 		'BOTS_TABLE'                 => 'site_bots',
 		'COMMENTS_TABLE'             => 'site_comments',
 		'CONFIG_TABLE'               => 'site_config',
@@ -42,8 +34,14 @@ if (false === $app->load_constants($app['acm.fw_prefix']))
 		'I18N_TABLE'                 => 'site_i18n',
 		'IMAGE_WATERMARKS_TABLE'     => 'site_image_watermarks',
 		'LANGUAGES_TABLE'            => 'site_languages',
+		'LOGS_TABLE'                 => 'site_logs',
+		'MAILLIST_TABLE'             => 'site_maillist',
+		'MAILLIST_GROUPS_TABLE'      => 'site_maillist_groups',
+		'MAILLIST_GROUP_USERS_TABLE' => 'site_maillist_group_users',
+		'MAILLIST_SIGNATURE_TABLE'   => 'site_maillist_signature',
+		'MAILLIST_SPOOL_TABLE'       => 'site_maillist_spool',
 		'MENUS_TABLE'                => 'site_menus',
-		'NEWS_TABLE'                 => 'site_news',
+		'MODULES_TABLE'              => 'site_modules',
 		'OPENID_IDENTITIES_TABLE'    => 'site_openid_identities',
 		'PAGES_TABLE'                => 'site_pages_tree',
 		'PAGES_GALLERY_TABLE'        => 'site_pages_gallery',
