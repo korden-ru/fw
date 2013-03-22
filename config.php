@@ -29,6 +29,7 @@ $app = [
 	'dir.app'             => SITE_DIR . '../includes',
 	'dir.fonts'           => FW_DIR . 'assets/fonts',
 	'dir.fw'              => rtrim(FW_DIR, '/'),
+	'dir.korden_fw'       => rtrim(KORDEN_FW_DIR, '/'),
 	'dir.lib'             => FW_DIR . '../lib',
 	'dir.logs'            => SITE_DIR . '../logs',
 	'dir.templates.app'   => SITE_DIR . '../templates',
