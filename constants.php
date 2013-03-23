@@ -43,7 +43,7 @@ if (false === $app->load_constants($app['acm.fw_prefix']))
 		'MENUS_TABLE'                => 'site_menus',
 		'MODULES_TABLE'              => 'site_modules',
 		'OPENID_IDENTITIES_TABLE'    => 'site_openid_identities',
-		'PAGES_TABLE'                => 'site_pages_tree',
+		'PAGES_TABLE'                => 'site_pages',
 		'PAGES_GALLERY_TABLE'        => 'site_pages_gallery',
 		'PUBLICATIONS_TABLE'         => 'site_publications',
 		'PUBLICATIONS_GALLERY_TABLE' => 'site_publications_gallery',
