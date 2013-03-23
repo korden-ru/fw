@@ -29,7 +29,7 @@ require(SITE_DIR . '../config.php');
 
 $app = new application($app);
 $app['autoloader']->register_namespaces([
-		'fw'  => [$app['dir.fw'], $app['dir.korden_fw']],
+		'fw'  => [$app['dir.korden_fw'], $app['dir.fw']],
 		'app' => $app['dir.app'],
 	])
 	->register_pear('Swift', "{$app['dir.lib']}/swiftmailer/{$app['version.swift']}/classes")
