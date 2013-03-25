@@ -85,7 +85,7 @@ $app = [
 	'urls' => [
 		'register' => '/',
 		'signin'   => '/',
-		'singout'  => '/',
+		'signout'  => '/',
 	],
 	
 	/* Версии библиотек */
