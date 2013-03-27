@@ -31,7 +31,7 @@ $app = new application($app);
 $app['autoloader']->register_namespaces([
 		'fw'     => [$app['dir.korden_fw'], $app['dir.fw']],
 		'app'    => $app['dir.app'],
-		'Guzzle' => "{$app['dir.lib']}/guzzle/{$app['version.guzzle']}",
+		'Guzzle' => "{$app['dir.lib']}/guzzle/{$app['version.guzzle']}/Guzzle",
 	])
 	->register_pear('Swift', "{$app['dir.lib']}/swiftmailer/{$app['version.swift']}/classes");
 
