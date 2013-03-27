@@ -94,5 +94,6 @@ $app = [
 	'version.imagine'  => '0.4.1',
 	'version.monolog'  => '1.0.3',
 	'version.smarty'   => '3.1.13',
+	'version.symfony'  => '2.2.0',
 	'version.swift'    => '4.3.0',
 ];
