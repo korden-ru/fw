@@ -24,12 +24,13 @@ require(FW_DIR . 'core/application.php');
 require(FW_DIR . 'core/autoloader.php');
 require(FW_DIR . 'functions.php');
 require(KORDEN_FW_DIR . 'functions.php');
+require(FW_DIR . 'config.php');
 require(KORDEN_FW_DIR . 'config.php');
 require(SITE_DIR . '../config.php');
 
 $app = new application($app);
 $app['autoloader']->register_namespaces([
-		'fw'      => [$app['dir.korden_fw'], $app['dir.fw']],
+		'fw'      => $app['dir.fw'],
 		'app'     => $app['dir.app'],
 		'Guzzle'  => "{$app['dir.lib']}/guzzle/{$app['version.guzzle']}/Guzzle",
 		'Symfony' => "{$app['dir.lib']}/symfony/{$app['version.symfony']}/Symfony",
