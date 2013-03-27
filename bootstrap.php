@@ -32,9 +32,7 @@ $app['autoloader']->register_namespaces([
 		'fw'  => [$app['dir.korden_fw'], $app['dir.fw']],
 		'app' => $app['dir.app'],
 	])
-	->register_pear('Swift', "{$app['dir.lib']}/swiftmailer/{$app['version.swift']}/classes")
-	->set_namespace_prefix('korden.fw', $app::VERSION)
-	->set_pear_prefix('Swift', $app['version.swift']);
+	->register_pear('Swift', "{$app['dir.lib']}/swiftmailer/{$app['version.swift']}/classes");
 
 require(KORDEN_FW_DIR . 'constants.php');
 require(SITE_DIR . '../constants.php');
