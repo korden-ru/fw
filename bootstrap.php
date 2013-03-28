@@ -45,5 +45,4 @@ $app['db']->_set_cache($app['cache'])
 	->_set_profiler($app['profiler']);
 $app['cache']->_set_config($app['config']);
 
-errorhandler::register();
-errorhandler::$mail = $app['mail.error'];
+errorhandler::register($app['mail.error']);
