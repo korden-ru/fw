@@ -10,11 +10,6 @@ $app = array_merge($app, [
 	/* Пути к папкам */
 	'dir.fw' => [rtrim(KORDEN_FW_DIR, '/'), rtrim(FW_DIR, '/')],
 	
-	/* Настройки обработчика ошибок */
-	'errorhandler.options' => [
-		'email.error' => 'korden.fw@ivacuum.ru',
-	],
-
 	/* Типы страниц */
 	'page.types' => [
 		'Текстовая'            => 0,
@@ -31,3 +26,6 @@ $app = array_merge($app, [
 		'services'     => 4,
 	],
 ]);
+
+/* Настройки обработчика ошибок */
+$app['errorhandler.options']['email.error'] = 'korden.fw@ivacuum.ru';
