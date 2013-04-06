@@ -40,9 +40,4 @@ $app['autoloader']->register_namespaces([
 require(KORDEN_FW_DIR . 'constants.php');
 require(SITE_DIR . '../constants.php');
 
-/* Внедрение зависимостей */
-$app['db']->_set_cache($app['cache'])
-	->_set_profiler($app['profiler']);
-$app['cache']->_set_config($app['config']);
-
 errorhandler::register($app['errorhandler.options']);
