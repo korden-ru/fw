@@ -22,7 +22,8 @@ Thumbs.db
 nbproject
 *.sublime-project
 *.sublime-workspace
-*.tm_properties
+cache.properties
+.tm_properties
 
 # Komodo
 *.komodoproject
