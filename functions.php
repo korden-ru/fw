@@ -282,6 +282,6 @@ function install_site()
 		'site_default'  => 1,
 	);
 			
-	$sql = 'INSERT INTO ' . SITES_TABLE . ' ' . $app['db']->build_array('INSERT', $sql_ary);
+	$sql = 'INSERT INTO site_sites ' . $app['db']->build_array('INSERT', $sql_ary);
 	$app['db']->query($sql);
 }
