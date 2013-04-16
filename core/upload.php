@@ -282,8 +282,16 @@ class upload
 		
 		if ($width > $prop['image_width'] && $height > $prop['image_height'])
 		{
-			$this->Save($filename);
-			return true;
+			if (!is_watermark)
+			{
+				$this->Save($filename);
+				return true;
+			}
+			else
+			{
+				$width = $prop['image_width'];
+				$height = $prop['image_height'];
+			}
 		}
 		
 		if ($this->dir_dest != "")
