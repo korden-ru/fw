@@ -103,7 +103,7 @@ function hidden_fields($row)
 
 function debug($array, $exit=1)
 {
-	if (isset($_GET['admin']) || isset($_COOKIE['debug_mode']) || $_SERVER['REMOTE_ADDR'] == '79.175.20.190' || $_SERVER['REMOTE_ADDR'] == '127.0.0.1')
+	if (isset($_GET['admin']) || isset($_COOKIE['debug_mode']))
 	{
 		echo '<pre>';
 		print_r($array);
@@ -330,29 +330,23 @@ function garbage_collection($display_profiler = true)
 {
 	global $app;
 
-	if( !empty($app['profiler']) )
-	{
-		if( $display_profiler && !$app['request']->is_ajax && !defined('IN_SQL_ERROR') )
-		{
-			if( $app['config']['profiler.enabled'] && ($_SERVER['REMOTE_ADDR'] == '79.175.20.190' || false !== strpos($_SERVER['SERVER_NAME'], '.korden.net')) )
-			{
+	if (!empty($app['profiler'])) {
+		if ($display_profiler && !$app['request']->is_ajax && !defined('IN_SQL_ERROR')) {
+			if ($app['config']['profiler.enabled'] && false !== strpos($_SERVER['SERVER_NAME'], '.korden.net')) {
 				$app['profiler']->display();
 			}
 		}
 		
-		if( !defined('IN_SQL_ERROR') && $app['config']['profiler.send_stats'] )
-		{
+		if (!defined('IN_SQL_ERROR') && $app['config']['profiler.send_stats']) {
 			$app['profiler']->send_stats($app['config']['profiler.remote_host'], $app['config']['profiler.remote_port']);
 		}
 	}
 	
-	if( !empty($app['cache']) )
-	{
+	if (!empty($app['cache'])) {
 		$app['cache']->unload();
 	}
 
-	if( !empty($app['db']) )
-	{
+	if (!empty($app['db'])) {
 		$app['db']->close();
 	}
 }
@@ -450,6 +444,7 @@ function get_server_name()
 	$hostname = mb_strtolower($app['request']->header('Host') ?: $app['request']->server('SERVER_NAME'));
 	$hostname = 0 === strpos($hostname, 'www.') ? substr($hostname, 4) : $hostname;
 	$hostname = (false !== $pos = strpos($hostname, ':')) ? substr($hostname, 0, $pos) : $hostname;
+	$hostname = trim($hostname, '.');
 		
 	return $hostname;
 }

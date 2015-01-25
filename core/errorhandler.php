@@ -67,21 +67,7 @@ class errorhandler
 				echo '<body>';
 				echo '<h1>Сервис временно недоступен</h1>';
 				echo '<p>Отчет о произошедшей ошибке отправлен администратору.</p>';
-				echo '<p>Приносим извинения за доставленные неудобства.</p>';
-				
-				if( $_SERVER['REMOTE_ADDR'] == '95.31.213.80' || $_SERVER['REMOTE_ADDR'] == '79.195.20.190' || $_SERVER['REMOTE_ADDR'] == '192.168.1.1' )
-				{
-					if( defined('IN_SQL_ERROR') )
-					{
-						echo '<h2>Ошибка в SQL запросе</h2>';
-						echo '<ul>';
-						echo '<li>Код ошибки: <b>' . $error_ary['code'] . '</b></li>';
-						echo '<li>Текст ошибки: <b>' . $error_ary['text'] . '</b></li>';
-						echo '</ul>';
-						echo '<code>' . $error_ary['sql'] . '</code>';
-					}
-				}
-				
+				echo '<p>Приносим извинения за доставленные неудобства. Сайт скоро восстановит работу.</p>';
 				echo '</body>';
 				echo '</html>';
 				exit;
@@ -158,41 +144,6 @@ class errorhandler
 	}
 
 	/**
-	* Перехват критических ошибок
-	*/
-	static public function handle_fatal_error()
-	{
-		if( $error = error_get_last() )
-		{
-			switch( $error['type'] )
-			{
-				case E_ERROR:
-				case E_CORE_ERROR:
-				case E_COMPILE_ERROR:
-				case E_USER_ERROR:
-				
-					self::log_mail('Fatal error: ' . $error['message']);
-					
-					if( $_SERVER['REMOTE_ADDR'] != '79.175.20.190' && $_SERVER['REMOTE_ADDR'] != '95.31.213.80' && $_SERVER['REMOTE_ADDR'] != '192.168.1.1' )
-					{
-						return;
-					}
-
-					$error['file'] = str_replace($_SERVER['DOCUMENT_ROOT'], '', $error['file']);
-
-					printf('<br><br><b style="color: red;">***</b> <b style="white-space: pre-line;">%s</b> on line <b>%d</b> in file <b>%s</b>.<br />', $error['message'], $error['line'], $error['file']);
-
-					if( function_exists('xdebug_print_function_stack') )
-					{
-						echo '<pre>', xdebug_print_function_stack(), '</pre>';
-					}
-
-				break;
-			}
-		}
-	}
-	
-	/**
 	* Уведомление администратора о произошедшей ошибке
 	*/
 	static public function log_mail($text, $title = '')
@@ -210,7 +161,7 @@ class errorhandler
 			$call_stack = str_replace(array('/srv/www/vhosts'), array(''), ob_get_clean());
 		}
 		
-		mail('src-work@ivacuum.ru', $title, $text . "\n" . $call_stack . print_r($_SESSION, true) . "\n" . print_r($_SERVER, true) . "\n" . print_r($_REQUEST, true), sprintf("From: fw@%s\r\n", gethostname()));
+		mail('vacuum@korden.net', $title, $text . "\n" . $call_stack . print_r($_SESSION, true) . "\n" . print_r($_SERVER, true) . "\n" . print_r($_REQUEST, true), sprintf("From: fw@%s\r\n", gethostname()));
 	}
 
 	/**
@@ -219,7 +170,6 @@ class errorhandler
 	static public function register()
 	{
 		set_error_handler(array(new self, 'handle_error'));
-		register_shutdown_function(array(new self, 'handle_fatal_error'));
 	}
 	
 	/**
