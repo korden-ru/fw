@@ -95,7 +95,7 @@ class mysqli
 		{
 			foreach( $data as $key => $value )
 			{
-				$fields[] = $key;
+				$fields[] = "`$key`";
 				$values[] = $this->check_value($value);
 			}
 
@@ -107,7 +107,7 @@ class mysqli
 			
 			foreach( $data as $key => $value )
 			{
-				$values[] = $key . ' = ' . $this->check_value($value);
+				$values[] = "`$key` = " . $this->check_value($value);
 			}
 
 			$query = implode(($query == 'UPDATE') ? ', ' : ' AND ', $values);
