@@ -45,17 +45,6 @@ class error_handler
 			*/
 			case E_USER_ERROR:
 			
-				if( defined('IN_SQL_ERROR') )
-				{
-					global $error_ary;
-					
-					self::log_mail($error_ary);
-				}
-				else
-				{
-					self::log_mail($text);
-				}
-
 				send_status_line(503, 'Service Unavailable');
 				garbage_collection(false);
 
@@ -109,7 +98,6 @@ class error_handler
 				{
 					send_status_line(404, 'Not Found');
 					$text = 'Страница не найдена';
-					// self::log_mail('Page http://' . $user->domain . $user->page . ' not found', '404 Not Found');
 				}
 			
 				$template->assign(array(
@@ -134,72 +122,11 @@ class error_handler
 	}
 
 	/**
-	* Перехват критических ошибок
-	*/
-	static public function handle_fatal_error()
-	{
-		if( $error = error_get_last() )
-		{
-			switch( $error['type'] )
-			{
-				case E_ERROR:
-				case E_CORE_ERROR:
-				case E_COMPILE_ERROR:
-				case E_USER_ERROR:
-				
-					self::log_mail('Fatal error: ' . $error['message']);
-
-					if( $_SERVER['REMOTE_ADDR'] != '79.175.20.190' && $_SERVER['REMOTE_ADDR'] != '85.21.240.187' )
-					{
-						return;
-					}
-
-					$error['file'] = str_replace($_SERVER['DOCUMENT_ROOT'], '', $error['file']);
-
-					printf('<b style="color: red;">***</b> <b style="white-space: pre-line;">%s</b> on line <b>%d</b> in file <b>%s</b>.<br />', $error['message'], $error['line'], $error['file']);
-
-					if( function_exists('xdebug_print_function_stack') )
-					{
-						echo '<pre>', xdebug_print_function_stack(), '</pre>';
-					}
-
-				break;
-			}
-		}
-	}
-	
-	/**
-	* Уведомление администратора о произошедшей ошибке
-	*/
-	static public function log_mail($text, $title = '')
-	{
-		global $request;
-		
-		$call_stack = '';
-		$text       = is_array($text) ? print_r($text, true) : $text;
-		
-		if( !$title )
-		{
-			$title = defined('IN_SQL_ERROR') ? 'E_USER_ERROR_SQL' : 'E_USER_ERROR';
-		}
-		
-		if( function_exists('xdebug_print_function_stack') )
-		{
-			ob_start();
-			xdebug_print_function_stack();
-			$call_stack = str_replace(array('/srv/www/vhosts'), array(''), ob_get_clean());
-		}
-		
-		mail('src-work@ivacuum.ru', $title, $text . "\n" . $call_stack . print_r($_SESSION, true) . "\n" . print_r($_SERVER, true) . "\n" . print_r($_REQUEST, true));
-	}
-
-	/**
 	* Регистрация обработчика
 	*/
 	static public function register()
 	{
 		set_error_handler(array(new self, 'handle_error'));
-		register_shutdown_function(array(new self, 'handle_fatal_error'));
 	}
 	
 	/**

@@ -519,12 +519,13 @@ class forms
 							$cols .= '<td>'.$td_data.'</td>';
 					}
 				}
+				
+				$cols .= '<td>';
 
 				//кнопка редактирования
 				if(!empty($this->U_EDIT))
 				{
-					$cols .= '<td>
-						<input class="button1" style="width:100%;" type="button" value="Изменить" onclick="Redirect(arguments, \''.str_replace('\\', '\\\\', $this->U_EDIT).$value[$this->primary_id].'\');" />
+					$cols .= '<input class="button1" style="width:100%;" type="button" value="Изменить" onclick="Redirect(arguments, \''.str_replace('\\', '\\\\', $this->U_EDIT).$value[$this->primary_id].'\');" />
 						<br />';
 				}
 
@@ -541,13 +542,10 @@ class forms
 				//кнопка удаления
 				if(!empty($this->U_DEL))
 				{
-					$cols .= '<input class="button1" style="width:100%;" type="button" value="Удалить" onclick="if(confirm(\'Будет удалена вся информация связанная с этой записью! Продолжить?\')) {Redirect(arguments, \''.$this->U_DEL.$value[$this->primary_id].'\');}" />
-						</td>';
+					$cols .= '<input class="button1" style="width:100%;" type="button" value="Удалить" onclick="if(confirm(\'Будет удалена вся информация связанная с этой записью! Продолжить?\')) {Redirect(arguments, \''.$this->U_DEL.$value[$this->primary_id].'\');}" />';
 				}
-
-
-
-				$cols .= '</tr>';
+				
+				$cols .= '</td></tr>';
 			}
 		$i++;
 		}

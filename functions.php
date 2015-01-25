@@ -99,7 +99,7 @@ function hidden_fields($row)
 
 function debug($array, $exit=1)
 {
-	if (isset($_GET['admin']) || $_SERVER['REMOTE_ADDR'] == '79.175.20.190' || $_SERVER['REMOTE_ADDR'] == '127.0.0.1')
+	if (isset($_GET['admin']))
 	{
 		echo '<pre>';
 		print_r($array);
@@ -152,6 +152,18 @@ function getRusDate($date)
 	$months_rus = array('Нулябрь', 'января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября','октября','ноября','декабря');
 	$str = date("j", $date) . ' ' . $months_rus[date("n", $date)] . ' ' . date("Y", $date);
 	return $str;
+}
+
+//wrapper for stripslashes
+function st($text)
+{
+	return stripslashes($text);
+}
+
+//wrapper for stripslashes \ htmlspecialchars
+function stch($text)
+{
+	return htmlspecialchars($text, ENT_QUOTES);
 }
 
 //определяем ip пользователя
@@ -331,7 +343,7 @@ function garbage_collection($display_profiler = true)
 	{
 		if( $display_profiler && !$request->is_ajax && !defined('IN_SQL_ERROR') )
 		{
-			if( $_SERVER['REMOTE_ADDR'] == '79.175.20.190' || false !== strpos($_SERVER['SERVER_NAME'], '.korden.net') )
+			if( false !== strpos($_SERVER['SERVER_NAME'], '.korden.net') )
 			{
 				$profiler->display();
 			}
@@ -820,6 +832,11 @@ function set_constants($constants)
 			define($key, $value);
 		}
 		
+		return;
+	}
+	
+	if( !$acm_prefix )
+	{
 		return;
 	}
 	

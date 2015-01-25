@@ -311,8 +311,15 @@ class upload
 		{
 			if( $trim )
 			{
-				@passthru(sprintf('%sconvert "%s" -quality %d -filter triangle -trim -resize %dx%d\> -gravity south -background None -extent %dx%d +repage "%s"', escapeshellcmd($config['imagemagick_dir']), $prop['tmp_name'], 75, $width, $height, $width, $height, $filename));
+				@passthru(sprintf('/usr/local/bin/gm convert "%s" -quality %d -filter triangle -trim -resize %dx%d\> -gravity south -background None -extent %dx%d +repage "%s"', $prop['tmp_name'], 75, $width, $height, $width, $height, $filename));
 				
+				if (!file_exists($filename))
+				{
+					return false;
+				}
+		
+				chmod($filename, 0666);
+		
 				return true;
 			}
 			else
@@ -509,7 +516,14 @@ class upload
 		global $config;
 		
 		/* -size ускоряет создание превью, фильтр немного замыливает изображение */
-		@passthru(sprintf('%sconvert -size %dx%d "%s" -quality %d -filter triangle -resize %dx%d\^ -gravity Center -crop %dx%d+0+0 +repage "%s"', escapeshellcmd($config['imagemagick_dir']), $width, $height, $prop['tmp_name'], 75, $width, $height, $width, $height, $filename));
+		@passthru(sprintf('/usr/local/bin/gm convert -size %dx%d "%s" -quality %d -filter triangle -resize %dx%d\^ -gravity Center -crop %dx%d+0+0 +repage "%s"', $width, $height, $prop['tmp_name'], 75, $width, $height, $width, $height, $filename));
+		
+		if (!file_exists($filename))
+		{
+			return false;
+		}
+		
+		chmod($filename, 0666);
 		
 		return true;
 		

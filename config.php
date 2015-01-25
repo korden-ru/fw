@@ -18,7 +18,7 @@ $dbsock = '';
 $dbpers = false;
 
 /* Настройки кэша */
-$acm_prefix = 'src';
+$acm_prefix = 'src_3.3';
 $acm_type   = 'null';
 
 /**
