@@ -649,7 +649,7 @@ class mysqli
 	*/
 	protected function connect()
 	{
-		$this->connect_id = mysqli_connect($this->server, $this->user, $this->password, $this->database, $this->port, $this->socket);
+		$this->connect_id = @mysqli_connect($this->server, $this->user, $this->password, $this->database, $this->port, $this->socket) or $this->error();
 		$this->password = '';
 
 		return ( $this->connect_id && $this->database ) ? $this->connect_id : $this->error();
@@ -662,15 +662,15 @@ class mysqli
 	{
 		global $error_ary;
 
-		$code = ( $this->connect_id ) ? mysqli_errno($this->connect_id) : mysqli_connect_errno();
-		$message = ( $this->connect_id ) ? mysqli_error($this->connect_id) : mysqli_connect_error();
+		$code = $this->connect_id ? mysqli_errno($this->connect_id) : mysqli_connect_errno();
+		$body = $this->connect_id ? mysqli_error($this->connect_id) : mysqli_connect_error();
 		
 		define('IN_SQL_ERROR', true);
 		
 		$error_ary = array(
 			'code' => $code,
 			'sql'  => $sql,
-			'text' => $message
+			'text' => $body
 		);
 
 		if( $this->transaction )
@@ -683,15 +683,23 @@ class mysqli
 		*/
 		if( $code === 145 )
 		{
-			if( preg_match("#Table '.+/(.+)' is marked as crashed and should be repaired#", $message, $matches) )
+			if( preg_match("#Table '.+/(.+)' is marked as crashed and should be repaired#", $body, $matches) )
 			{
 				$this->query('REPAIR TABLE ' . $matches[1]);
 			}
-			elseif( preg_match("#Can't open file: '(.+).MY[ID]'\.? \(errno: 145\)#", $message, $matches) )
+			elseif( preg_match("#Can't open file: '(.+).MY[ID]'\.? \(errno: 145\)#", $body, $matches) )
 			{
 				$this->query('REPAIR TABLE ' . $matches[1]);
 			}
 		}
+		
+		// Если сервер не выключен
+		if ($body != 'No such file or directory' &&
+			$body != 'Connection refused') {
+			error_log("MySQL error code: $code, body: $body, sql: $sql");
+		}
+		
+		die('Ошибка работы с базой данных. Информация о неполадке отправлена администратору. Сайт скоро продолжит работу.');
 
 		trigger_error(false, E_USER_ERROR);
 
