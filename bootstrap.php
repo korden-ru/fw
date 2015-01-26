@@ -57,20 +57,14 @@ $request = new core\request();
 $factory = new cache\factory($acm_type, $acm_prefix);
 $cache   = $factory->get_service();
 
-$db = new db\mysqli($dbhost, $dbuser, $dbpass, $dbname, $dbport, $dbsock, $dbpers);
-
-if( false === strpos($_SERVER['SERVER_NAME'], '.korden.net') )
-{
-	/* Принудительная установка кодировки для хостинг-провайдеров */
-	$db->query('SET NAMES utf8');
-}
-
 /* Инициализация классов */
+$db       = new db\mysqli($dbhost, $dbuser, $dbpass, $dbname, $dbport, $dbsock, $dbpers);
+$db->query('SET NAMES utf8');
+
 $template = new template\smarty();
 $user     = new core\user();
 $config   = new config\db($site_info, CONFIG_TABLE);
 
-// 
 
 $template->assign('cfg', $config);
 $template->assign('metaVersion', 1);

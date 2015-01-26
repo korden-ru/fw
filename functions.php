@@ -116,10 +116,9 @@ function check_email($email)
 
 function modifyUrl($title)
 {
-	$title = htmlspecialchars_decode($title);
     $ruTitle = preg_replace('/[^А-Яа-яA-Za-z0-9]/ui', '_', $title);
 	$ruTitle = trim($ruTitle, '_');
-	$ruTitle = mb_strtolower($ruTitle);
+	$ruTitle = mb_strtolower($ruTitle, 'utf-8');
 	
 	$ruLetters = array(	'а','б','в','г','д','е','ё','ж','з','и','й','к','л','м','н','о','п','р','с','т','у','ф','х','ц','ч','ы','ш','щ','ь','ъ','э','ю','я');
 	$enLetters = array(	'a','b','v','g','d','e','e','zh','z','i','i','k','l','m','n','o','p','r','s','t','u','f','h','c','ch','y','sh','sh','','','e','yu','ya');
@@ -152,6 +151,18 @@ function getRusDate($date)
 	$months_rus = array('Нулябрь', 'января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября','октября','ноября','декабря');
 	$str = date("j", $date) . ' ' . $months_rus[date("n", $date)] . ' ' . date("Y", $date);
 	return $str;
+}
+
+//wrapper for stripslashes
+function st($text)
+{
+	return stripslashes($text);
+}
+
+//wrapper for stripslashes \ htmlspecialchars
+function stch($text)
+{
+	return htmlspecialchars($text, ENT_QUOTES);
 }
 
 //определяем ip пользователя
@@ -277,7 +288,7 @@ function fileSafeUpload ($subname='uploads/banners/',$params=array())
 	$ext = substr($p, (strlen($p)-3), 3);
 	$name = substr($p, 0, (strlen($p)-4));
 	
-	$new_name = substr(md5(mktime()), 0, 10).'.'.$ext;
+	$new_name = substr(md5(time()), 0, 10).'.'.$ext;
 	$path = ROOT_PATH.$subname.$new_name;
 
         move_uploaded_file($_FILES[$user_file]['tmp_name'], $path);
@@ -302,7 +313,7 @@ function remote_file_upload ($subname='uploads/banners/',$params=array(),$filena
 	if(isset($_FILES[$filename]['tmp_name']) && @is_uploaded_file($_FILES[$filename]['tmp_name']))
 	{	
 	   $ftp_conn = ftp_connect($ftp_data['ftp_ip']) or exit('Unable to sending data to ftp-server'); 
-	   $uploaded = substr(md5(mktime()), 0,10).'.swf'; //file name
+	   $uploaded = substr(md5(time()), 0,10).'.swf'; //file name
 	   
 		if (@ftp_login($ftp_conn, $ftp_data['ftp_login'], $ftp_data['ftp_password'])) 
 		{
@@ -893,8 +904,6 @@ function send_status_line($code, $message = '')
 */
 function seo_url($url, $lang = 'ru')
 {
-	$url = htmlspecialchars_decode($url);
-	
 	switch( $lang )
 	{
 		case 'ru': $pattern = '/[^а-яa-z\d\.]/u'; break;
@@ -913,7 +922,7 @@ function seo_url($url, $lang = 'ru')
 	* _. заменяем на _
 	* Убираем точку в конце
 	*/
-	$result = preg_replace(array('/\.{2,}/', '/_\./', '/_{2,}/', '/(.*)\./'), array('', '_', '_', '$1'), $result);
+	$result = preg_replace(array('/_{2,}/', '/\.{2,}/', '/_\./', '/(.*)\./'), array('_', '', '_', '$1'), $result);
 
 	return $result;
 }

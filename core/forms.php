@@ -246,13 +246,13 @@ class forms
 						{
 							if(isset($_POST['modifyurl']))
 							{
-								//$filename = md5(mktime()).'.'.$this->uploader->GetExtension();
+								//$filename = md5(time()).'.'.$this->uploader->GetExtension();
 								$filename_noext = modifyUrl($_POST['title']).'-'.$this->table_row_id.substr(md5(time().'солька'), 0 ,3);
 								$filename = $filename_noext.'.'.$this->uploader->GetExtension();
 							}
 							else
 							{
-								$filename_noext = md5(mktime());
+								$filename_noext = md5(time());
 								$filename = $filename_noext.'.'.$this->uploader->GetExtension();
 							}
 
@@ -377,7 +377,7 @@ class forms
 						if(isset($_POST['modifyurl']) && isset($_POST['title']))
 							$filename = modifyUrl($_POST['title']).'-'.$this->table_row_id.'.'.$this->uploader->GetExtension();
 						else
-							$filename = md5(mktime()).'.'.$this->uploader->GetExtension();
+							$filename = md5(time()).'.'.$this->uploader->GetExtension();
 							
 						$this->uploader->dir_dest = ROOT_PATH.'uploads/'.$this->upload_folder.'/'; 
 						if (!is_dir($this->uploader->dir_dest))
@@ -480,7 +480,7 @@ class forms
 				}
 				
 				$row = ' class="row'.($i%2+1).'" '.$sortId . $style_tr;
-				$cols .= '<tr '.$row. (!empty($this->U_EDIT) ? ' ondblclick="Redirect(arguments, \''.str_replace('\\', '\\\\', $this->U_EDIT).$value[$this->primary_id].'\');"' : '') . '>';
+				$cols .= '<tr '.$row. (!empty($this->U_EDIT) ? ' ondblclick="Redirect(arguments, \''.$this->U_EDIT.$value[$this->primary_id].'\');"' : '') . '>';
 			
 
 				//добавляем данные
@@ -524,7 +524,7 @@ class forms
 				if(!empty($this->U_EDIT))
 				{
 					$cols .= '<td>
-						<input class="button1" style="width:100%;" type="button" value="Изменить" onclick="Redirect(arguments, \''.str_replace('\\', '\\\\', $this->U_EDIT).$value[$this->primary_id].'\');" />
+						<input class="button1" style="width:100%;" type="button" value="Изменить" onclick="Redirect(arguments, \''.$this->U_EDIT.$value[$this->primary_id].'\');" />
 						<br />';
 				}
 
