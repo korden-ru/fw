@@ -376,14 +376,14 @@ function generate_page_link($page, $base_url, $query_string)
 /**
 * Загрузка блока
 */
-function get_page_block($page_url, $parent_id, $table)
+function get_page_block($page_url, $parent_id, $table, $site_id = 1)
 {
 	global $app;
 	
 	$sql = '
 		SELECT
 			id AS page_id,
-			1 AS site_id,
+			' . $site_id . ' AS site_id,
 			id_row AS parent_id,
 			0 AS is_dir,
 			activation AS page_enabled,

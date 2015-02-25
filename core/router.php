@@ -447,7 +447,7 @@ class router
 		/* Загрузка блока */
 		if( !$row && !$is_dir && $parent_id )
 		{
-			$row = get_page_block($page_url, $parent_id, 'pages');
+			$row = get_page_block($page_url, $parent_id, 'pages', $this->site_id);
 		}
 		
 		return $row;
