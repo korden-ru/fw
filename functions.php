@@ -890,7 +890,7 @@ function redirect($url, $status_code = 302)
 {
 	if( false !== strpos(urldecode($url), "\n") || false !== strpos(urldecode($url), "\r") )
 	{
-		trigger_error('Bad URL.', E_USER_ERROR);
+		die('Bad URL.');
 	}
 	
 	if( $status_code != 302 )
