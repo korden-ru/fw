@@ -29,7 +29,7 @@ class smarty extends \Smarty
 		$this->debugging       = false;
 		$this->error_reporting = E_ALL ^ E_NOTICE;
 		$this->force_compile   = false;
-		$this->use_sub_dirs    = true;
+		$this->use_sub_dirs    = false;
 	}
 	
 	/**
