@@ -11,7 +11,7 @@ class email
 	public $useragent		= "robot";
 	public $mailpath		= "/usr/sbin/sendmail";	// Sendmail path
 	public $protocol		= "mail";	// mail/sendmail/smtp
-	public $smtp_host		= "";		// SMTP Server.  Example: mail.earthlink.net
+	public $smtp_host		= "localhost";		// SMTP Server.  Example: mail.earthlink.net
 	public $smtp_user		= "";		// SMTP Username
 	public $smtp_pass		= "";		// SMTP Password
 	public $smtp_port		= "25";		// SMTP Port
@@ -28,7 +28,7 @@ class email
 	public $crlf			= "\n";		// The RFC 2045 compliant CRLF for quoted-printable is "\r\n".  Apparently some servers,
 									// even on the receiving end think they need to muck with CRLFs, so using "\n", while
 									// distasteful, is the only thing that seems to work for all environments.
-	public $send_multipart	= TRUE;		// TRUE/FALSE - Yahoo does not like multipart alternative, so this is an override.  Set to FALSE for Yahoo.
+	public $send_multipart	= FALSE;		// TRUE/FALSE - Yahoo does not like multipart alternative, so this is an override.  Set to FALSE for Yahoo.
 	public $bcc_batch_mode	= FALSE;	// TRUE/FALSE  Turns on/off Bcc batch feature
 	public $bcc_batch_size	= 200;		// If bcc_batch_mode = TRUE, sets max number of Bccs in each batch
 	public $_safe_mode		= FALSE;
