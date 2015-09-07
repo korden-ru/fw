@@ -123,7 +123,7 @@ class manager
 			$this->release_deadlock();
 		}
 
-		return false;
+		return touch($this->cron_allowed);
 	}
 
 	/**
