@@ -24,7 +24,7 @@ class db extends config
 	{
 		if( !is_array($site_info) )
 		{
-			trigger_error('Сайт не найден', E_USER_ERROR);
+			die('Сайт не найден');
 		}
 		
 		$this->cache = $cache;
