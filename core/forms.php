@@ -640,12 +640,33 @@ class forms
 			'title' 		=> $title_select
 		);
 	}
+	
 	public function GenerateFilterList()
 	{
 		$text = '';
 		if (count($this->FiltersList))
 		{
 			$script_js_ready = '<script type="text/javascript">
+			function setAttr(prmName,val){
+			    var res = "";
+				var d = location.href.split("#")[0].split("?");  
+				var base = d[0];
+				var query = d[1];
+				if(query) {
+					var params = query.split("&");  
+					for(var i = 0; i < params.length; i++) {  
+						var keyval = params[i].split("=");  
+						if(keyval[0] != prmName) {  
+							res += params[i] + "&";
+						}
+					}
+				}
+				res += prmName + "=" + val;
+				window.location.href = base + "?" + res;
+				return false;
+			} 
+					
+					
 			$(document).ready(function() {';
 			
 			foreach ($this->FiltersList AS $filter)
@@ -671,10 +692,9 @@ class forms
 				//добавляем событие на смену фильтра
 				$script_js_ready .= '
 					$(\'#'.$filter['get_param'].'\').change(function(){
-						var param = $(\'#'.$filter['get_param'].'\').val();
-						var url = "'.$filter['url'].'";
-						url = url + "&'.$filter['get_param'].'=" + param;
-						window.location.assign(url);
+						var param = "'.$filter['get_param'].'";
+						var value = $(\'#'.$filter['get_param'].'\').val();
+						setAttr(param, value);
 					});
 				';
 			
