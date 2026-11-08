@@ -426,7 +426,7 @@ class upload
 		if ($format == 'png' || $format == 'gif')
 			$this->setTransparency($img_thumb, $img_upload); 
 		else 
-			@imagefill($img_thumb, 0, 0, $this->back_color);		//заливаем цветом подложки
+			@imagefill($img_thumb, 0, 0, hexdec(ltrim($this->back_color, '#')));		//заливаем цветом подложки
 		
 		//непосредственно создание уменьшенной копии
 		@imagecopyresampled($img_thumb, $img_upload, 0, 0, 0, 0, $width, $height, $prop['image_width'], $prop['image_height']);

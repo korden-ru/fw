@@ -380,7 +380,7 @@ class forms
 						if(isset($_POST['modifyurl']) && isset($_POST['title']))
 							$filename = modifyUrl($_POST['title']).'-'.$this->table_row_id.'.'.$this->uploader->GetExtension();
 						else
-							$filename = md5(mktime()).'.'.$this->uploader->GetExtension();
+							$filename = md5(time()).'.'.$this->uploader->GetExtension();
 							
 						$this->uploader->dir_dest = SITE_DIR.'uploads/'.$this->upload_folder.'/'; 
 						if (!is_dir($this->uploader->dir_dest))

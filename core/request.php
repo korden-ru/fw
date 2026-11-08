@@ -213,7 +213,8 @@ class request
 			return;
 		}
 		
-		list($default_key, $default_value) = each($default);
+		$default_key = key($default);
+		$default_value = current($default);
 		$value_type = gettype($default_value);
 		$key_type = gettype($default_key);
 		

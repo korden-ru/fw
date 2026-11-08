@@ -649,8 +649,13 @@ class mysqli
 	*/
 	protected function connect()
 	{
+		/* PHP 8.1+ по умолчанию бросает исключения; обработка ошибок здесь рассчитана на false */
+		mysqli_report(MYSQLI_REPORT_OFF);
+
 		$this->connect_id = @mysqli_connect($this->server, $this->user, $this->password, $this->database, $this->port, $this->socket) or $this->error();
 		$this->password = '';
+		
+		$this->query("set session sql_mode='NO_ENGINE_SUBSTITUTION'");
 
 		return ( $this->connect_id && $this->database ) ? $this->connect_id : $this->error();
 	}
