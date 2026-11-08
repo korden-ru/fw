@@ -659,6 +659,8 @@ class mysqli
 	{
 		$this->connect_id = @mysqli_connect($this->server, $this->user, $this->password, $this->database, $this->port, $this->socket) or $this->error();
 		$this->password = '';
+		
+		$this->query("set session sql_mode='NO_ENGINE_SUBSTITUTION'");
 
 		return ( $this->connect_id && $this->database ) ? $this->connect_id : $this->error();
 	}
